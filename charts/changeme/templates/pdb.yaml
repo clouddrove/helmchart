@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "changeme.fullname" . }}
+  labels:
+    {{- include "changeme.labels" . | nindent 4 }}
+spec:
+  minAvailable: "30%"
+  selector:
+    matchLabels:
+      {{- include "changeme.selectorLabels" . | nindent 6 }}
