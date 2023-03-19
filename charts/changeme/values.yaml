@@ -83,3 +83,8 @@ tolerations: []
 
 affinity: {}
 
+metrics:
+  enabled: true
+  portName: "prometheus"
+  port: 3001
+  targetPort: 3001
