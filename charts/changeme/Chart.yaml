@@ -9,5 +9,5 @@ home: https://github.com/clouddrove/helmchart-template
 maintainers:
     - name: CloudDrove Inc
       email: hello@clouddrove.com
-type: template
+type: application
 version: 0.1.2   
