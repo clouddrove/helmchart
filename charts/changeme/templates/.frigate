@@ -1,0 +1,9 @@
+# {{ name }} - {{ version }}
+
+{{ description }}
+
+## Configuration options
+
+{% for (param, comment, default) in values -%}
+ - `{{ param }}` - {{ default }}
+{% endfor -%}
