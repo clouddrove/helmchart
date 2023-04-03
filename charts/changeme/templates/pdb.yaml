@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "changeme.labels" . | nindent 4 }}
 spec:
-  minAvailable: "30%"
+  minAvailable: {{ .Values.pdbMinAvailable }}
   selector:
     matchLabels:
       {{- include "changeme.selectorLabels" . | nindent 6 }}
