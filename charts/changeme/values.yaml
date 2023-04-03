@@ -2,14 +2,15 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1           # Replica count used to configure the number of replica pods that should be deployed and maintained.
+replicaCount: 1 # Replica count used to configure the number of replica pods that should be deployed and maintained.
 
 image:
   repository: nginx      # The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.
   pullPolicy: IfNotPresent # The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   tag: ""               # Overrides the image tag whose default is the chart appVersion.
 
-secrets: {}             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
+secrets:
+  enabled: true               # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
 configs:
   create: true
 imagePullSecrets: []    #  imagePullSecrets lists the Secret resources that should be used for accessing private registries.
