@@ -2,30 +2,34 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 1           # Replica count used to configure the number of replica pods that should be deployed and maintained.
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  tag: ""   # Overrides the image tag whose default is the chart appVersion.
+  repository: nginx      # The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.
+  pullPolicy: IfNotPresent # The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
+  tag: ""               # Overrides the image tag whose default is the chart appVersion.
 
-secrets: {}
-configs: {}
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+secrets:
+  create: false             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
+configs:
+  create: true
+imagePullSecrets: []    #  imagePullSecrets lists the Secret resources that should be used for accessing private registries.
+nameOverride: "" 
+fullnameOverride: ""    # fullnameOverride is a string that allows overriding the default fullname that appears as the application name and is used as the application name by kubernetes.
+
+pdbMinAvailable: 30%    # minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
 
 serviceAccount:
-  create: true      # Specifies whether a service account should be created
-  annotations: {}   # Annotations to add to the service account
-  name: ""          # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  create: true          # Specifies whether a service account should be created
+  annotations: {}       # Annotations to add to the service account
+  name: ""              # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
 
-podAnnotations: {}
+podAnnotations: {}      # podAnnotations will add the provided map to the annotations for the Pod resource created by the Deployment.
 
-podSecurityContext: {}
+podSecurityContext: {}  # podSecurityContext holds pod-level security access control settings.
   # fsGroup: 2000
 
-securityContext: {}
+securityContext: {}     # securityContext is a map that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions.
   # capabilities:
   #   drop:
   #   - ALL
@@ -33,31 +37,28 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 80
+service:              # service is a map that specifies the configuration for the Service resource that is created by the chart.
+  create: true        # Specifies whether a service account should be created
+  type: ClusterIP     # The Service type, as defined in Kubernetes. Defaults to ClusterIP.
+  port: 80            # A map that specifies the port bindings of the service against the Pods in the Deployment.
 
-ingress:
-  enabled: false
+ingress:              #  ingress is a map that can be used to configure an Ingress resource for this service.
+  enabled: false      # Specifies whether a ingress should be created
   className: ""
-  annotations: {}
+  annotations: {}     # Annotations that should be added to the Service resource. This is injected directly in to the resource yaml.
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
+  hosts:                        # Sets up the host routes for the ingress resource.
     - host: chart-example.local
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
+  tls: []                       # Sets up TLS termination on the ingress rule. Each item is a separate TLS rule that maps to one or more hosts specified in this ingress rule. This is injected directly in to the resource yaml.
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
 
-resources: 
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+resources:    # We usually recommend not to specify default resources and to leave this as a conscious.  We usually recommend not to specify default resources and to leave this as a conscious. resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 100m
     memory: 128Mi
@@ -65,21 +66,24 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-autoscaling:
+autoscaling:      
+  enabled: false   # Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created
+  minReplicas: 1   # The minimum amount of replicas allowed
+  maxReplicas: 100 # The maximum amount of replicas allowed
+  targetCPUUtilizationPercentage: 80 # The target average CPU utilization to be used with the metrics
+  # targetMemoryUtilizationPercentage: 80 # The target average Memory utilization to be used with the metrics
+
+poddisruptionbudget:
   enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
-nodeSelector: {}
+nodeSelector: {}  # nodeSelector specify restrictions on what node this pod should be scheduled on.
 
-tolerations: []
+tolerations: []   # tolerations can be used to allow the pod to be scheduled on nodes with a specific taint.
 
-affinity: {}
+affinity: {}    # # affinity specify restrictions on what node this pod should be scheduled on.
 
 metrics:
-  enabled: true
-  portName: "prometheus"
-  port: 3001
-  targetPort: 3001
+  enabled: true   # Whether or not metrics should be created, if false the metrics will not be created
+  portName: "prometheus" # portName specify the name of the port for the metrics resource.
+  port: 3001     
+  targetPort: 3001 
