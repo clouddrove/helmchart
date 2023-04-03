@@ -9,7 +9,8 @@ image:
   pullPolicy: IfNotPresent # The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   tag: ""               # Overrides the image tag whose default is the chart appVersion.
 
-secrets: {}             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
+secrets:
+  create: false             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
 configs:
   create: true
 imagePullSecrets: []    #  imagePullSecrets lists the Secret resources that should be used for accessing private registries.
@@ -71,6 +72,9 @@ autoscaling:
   maxReplicas: 100 # The maximum amount of replicas allowed
   targetCPUUtilizationPercentage: 80 # The target average CPU utilization to be used with the metrics
   # targetMemoryUtilizationPercentage: 80 # The target average Memory utilization to be used with the metrics
+
+poddisruptionbudget:
+  enabled: false
 
 nodeSelector: {}  # nodeSelector specify restrictions on what node this pod should be scheduled on.
 
