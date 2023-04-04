@@ -10,7 +10,7 @@ image:
   tag: ""               # Overrides the image tag whose default is the chart appVersion.
 
 secrets:
-  create: false             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
+  create: true             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
 configs:
   create: true
 imagePullSecrets: []    #  imagePullSecrets lists the Secret resources that should be used for accessing private registries.
