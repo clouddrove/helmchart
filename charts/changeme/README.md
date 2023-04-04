@@ -11,41 +11,43 @@ The following table lists the configurable parameters of the Changeme chart and 
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
-| `replicaCount` |  | `1` |
-| `image.repository` |  | `"nginx"` |
-| `image.pullPolicy` |  | `"IfNotPresent"` |
+| `replicaCount` | Replica count used to configure the number of replica pods that should be deployed and maintained. | `1` |
+| `image.repository` | The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'. | `"nginx"` |
+| `image.pullPolicy` | The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'. | `"IfNotPresent"` |
 | `image.tag` | Overrides the image tag whose default is the chart appVersion. | `""` |
-| `secrets` |  | `{}` |
-| `configs` |  | `{}` |
-| `imagePullSecrets` |  | `[]` |
+| `secrets.enabled` | secrets is a map that specifies the Secret resources that should be exposed to the main application container. | `true` |
+| `configs.create` |  | `true` |
+| `imagePullSecrets` | imagePullSecrets lists the Secret resources that should be used for accessing private registries. | `[]` |
 | `nameOverride` |  | `""` |
-| `fullnameOverride` |  | `""` |
+| `fullnameOverride` | fullnameOverride is a string that allows overriding the default fullname that appears as the application name and is used as the application name by kubernetes. | `""` |
+| `pdbMinAvailable` | minPodsAvailable specifies the minimum number of pods that should be available at any given point in time. | `"30%"` |
 | `serviceAccount.create` | Specifies whether a service account should be created | `true` |
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
 | `serviceAccount.name` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template | `""` |
-| `podAnnotations` |  | `{}` |
-| `podSecurityContext` |  | `{}` |
-| `securityContext` |  | `{}` |
-| `service.type` |  | `"ClusterIP"` |
-| `service.port` |  | `80` |
-| `ingress.enabled` |  | `false` |
+| `podAnnotations` | podAnnotations will add the provided map to the annotations for the Pod resource created by the Deployment. | `{}` |
+| `podSecurityContext` | podSecurityContext holds pod-level security access control settings. | `{}` |
+| `securityContext` | securityContext is a map that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. | `{}` |
+| `service.create` | Specifies whether a service account should be created | `true` |
+| `service.type` | The Service type, as defined in Kubernetes. Defaults to ClusterIP. | `"ClusterIP"` |
+| `service.port` | A map that specifies the port bindings of the service against the Pods in the Deployment. | `80` |
+| `ingress.enabled` | Specifies whether a ingress should be created | `false` |
 | `ingress.className` |  | `""` |
-| `ingress.annotations` |  | `{}` |
-| `ingress.hosts` |  | `[{"host": "chart-example.local", "paths": [{"path": "/", "pathType": "ImplementationSpecific"}]}]` |
-| `ingress.tls` |  | `[]` |
+| `ingress.annotations` | Annotations that should be added to the Service resource. This is injected directly in to the resource yaml. | `{}` |
+| `ingress.hosts` | Sets up the host routes for the ingress resource. | `[{"host": "chart-example.local", "paths": [{"path": "/", "pathType": "ImplementationSpecific"}]}]` |
+| `ingress.tls` | Sets up TLS termination on the ingress rule. Each item is a separate TLS rule that maps to one or more hosts specified in this ingress rule. This is injected directly in to the resource yaml. | `[]` |
 | `resources.limits.cpu` |  | `"100m"` |
 | `resources.limits.memory` |  | `"128Mi"` |
 | `resources.requests.cpu` |  | `"100m"` |
 | `resources.requests.memory` |  | `"128Mi"` |
-| `autoscaling.enabled` |  | `false` |
-| `autoscaling.minReplicas` |  | `1` |
-| `autoscaling.maxReplicas` |  | `100` |
-| `autoscaling.targetCPUUtilizationPercentage` |  | `80` |
-| `nodeSelector` |  | `{}` |
-| `tolerations` |  | `[]` |
-| `affinity` |  | `{}` |
-| `metrics.enabled` |  | `true` |
-| `metrics.portName` |  | `"prometheus"` |
+| `autoscaling.enabled` | Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created | `false` |
+| `autoscaling.minReplicas` | The minimum amount of replicas allowed | `1` |
+| `autoscaling.maxReplicas` | The maximum amount of replicas allowed | `100` |
+| `autoscaling.targetCPUUtilizationPercentage` | The target average CPU utilization to be used with the metrics | `80` |
+| `nodeSelector` | nodeSelector specify restrictions on what node this pod should be scheduled on. | `{}` |
+| `tolerations` | tolerations can be used to allow the pod to be scheduled on nodes with a specific taint. | `[]` |
+| `affinity` | affinity specify restrictions on what node this pod should be scheduled on. | `{}` |
+| `metrics.enabled` | Whether or not metrics should be created, if false the metrics will not be created | `true` |
+| `metrics.portName` | portName specify the name of the port for the metrics resource. | `"prometheus"` |
 | `metrics.port` |  | `3001` |
 | `metrics.targetPort` |  | `3001` |
 
