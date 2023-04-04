@@ -12,6 +12,7 @@
         "imagePullSecrets",
         "nameOverride",
         "fullnameOverride",
+        "pdbMinAvailable",
         "serviceAccount",
         "podAnnotations",
         "podSecurityContext",
@@ -46,7 +47,6 @@
             "properties": {
                 "repository": {
                     "type": "string",
-                    "pattern": "^[a-z0-9-_]+$",                    
                     "default": "",
                     "title": "The repository Schema",
                     "examples": [
@@ -55,7 +55,6 @@
                 },
                 "pullPolicy": {
                     "type": "string",
-                    "pattern": "^(Always|Never|IfNotPresent)$",                    
                     "default": "",
                     "title": "The pullPolicy Schema",
                     "examples": [
@@ -81,17 +80,43 @@
             "type": "object",
             "default": {},
             "title": "The secrets Schema",
-            "required": [],
-            "properties": {},
-            "examples": [{}]
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The enabled Schema",
+                    "examples": [
+                        true
+                    ]
+                }
+            },
+            "examples": [{
+                "enabled": true
+            }]
         },
         "configs": {
             "type": "object",
             "default": {},
             "title": "The configs Schema",
-            "required": [],
-            "properties": {},
-            "examples": [{}]
+            "required": [
+                "create"
+            ],
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The create Schema",
+                    "examples": [
+                        true
+                    ]
+                }
+            },
+            "examples": [{
+                "create": true
+            }]
         },
         "imagePullSecrets": {
             "type": "array",
@@ -116,6 +141,14 @@
             "title": "The fullnameOverride Schema",
             "examples": [
                 ""
+            ]
+        },
+        "pdbMinAvailable": {
+            "type": "string",
+            "default": "",
+            "title": "The pdbMinAvailable Schema",
+            "examples": [
+                "30%"
             ]
         },
         "serviceAccount": {
@@ -188,10 +221,19 @@
             "default": {},
             "title": "The service Schema",
             "required": [
+                "create",
                 "type",
                 "port"
             ],
             "properties": {
+                "create": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The create Schema",
+                    "examples": [
+                        true
+                    ]
+                },
                 "type": {
                     "type": "string",
                     "default": "",
@@ -210,6 +252,7 @@
                 }
             },
             "examples": [{
+                "create": true,
                 "type": "ClusterIP",
                 "port": 80
             }]
@@ -574,11 +617,16 @@
             "pullPolicy": "IfNotPresent",
             "tag": ""
         },
-        "secrets": {},
-        "configs": {},
+        "secrets": {
+            "enabled": true
+        },
+        "configs": {
+            "create": true
+        },
         "imagePullSecrets": [],
         "nameOverride": "",
         "fullnameOverride": "",
+        "pdbMinAvailable": "30%",
         "serviceAccount": {
             "create": true,
             "annotations": {},
@@ -588,6 +636,7 @@
         "podSecurityContext": {},
         "securityContext": {},
         "service": {
+            "create": true,
             "type": "ClusterIP",
             "port": 80
         },
