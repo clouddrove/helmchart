@@ -9,10 +9,16 @@ image:
   pullPolicy: IfNotPresent # The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   tag: ""               # Overrides the image tag whose default is the chart appVersion.
 
-secrets:
-  create: true             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
-configs:
-  create: true
+secret:
+  enabled: true             # secrets is a map that specifies the Secret resources that should be exposed to the main application container.
+  secrets:
+    KEY: "value"
+
+configmap:
+  enabled: true
+  configs:
+    KEY: "value"
+
 imagePullSecrets: []    #  imagePullSecrets lists the Secret resources that should be used for accessing private registries.
 nameOverride: "" 
 fullnameOverride: ""    # fullnameOverride is a string that allows overriding the default fullname that appears as the application name and is used as the application name by kubernetes.
@@ -20,9 +26,9 @@ fullnameOverride: ""    # fullnameOverride is a string that allows overriding th
 pdbMinAvailable: 30%    # minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
 
 serviceAccount:
-  create: true          # Specifies whether a service account should be created
+  enabled: true          # Specifies whether a service account should be created
   annotations: {}       # Annotations to add to the service account
-  name: ""              # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""              # The name of the service account to use. If not set and enabled is true, a name is generated using the fullname template
 
 podAnnotations: {}      # podAnnotations will add the provided map to the annotations for the Pod resource created by the Deployment.
 
@@ -38,7 +44,7 @@ securityContext: {}     # securityContext is a map that specified the privilege 
   # runAsUser: 1000
 
 service:              # service is a map that specifies the configuration for the Service resource that is created by the chart.
-  create: true        # Specifies whether a service account should be created
+  enabled: true        # Specifies whether a service account should be created
   type: ClusterIP     # The Service type, as defined in Kubernetes. Defaults to ClusterIP.
   port: 80            # A map that specifies the port bindings of the service against the Pods in the Deployment.
 
