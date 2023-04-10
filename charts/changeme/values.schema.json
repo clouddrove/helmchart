@@ -1,7 +1,11 @@
 {
-    "$schema": "http://json-schema.org/schema#",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
     "type": "object",
+    "default": {},
+    "title": "Root Schema",
     "required": [
+      "replicaCount",
       "image",
       "secret",
       "configmap",
@@ -24,6 +28,14 @@
       "metrics"          
     ],
     "properties": {
+      "replicaCount": {
+          "type": "integer",
+          "default": 0,
+          "title": "The replicaCount Schema",
+          "examples": [
+              1
+          ]
+      },        
       "image": {
         "type": "object",
         "required": [
