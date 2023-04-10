@@ -39,7 +39,7 @@ helm.sh/chart: {{ include "helmchart.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: "https://charts.clouddrove.com/charts/helmchart"
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/created-by: "CloudDrove"
 {{- end }}
 
