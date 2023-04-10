@@ -1,13 +1,13 @@
 apiVersion: v2
-appVersion: "1.16.0"
+appVersion: "0.0.1"
 keywords:
     - helm
     - template   
 name: helmchart
 description: A Helm chart for Kubernetes
-home: https://github.com/clouddrove/helmchart-template
+home: https://github.com/clouddrove/helmchart
 maintainers:
     - name: CloudDrove Inc
       email: hello@clouddrove.com
 type: application
-version: 0.1.2   
+version: 0.0.1
