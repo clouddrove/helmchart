@@ -12,7 +12,7 @@ entries:
     - template
     maintainers:
     - email: hello@clouddrove.com
-      name: CloudDrove Inc
+      name: CloudDrove Inc.
     name: helmchart
     type: application
     urls:
