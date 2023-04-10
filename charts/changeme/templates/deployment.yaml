@@ -40,7 +40,7 @@ spec:
           {{- if .Values.configmap.enabled }}
           envFrom:
             - configMapRef:
-                name: {{ .Release.Name }}-config
+                name: {{ include "changeme.fullname" . }}-config
           {{- end }}
           # livenessProbe:
           #   httpGet:
