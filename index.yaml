@@ -16,6 +16,6 @@ entries:
     name: helmchart
     type: application
     urls:
-    - https://charts.clouddrove.com/helmchart/helmchart-0.0.1.tgz
+    - https://github.com/clouddrove/helmchart/releases/download/helmchart-0.0.1/helmchart-0.0.1.tgz
     version: 0.0.1
 generated: "2023-04-10T05:47:31.418494-04:00"
