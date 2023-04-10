@@ -3,7 +3,7 @@ appVersion: "1.16.0"
 keywords:
     - helm
     - template   
-name: changeme
+name: helmchart
 description: A Helm chart for Kubernetes
 home: https://github.com/clouddrove/helmchart-template
 maintainers:

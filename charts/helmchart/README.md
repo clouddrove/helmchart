@@ -1,5 +1,5 @@
 
-Changeme
+helmchart
 ===========
 
 A Helm chart for Kubernetes
@@ -7,7 +7,7 @@ A Helm chart for Kubernetes
 
 ## Configuration
 
-The following table lists the configurable parameters of the Changeme chart and their default values.
+The following table lists the configurable parameters of the helmchart chart and their default values.
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |

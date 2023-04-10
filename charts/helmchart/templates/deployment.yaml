@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "changeme.fullname" . }}
+  name: {{ include "helmchart.fullname" . }}
   labels:
-    {{- include "changeme.labels" . | nindent 4 }}
+    {{- include "helmchart.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "changeme.selectorLabels" . | nindent 6 }}
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "changeme.selectorLabels" . | nindent 8 }}
+        {{- include "helmchart.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "changeme.serviceAccountName" . }}
+      serviceAccountName: {{ include "helmchart.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -40,7 +40,7 @@ spec:
           {{- if .Values.configmap.enabled }}
           envFrom:
             - configMapRef:
-                name: {{ include "changeme.fullname" . }}-config
+                name: {{ include "helmchart.fullname" . }}-config
           {{- end }}
           # livenessProbe:
           #   httpGet:

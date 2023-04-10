@@ -3,12 +3,12 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: {{ include "changeme.fullname" . }}
+  name: {{ include "helmchart.fullname" . }}
   labels:
-    {{- include "changeme.labels" . | nindent 4 }}
+    {{- include "helmchart.labels" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.pdbMinAvailable }}
   selector:
     matchLabels:
-      {{- include "changeme.selectorLabels" . | nindent 6 }}
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
 {{- end}}    

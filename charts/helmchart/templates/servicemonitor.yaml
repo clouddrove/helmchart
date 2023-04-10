@@ -2,15 +2,15 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "changeme.fullname" . }}
+  name: {{ include "helmchart.fullname" . }}
   labels:
-    {{- include "changeme.labels" . | nindent 4 }}
+    {{- include "helmchart.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook-weight": "1"
 spec:
   selector:
     matchLabels:
-      {{- include "changeme.labels" . | nindent 6 }}
+      {{- include "helmchart.labels" . | nindent 6 }}
   endpoints:
     - port: {{ .Values.metrics.portName }}
   {{- end }}

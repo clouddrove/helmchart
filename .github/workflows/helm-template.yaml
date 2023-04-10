@@ -6,8 +6,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - name: helm-check-changeme
+    - name: helm-check-helmchart
       uses: igabaydulin/helm-check-action@0.1.4
       env:
-        CHART_LOCATION: ./charts/changeme
-        CHART_VALUES: ./charts/changeme/values/test.yaml
+        CHART_LOCATION: ./charts/helmchart
+        CHART_VALUES: ./charts/helmchart/values/test.yaml
