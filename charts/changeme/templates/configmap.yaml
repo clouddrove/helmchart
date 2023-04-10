@@ -1,4 +1,4 @@
-{{- if .Values.configs.enabled }}
+{{- if .Values.configmap.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,7 +8,7 @@ metadata:
   annotations:
     "helm.sh/hook-weight": "4"    
 data:
-{{- with .Values.configs }}
+{{- with .Values.configmap.configs }}
   {{- toYaml . | nindent 2 -}}
   {{- end}}
 {{- end}}
