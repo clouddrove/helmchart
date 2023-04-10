@@ -1,0 +1,21 @@
+apiVersion: v1
+entries:
+  changeme:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-04-10T04:55:53.452027-04:00"
+    description: A Helm chart for Kubernetes
+    digest: d59e46671aaca8ffb0443129b90323178c23c9b92fc2699587ee0d3217b06db1
+    home: https://github.com/clouddrove/helmchart-template
+    keywords:
+    - helm
+    - template
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: changeme
+    type: application
+    urls:
+    - https://charts.clouddrove.com/changeme/changeme-0.1.2.tgz
+    version: 0.1.2
+generated: "2023-04-10T04:55:53.451196-04:00"
