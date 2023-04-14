@@ -79,7 +79,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80 # The target average CPU utilization to be used with the metrics
   # targetMemoryUtilizationPercentage: 80 # The target average Memory utilization to be used with the metrics
 
-podDisruptionBudget:
+poddisruptionbudget:
   enabled: false
 
 nodeSelector: {}  # nodeSelector specify restrictions on what node this pod should be scheduled on.

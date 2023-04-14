@@ -73,7 +73,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80 
   targetMemoryUtilizationPercentage: 80 
 
-podDisruptionBudget:
+poddisruptionbudget:
   enabled: true
   minAvailable: "10%"
 
