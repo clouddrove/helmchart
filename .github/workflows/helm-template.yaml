@@ -10,4 +10,4 @@ jobs:
       uses: igabaydulin/helm-check-action@0.1.4
       env:
         CHART_LOCATION: ./charts/helmchart
-        CHART_VALUES: ./charts/helmchart/values/test.yaml
+        CHART_VALUES: ./tests/helmchart/override-test.yaml
