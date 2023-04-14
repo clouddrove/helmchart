@@ -86,10 +86,12 @@ nodeSelector: {}  # nodeSelector specify restrictions on what node this pod shou
 
 tolerations: []   # tolerations can be used to allow the pod to be scheduled on nodes with a specific taint.
 
-affinity: {}    # # affinity specify restrictions on what node this pod should be scheduled on.
+affinity: {}    # affinity specify restrictions on what node this pod should be scheduled on.
 
 metrics:
-  enabled: true   # Whether or not metrics should be created, if false the metrics will not be created
-  portName: "prometheus" # portName specify the name of the port for the metrics resource.
+# -- Whether or not metrics should be created, if false the metrics will not be created
+  enabled: true   
+# portName specify the name of the port for the metrics resource.  
+  portName: "prometheus" 
   port: 3001     
   targetPort: 3001 

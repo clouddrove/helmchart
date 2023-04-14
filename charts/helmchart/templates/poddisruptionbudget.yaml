@@ -1,13 +1,13 @@
 {{- if .Values.poddisruptionbudget.enabled }}
 apiVersion: policy/v1
-kind: PodDisruptionBudget
+kind: poddisruptionbudget
 metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ include "helmchart.fullname" . }}
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:
-  minAvailable: {{ .Values.pdbMinAvailable }}
+  minAvailable: {{ .Values.poddisruptionbudget.minAvailable | quote }}
   selector:
     matchLabels:
       {{- include "helmchart.selectorLabels" . | nindent 6 }}
