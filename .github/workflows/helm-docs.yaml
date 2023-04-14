@@ -1,9 +1,9 @@
-name: Release Charts
+name: Helm Docs
 
 on:
   push:
     branches:
-      - develop
+      - master
 
 jobs:
   install-helm-docs:
