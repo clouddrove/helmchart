@@ -401,10 +401,10 @@
             }
         }
     },
-    "poddisruptionbudget": {
+    "PodDisruptionBudget": {
         "type": "object",
         "default": {},
-        "title": "The poddisruptionbudget Schema",
+        "title": "The PodDisruptionBudget Schema",
         "required": [
             "enabled"
         ],
