@@ -19,6 +19,4 @@ deploy-devel:
         --set image.tag=$IMAGE_TAG \
         --set namespace=$NAMESPACE 
         clouddrove/<application>
-
 ... 
-and other stages with their namespaces and so on...
