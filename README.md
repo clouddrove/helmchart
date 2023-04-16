@@ -7,7 +7,7 @@ Each microservice has its own repository and override-<env>.yaml. In its own CI 
 
 deploy-devel:
     stage: deploy-dev
-...
+``` 
     script:
     - cd build
     - helm init --upgrade
@@ -19,4 +19,4 @@ deploy-devel:
         --set image.tag=$IMAGE_TAG \
         --set namespace=$NAMESPACE 
         clouddrove/<application>
-... 
+    ```
