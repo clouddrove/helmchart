@@ -1,58 +1,62 @@
+# helmchart
 
-helmchart
-===========
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
+**Homepage:** <https://github.com/clouddrove/helmchart>
 
-## Configuration
+## Maintainers
 
-The following table lists the configurable parameters of the helmchart chart and their default values.
+| Name | Email | Url |
+| ---- | ------ | --- |
+| CloudDrove Inc | <hello@clouddrove.com> |  |
 
-| Parameter                | Description             | Default        |
-| ------------------------ | ----------------------- | -------------- |
-| `replicaCount` | Replica count used to configure the number of replica pods that should be deployed and maintained. | `1` |
-| `image.repository` | The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'. | `"nginx"` |
-| `image.pullPolicy` | The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'. | `"IfNotPresent"` |
-| `image.tag` | Overrides the image tag whose default is the chart appVersion. | `""` |
-| `secrets.enabled` | secrets is a map that specifies the Secret resources that should be exposed to the main application container. | `true` |
-| `configs.create` |  | `true` |
-| `imagePullSecrets` | imagePullSecrets lists the Secret resources that should be used for accessing private registries. | `[]` |
-| `nameOverride` |  | `""` |
-| `fullnameOverride` | fullnameOverride is a string that allows overriding the default fullname that appears as the application name and is used as the application name by kubernetes. | `""` |
-| `pdbMinAvailable` | minPodsAvailable specifies the minimum number of pods that should be available at any given point in time. | `"30%"` |
-| `serviceAccount.create` | Specifies whether a service account should be created | `true` |
-| `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
-| `serviceAccount.name` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template | `""` |
-| `podAnnotations` | podAnnotations will add the provided map to the annotations for the Pod resource created by the Deployment. | `{}` |
-| `podSecurityContext` | podSecurityContext holds pod-level security access control settings. | `{}` |
-| `securityContext` | securityContext is a map that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. | `{}` |
-| `service.create` | Specifies whether a service account should be created | `true` |
-| `service.type` | The Service type, as defined in Kubernetes. Defaults to ClusterIP. | `"ClusterIP"` |
-| `service.port` | A map that specifies the port bindings of the service against the Pods in the Deployment. | `80` |
-| `ingress.enabled` | Specifies whether a ingress should be created | `false` |
-| `ingress.className` |  | `""` |
-| `ingress.annotations` | Annotations that should be added to the Service resource. This is injected directly in to the resource yaml. | `{}` |
-| `ingress.hosts` | Sets up the host routes for the ingress resource. | `[{"host": "chart-example.local", "paths": [{"path": "/", "pathType": "ImplementationSpecific"}]}]` |
-| `ingress.tls` | Sets up TLS termination on the ingress rule. Each item is a separate TLS rule that maps to one or more hosts specified in this ingress rule. This is injected directly in to the resource yaml. | `[]` |
-| `resources.limits.cpu` |  | `"100m"` |
-| `resources.limits.memory` |  | `"128Mi"` |
-| `resources.requests.cpu` |  | `"100m"` |
-| `resources.requests.memory` |  | `"128Mi"` |
-| `autoscaling.enabled` | Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created | `false` |
-| `autoscaling.minReplicas` | The minimum amount of replicas allowed | `1` |
-| `autoscaling.maxReplicas` | The maximum amount of replicas allowed | `100` |
-| `autoscaling.targetCPUUtilizationPercentage` | The target average CPU utilization to be used with the metrics | `80` |
-| `nodeSelector` | nodeSelector specify restrictions on what node this pod should be scheduled on. | `{}` |
-| `tolerations` | tolerations can be used to allow the pod to be scheduled on nodes with a specific taint. | `[]` |
-| `affinity` | affinity specify restrictions on what node this pod should be scheduled on. | `{}` |
-| `metrics.enabled` | Whether or not metrics should be created, if false the metrics will not be created | `true` |
-| `metrics.portName` | portName specify the name of the port for the metrics resource. | `"prometheus"` |
-| `metrics.port` |  | `3001` |
-| `metrics.targetPort` |  | `3001` |
+## Values
 
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| autoscaling.enabled | bool | `false` |  |
+| autoscaling.maxReplicas | int | `100` | The minimum amount of replicas allowed |
+| autoscaling.minReplicas | int | `1` | Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` | The maximum amount of replicas allowed |
+| configmap.configs.KEY | string | `"value"` |  |
+| configmap.enabled | bool | `true` |  |
+| fullnameOverride | string | `""` |  |
+| image.pullPolicy | string | `"IfNotPresent"` | The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.        |
+| image.repository | string | `"nginx"` | Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files |
+| image.tag | string | `""` | The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.   |
+| imagePullSecrets | list | `[]` |  |
+| ingress.annotations | object | `{}` |  |
+| ingress.className | string | `""` | Specifies whether a ingress should be created |
+| ingress.enabled | bool | `false` | ingress is a map that can be used to configure an Ingress resource for this service. |
+| ingress.hosts | list | `[{"host":"chart-example.local","paths":[{"path":"/","pathType":"ImplementationSpecific"}]}]` | Annotations that should be added to the Service resource. This is injected directly in to the resource yaml. kubernetes.io/ingress.class: nginx kubernetes.io/tls-acme: "true" |
+| ingress.tls | list | `[]` |  |
+| metrics.enabled | bool | `true` | Whether or not metrics should be created, if false the metrics will not be created |
+| metrics.port | int | `3001` |  |
+| metrics.portName | string | `"prometheus"` | portName specify the name of the port for the metrics resource.   |
+| metrics.targetPort | int | `3001` |  |
+| nameOverride | string | `""` | imagePullSecrets lists the Secret resources that should be used for accessing private registries. |
+| nodeSelector | object | `{}` |  |
+| pdbMinAvailable | string | `"30%"` |  |
+| podAnnotations | object | `{}` |  |
+| podSecurityContext | object | `{}` |  |
+| poddisruptionbudget.enabled | bool | `false` |  |
+| replicaCount | int | `1` |  |
+| resources.limits | object | `{"cpu":"100m","memory":"128Mi"}` | We usually recommend not to specify default resources and to leave this as a conscious.  We usually recommend not to specify default resources and to leave this as a conscious. resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.     |
+| resources.requests.cpu | string | `"100m"` |  |
+| resources.requests.memory | string | `"128Mi"` |  |
+| secret.enabled | bool | `true` |  |
+| secret.secrets | object | `{"KEY":"value"}` | secrets is a map that specifies the Secret resources that should be exposed to the main application container.            |
+| securityContext | object | `{}` |  |
+| service.enabled | bool | `true` | service is a map that specifies the configuration for the Service resource that is created by the chart. |
+| service.port | int | `80` | The Service type, as defined in Kubernetes. Defaults to ClusterIP. |
+| service.type | string | `"ClusterIP"` | Specifies whether a service account should be created.         |
+| serviceAccount.annotations | object | `{}` | Specifies whether a service account should be created |
+| serviceAccount.enabled | bool | `true` |  |
+| serviceAccount.name | string | `""` | Annotations to add to the service account |
+| tolerations | list | `[]` |  |
 
-
----
-_Documentation generated by [Frigate](https://frigate.readthedocs.io)._
-
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
