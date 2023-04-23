@@ -122,6 +122,34 @@ tolerations: []
 affinity: {} 
   # -- affinity specify restrictions on what node this pod should be scheduled on.
 
+cronJob: 
+  # -- Determines if the `cronJob` resource should be deployed as part of the helm release.
+  enabled: false
+  # -- Cron job schedule.
+  schedule: ""
+  # -- Cron Job startingDeadlineSeconds
+  startingDeadlineSeconds: 3600
+  # -- CronJob's concurrencyPolicy
+  concurrencyPolicy: Forbid
+  # -- ConnJob's failed history limit
+  failedJobsHistoryLimit: 3
+  # -- CPU/Memory resource requests/limits for CronJob
+  resources: {}
+  image:
+    # -- Cron Job's image repository
+    repository: nginx
+    # -- Cron Job's image pullPolicy
+    pullPolicy: IfNotPresent
+    # -- Cron Job's image tag
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "1.16.0" 
+  secret:
+    # -- Turn on and off secrets for CronJob resource.
+    enabled: false
+  configmap:
+    # -- Turn on and off configmap for CronJob resource.
+    enabled: false
+
 metrics:
   # -- Whether or not metrics should be created, if false the metrics will not be created
   enabled: true   

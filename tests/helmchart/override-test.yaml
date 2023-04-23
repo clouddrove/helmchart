@@ -88,3 +88,19 @@ metrics:
   portName: "prometheus" 
   port: 3001     
   targetPort: 3001
+
+cronJob: 
+  enabled: false
+  schedule: "* * * * *"
+  failedJobsHistoryLimit: 3
+  resources:
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "1.16.0"
+  secret:
+    # -- Turn on and off secrets for CronJob resource.
+    enabled: false
+  configmap:
+    # -- Turn on and off configmap for CronJob resource.
+    enabled: false  
