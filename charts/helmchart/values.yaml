@@ -12,7 +12,7 @@ image:
   pullPolicy: IfNotPresent
     # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.  
   tag: ""
-      # -- Overrides the image tag whose default is the chart appVersion.
+      # -- Overrides the image tag whose default is the chart version.
 
 secret:
   enabled: true 
@@ -141,7 +141,7 @@ cronJob:
     # -- Cron Job's image pullPolicy
     pullPolicy: IfNotPresent
     # -- Cron Job's image tag
-    # Overrides the image tag whose default is the chart appVersion.
+    # Overrides the image tag whose default is the chart version.
     tag: "1.16.0" 
   secret:
     # -- Turn on and off secrets for CronJob resource.

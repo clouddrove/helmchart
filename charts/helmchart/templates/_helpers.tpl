@@ -36,9 +36,6 @@ Common labels
 {{- define "helmchart.labels" -}}
 helm.sh/chart: {{ include "helmchart.chart" . }}
 {{ include "helmchart.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/created-by: "CloudDrove"
 {{- end }}
