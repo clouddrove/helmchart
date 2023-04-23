@@ -1,0 +1,21 @@
+apiVersion: v1
+entries:
+  helmchart:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2023-04-23T05:02:33.097836+02:00"
+    description: A Helm chart for Kubernetes
+    digest: d683e842e01d8664cfc5407f356323d3817892076a7cbbe8a74bb7feec3edf13
+    home: https://github.com/clouddrove/helmchart
+    keywords:
+    - helm
+    - template
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/helmchart-0.0.2.tgz
+    version: 0.0.2
+generated: "2023-04-23T05:02:33.096602+02:00"
