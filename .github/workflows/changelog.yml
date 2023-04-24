@@ -2,10 +2,9 @@ name: changelog
 permissions: write-all
 
 on:
-  workflow_run:
-    workflows: ["Release Charts"]
-    types:
-      - completed
+  push:
+    tags:
+      - "*"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 jobs:
