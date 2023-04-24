@@ -19,5 +19,5 @@ entries:
     type: application
     urls:
     - https://charts.clouddrove.com/charts/helmchart-0.0.4.tgz
-    version: 0.0.4
+    version: 0.0.5
 generated: "2023-04-23T05:22:28.817332+02:00"
