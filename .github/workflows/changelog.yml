@@ -10,3 +10,5 @@ on:
 jobs:
   call-workflow-changelog:
     uses: clouddrove/github-shared-workflows/.github/workflows/changelog.yml@master
+    with:
+      branch: 'master'
