@@ -20,4 +20,4 @@ jobs:
     # uses: clouddrove/github-shared-workflows/.github/workflows/main.yml@master
     uses: clouddrove/github-shared-workflows/.github/workflows/actions/github/changelog/main.yml@master
     with:
-      severity: 'HIGH,CRITICAL'
+      severity: 'HIGH,CRITICAL' 
