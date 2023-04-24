@@ -1,23 +1,12 @@
-name: workflow_dispatch
+name: changelog
 permissions: write-all
-  
-
-   # This is required for requesting the JWT
 
 on:
   push:
     tags:
       - "*"
-    branches: none # [ main ]
-  pull_request:
-    branches: none # [ main ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
 jobs:
-  call-workflow-A:
-    # uses: clouddrove/github-shared-workflows/.github/workflows/main.yml@master
+  call-workflow-changelog:
     uses: clouddrove/github-shared-workflows/.github/workflows/changelog.yml@master
-    with:
-      severity: 'HIGH,CRITICAL' 
