@@ -18,6 +18,6 @@ on:
 jobs:
   call-workflow-A:
     # uses: clouddrove/github-shared-workflows/.github/workflows/main.yml@master
-    uses: clouddrove/github-shared-workflows/.github/workflows/actions/github/changelog/main.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/changelog.yml@master
     with:
       severity: 'HIGH,CRITICAL' 
