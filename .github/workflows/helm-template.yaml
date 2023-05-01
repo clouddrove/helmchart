@@ -11,3 +11,8 @@ jobs:
       env:
         CHART_LOCATION: ./charts/helmchart
         CHART_VALUES: ./tests/helmchart/override-test.yaml
+    - name: helm-check-cronjob
+      uses: igabaydulin/helm-check-action@0.1.4
+      env:
+        CHART_LOCATION: ./charts/cronjob
+        CHART_VALUES: ./tests/cronjob/override-test.yaml
