@@ -1,8 +1,9 @@
+# This object requires CustomResourceDefinition (crds).
 {{- if .Values.metrics.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "helmchart.fullname" . }}
+  name: {{ include "helmchart.fullname" . }}-service-monitor
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
   annotations:
