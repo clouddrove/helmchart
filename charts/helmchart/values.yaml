@@ -6,13 +6,13 @@ replicaCount: 1
   # -- Replica count used to configure the number of replica pods that should be deployed and maintained.
 
 image:
-  # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
-  repository: nginx
+    # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
     # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.       
+  repository: nginx
+    # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   pullPolicy: IfNotPresent
-    # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.  
-  tag: ""
       # -- Overrides the image tag whose default is the chart version.
+  tag: "latest"
 
 secret:
   enabled: false 
@@ -73,10 +73,13 @@ istio:
   enabled: false
   # -- virtualService is required when using istio.
   virtualService:
-    host: test.example.com
+    hosts: 
+      - test.example.com
+      - test-2.example.com
   # -- 
   gateway:
-    name: "istio-system/istio-gateway"
+    names: 
+      - "istio-system/istio-gateway"
 
 ingress:    
     # -- ingress is a map that can be used to configure an Ingress resource for this service.
@@ -93,6 +96,7 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+
   tls: []
       # -- Sets up TLS termination on the ingress rule. Each item is a separate TLS rule that maps to one or more hosts specified in this ingress rule. This is injected directly in to the resource yaml.                       
   #  - secretName: chart-example-tls

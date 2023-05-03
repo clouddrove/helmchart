@@ -37,10 +37,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          {{- if .Values.configmap.enabled }}
           envFrom:
+          {{- if .Values.configmap.enabled }}
             - configMapRef:
                 name: {{ include "helmchart.fullname" . }}-config
+          {{- end }}
+          {{- if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ include "helmchart.fullname" . }}
           {{- end }}
           # livenessProbe:
           #   httpGet:

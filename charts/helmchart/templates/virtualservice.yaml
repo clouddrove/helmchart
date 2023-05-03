@@ -7,10 +7,13 @@ metadata:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:
   hosts:
-    - {{ required "Name of host is required" .Values.istio.virtualService.host | quote}}
+    {{- range .Values.istio.virtualService.hosts }}
+    - {{ . | quote }}
+    {{- end }} 
   gateways:
-    - {{ required "Name of Istio gateway is required" .Values.istio.gateway.name }}
-
+    {{- range .Values.istio.gateway.names }}
+    - {{ . }}
+    {{- end }} 
   http:
   - route:
     - destination:

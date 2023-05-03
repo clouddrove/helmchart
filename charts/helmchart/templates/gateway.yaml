@@ -2,13 +2,15 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ $fullName }}-istio-gateway
+  name: {{ include "helmchart.fullname" . }}-istio-gateway
 spec:
   selector:
     istio: ingress
   servers:
   - hosts:
-    - {{ .Values.istio.virtualService.host | quote }}
+    {{- range .Values.istio.virtualService.hosts }}
+    - {{ . | quote }}
+    {{- end }}
     port:
       number: {{ .Values.service.port }}
       name: http
