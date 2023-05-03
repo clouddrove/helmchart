@@ -44,7 +44,7 @@ spec:
           {{- end }}
           {{- if .Values.secret.enabled }}
             - secretRef:
-                name: {{ include "helmchart.fullname" . }}
+                name: {{ include "helmchart.fullname" . }}-secret
           {{- end }}
           # livenessProbe:
           #   httpGet:
