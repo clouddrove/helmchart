@@ -59,9 +59,9 @@ jobs:
       value: "busybox"
     envFrom:
     - secretRef:
-        name: secret_data
+        name: cron-secret
     - configMapRef:
-        name: config_data
+        name: cron-config
     schedule: "* * * * *"
     command: ["/bin/sh"]
     args:
@@ -97,3 +97,14 @@ jobs:
               values:
               - e2e-az1
               - e2e-az2
+
+
+secret:
+  enabled: true
+  secrets:
+    SECRET_1: "this is secret"
+
+configmap:
+  enabled: true
+  configs:
+    CONFIG_1: "this is config"

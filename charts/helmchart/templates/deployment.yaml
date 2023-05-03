@@ -54,8 +54,10 @@ spec:
           #   httpGet:
           #     path: /
           #     port: http
+          {{- if .Values.resources.enabled }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
