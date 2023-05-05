@@ -1,11 +1,11 @@
 # -- Visit https://crontab.guru/ to get the schedule for your cronjob
 
-#     * * * * *
-#     | | | | |___ Day of The Week
-#     | | | |_____ Month
-#     | | |_______ Day of The Month
-#     | |_________ Hour
-#     |___________ Minutes
+#                         * * * * *
+#     Minutes ____________| | | | |
+#     Hours ________________| | | |
+#     Day of The Month _______| | |
+#     Month ____________________| |
+#     Day of The Week ____________|
 
 # -- Secrets that can be used as Environment variable in `base64 encoded` form -- Optional -- secrets can be changed
 secret:
@@ -25,42 +25,28 @@ jobs:
   # -- job-name-1 is the name of your job -- Required -- name can be changed
   job-name-1:
 
-    # -- Provides privileges to running pod -- Optional -- numbers can be changed
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 2000
-
     # -- Valid Repository and tag of the image -- Required -- can be changed
     image:
       repository: ubuntu
       tag: latest
       imagePullPolicy: IfNotPresent
-
-    # -- Environment variable of running pod -- Optional -- can be changed and added
-    env:
-    - name: ECHO_VAR
-      value: "ubuntu"
-
-    # -- we can use Secrets and ConfigMap for environment variables -- Optional
-    envFrom:
-    - secretRef:
-        name: cron-secret
-    - configMapRef:
-        name: cron-config
-
-    # -- Schedule to when to create & run the job on kubernetes-cluster -- Required -- can be changed
-    schedule: "*/2 * * * *"
-
-    # -- Commands to execute inside the container created by cronjob -- Optional -- can be changed
-    command: ["/bin/bash"]
-    args:
-      - "-c"
-      - "echo $(date) - hello from ubuntu"
+              
+    # -- When using private repositories that requires login before using their image -- Optional -- can be changed
+    imagePullSecrets: []
+    # - username: clouddrove
+    #   password: changeme
+    #   email: docker@clouddrove.com
+    #   registry: docker.io
 
     # -- Service account to provide extra previleges to running pod  -- Required -- name can be changed
     serviceAccount:
       name: "ubuntu-serviceaccount"
+
+    # -- Provides privileges to running pod -- Optional -- numbers can be changed
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 2000
 
     # -- For scheduling pod on node and limiting resource consumption of pods. `limits` must always greater than or equal to `request` -- Optinal -- values can be changed
     resources:
@@ -70,6 +56,27 @@ jobs:
       requests:
         cpu: 50m
         memory: 256Mi
+
+    # -- Environment variable of running pod -- Optional -- can be changed and added
+    env:
+    # - name: ECHO_VAR
+    #   value: "ubuntu"
+
+    # -- we can use Secrets and ConfigMap for environment variables -- Optional
+    envFrom: []
+    # - secretRef:
+    #     name: cron-secret
+    # - configMapRef:
+    #     name: cron-config
+
+    # -- Commands to execute inside the container created by cronjob -- Optional -- can be changed
+    command: ["/bin/bash"]
+    args:
+      - "-c"
+      - "echo $(date) - hello from ubuntu"
+
+    # -- Schedule to when to create & run the job on kubernetes-cluster -- Required -- can be changed
+    schedule: "*/2 * * * *"
 
     # -- JobsHistoryLimit is that how many jobs can live on cluster after completion or failure  -- Optinal -- can be changed
     failedJobsHistoryLimit: 1
@@ -82,7 +89,7 @@ jobs:
     # -- To schedule cronjob on specific node having label as `type=infra` -- Optinak -- can be changed
     nodeSelector: {}
       # type: infra
-    tolerations: {}
+    tolerations: []
     # - effect: NoSchedule
     #   operator: Exists
 
@@ -97,12 +104,5 @@ jobs:
       #         values:
       #         - e2e-az1
       #         - e2e-az2
-              
-    # -- When using private repositories that requires login before using their image -- Optional -- can be changed
-    imagePullSecrets: []
-    # - username: clouddrove
-    #   password: changeme
-    #   email: docker@clouddrove.com
-    #   registry: docker.io
 
   # job-name-2: 

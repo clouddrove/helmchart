@@ -5,7 +5,9 @@
     "default": {},
     "title": "Root Schema",
     "required": [
-        "jobs"
+        "jobs",
+        "secret",
+        "configmap"
     ],
     "properties": {
         "jobs": {
@@ -13,24 +15,29 @@
             "default": {},
             "title": "The jobs Schema",
             "required": [
-                "hello-world",
-                "hello-ubuntu",
-                "hello-env-var"
+                "job-name-1"
             ],
             "properties": {
-                "hello-world": {
+                "job-name-1": {
                     "type": "object",
                     "default": {},
-                    "title": "The hello-world Schema",
+                    "title": "The job-name-1 Schema",
                     "required": [
                         "image",
+                        "imagePullSecrets",
+                        "serviceAccount",
+                        "securityContext",
+                        "resources",
+                        "envFrom",
                         "schedule",
                         "failedJobsHistoryLimit",
                         "successfulJobsHistoryLimit",
                         "concurrencyPolicy",
                         "restartPolicy",
-                        "imagePullSecrets"
-                    ],
+                        "nodeSelector",
+                        "tolerations",
+                        "affinity"        
+                    ],    
                     "properties": {
                         "image": {
                             "type": "object",
@@ -58,31 +65,6 @@
                                     "title": "The imagePullPolicy Schema"
                                 }
                             }
-                        },
-                        "schedule": {
-                            "type": "string",
-                            "default": "",
-                            "title": "The schedule Schema"
-                        },
-                        "failedJobsHistoryLimit": {
-                            "type": "integer",
-                            "default": 0,
-                            "title": "The failedJobsHistoryLimit Schema"
-                        },
-                        "successfulJobsHistoryLimit": {
-                            "type": "integer",
-                            "default": 0,
-                            "title": "The successfulJobsHistoryLimit Schema"
-                        },
-                        "concurrencyPolicy": {
-                            "type": "string",
-                            "default": "",
-                            "title": "The concurrencyPolicy Schema"
-                        },
-                        "restartPolicy": {
-                            "type": "string",
-                            "default": "",
-                            "title": "The restartPolicy Schema"
                         },
                         "imagePullSecrets": {
                             "type": "array",
@@ -115,75 +97,47 @@
                                     }
                                 }
                             }
-                        }
-                    }
-                },
-                "hello-ubuntu": {
-                    "type": "object",
-                    "default": {},
-                    "title": "The hello-ubuntu Schema",
-                    "required": [
-                        "image",
-                        "schedule",
-                        "command",
-                        "args",
-                        "resources",
-                        "failedJobsHistoryLimit",
-                        "successfulJobsHistoryLimit",
-                        "concurrencyPolicy",
-                        "restartPolicy",
-                        "imagePullSecrets"
-                    ],
-                    "properties": {
-                        "image": {
+                        },
+                        "serviceAccount": {
                             "type": "object",
                             "default": {},
-                            "title": "The image Schema",
+                            "title": "The serviceAccount Schema",
                             "required": [
-                                "repository",
-                                "tag",
-                                "imagePullPolicy"
+                                "name"
                             ],
                             "properties": {
-                                "repository": {
+                                "name": {
                                     "type": "string",
                                     "default": "",
-                                    "title": "The repository Schema"
-                                },
-                                "tag": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The tag Schema"
-                                },
-                                "imagePullPolicy": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The imagePullPolicy Schema"
+                                    "title": "The name Schema"
                                 }
                             }
                         },
-                        "schedule": {
-                            "type": "string",
-                            "default": "",
-                            "title": "The schedule Schema"
-                        },
-                        "command": {
-                            "type": "array",
-                            "default": [],
-                            "title": "The command Schema",
-                            "items": {
-                                "type": "string",
-                                "default": "",
-                                "title": "A Schema"
-                            }
-                        },
-                        "args": {
-                            "type": "array",
-                            "default": [],
-                            "title": "The args Schema",
-                            "items": {
-                                "type": "string",
-                                "title": "A Schema"
+                        "securityContext": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The securityContext Schema",
+                            "required": [
+                                "runAsUser",
+                                "runAsGroup",
+                                "fsGroup"
+                            ],
+                            "properties": {
+                                "runAsUser": {
+                                    "type": "integer",
+                                    "default": 0,
+                                    "title": "The runAsUser Schema"
+                                },
+                                "runAsGroup": {
+                                    "type": "integer",
+                                    "default": 0,
+                                    "title": "The runAsGroup Schema"
+                                },
+                                "fsGroup": {
+                                    "type": "integer",
+                                    "default": 0,
+                                    "title": "The fsGroup Schema"
+                                }
                             }
                         },
                         "resources": {
@@ -238,170 +192,7 @@
                                     }
                                 }
                             }
-                        },
-                        "failedJobsHistoryLimit": {
-                            "type": "integer",
-                            "default": 0,
-                            "title": "The failedJobsHistoryLimit Schema"
-                        },
-                        "successfulJobsHistoryLimit": {
-                            "type": "integer",
-                            "default": 0,
-                            "title": "The successfulJobsHistoryLimit Schema"
-                        },
-                        "concurrencyPolicy": {
-                            "type": "string",
-                            "default": "",
-                            "title": "The concurrencyPolicy Schema"
-                        },
-                        "restartPolicy": {
-                            "type": "string",
-                            "default": "",
-                            "title": "The restartPolicy Schema"
-                        },
-                        "imagePullSecrets": {
-                            "type": "array",
-                            "default": [],
-                            "title": "The imagePullSecrets Schema",
-                            "items": {
-                                "type": "object",
-                                "default": {},
-                                "title": "A Schema",
-                                "required": [
-                                    "username",
-                                    "password",
-                                    "email",
-                                    "registry"
-                                ],
-                                "properties": {
-                                    "username": {
-                                        "type": "string",
-                                        "default": "",
-                                        "title": "The username Schema"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "default": "",
-                                        "title": "The password Schema"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "default": "",
-                                        "title": "The email Schema"
-                                    },
-                                    "registry": {
-                                        "type": "string",
-                                        "default": "",
-                                        "title": "The registry Schema"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "hello-env-var": {
-                    "type": "object",
-                    "default": {},
-                    "title": "The hello-env-var Schema",
-                    "required": [
-                        "securityContext",
-                        "image",
-                        "env",
-                        "envFrom",
-                        "schedule",
-                        "command",
-                        "args",
-                        "serviceAccount",
-                        "resources",
-                        "failedJobsHistoryLimit",
-                        "successfulJobsHistoryLimit",
-                        "concurrencyPolicy",
-                        "restartPolicy",
-                        "nodeSelector",
-                        "tolerations",
-                        "affinity"
-                    ],
-                    "properties": {
-                        "securityContext": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The securityContext Schema",
-                            "required": [
-                                "runAsUser",
-                                "runAsGroup",
-                                "fsGroup"
-                            ],
-                            "properties": {
-                                "runAsUser": {
-                                    "type": "integer",
-                                    "default": 0,
-                                    "title": "The runAsUser Schema"
-                                },
-                                "runAsGroup": {
-                                    "type": "integer",
-                                    "default": 0,
-                                    "title": "The runAsGroup Schema"
-                                },
-                                "fsGroup": {
-                                    "type": "integer",
-                                    "default": 0,
-                                    "title": "The fsGroup Schema"
-                                }
-                            }
-                        },
-                        "image": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The image Schema",
-                            "required": [
-                                "repository",
-                                "tag",
-                                "imagePullPolicy"
-                            ],
-                            "properties": {
-                                "repository": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The repository Schema"
-                                },
-                                "tag": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The tag Schema"
-                                },
-                                "imagePullPolicy": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The imagePullPolicy Schema"
-                                }
-                            }
-                        },
-                        "env": {
-                            "type": "array",
-                            "default": [],
-                            "title": "The env Schema",
-                            "items": {
-                                "type": "object",
-                                "default": {},
-                                "title": "A Schema",
-                                "required": [
-                                    "name",
-                                    "value"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "default": "",
-                                        "title": "The name Schema"
-                                    },
-                                    "value": {
-                                        "type": "string",
-                                        "default": "",
-                                        "title": "The value Schema"
-                                    }
-                                }
-                            }
-                        },
+                        },       
                         "envFrom": {
                             "type": "array",
                             "default": [],
@@ -444,99 +235,12 @@
                                     }
                                 }
                             }
-                        },
+                        },          
                         "schedule": {
                             "type": "string",
                             "default": "",
                             "title": "The schedule Schema"
-                        },
-                        "command": {
-                            "type": "array",
-                            "default": [],
-                            "title": "The command Schema",
-                            "items": {
-                                "type": "string",
-                                "default": "",
-                                "title": "A Schema"
-                            }
-                        },
-                        "args": {
-                            "type": "array",
-                            "default": [],
-                            "title": "The args Schema",
-                            "items": {
-                                "type": "string",
-                                "title": "A Schema"
-                            }
-                        },
-                        "serviceAccount": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The serviceAccount Schema",
-                            "required": [
-                                "name"
-                            ],
-                            "properties": {
-                                "name": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The name Schema"
-                                }
-                            }
-                        },
-                        "resources": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The resources Schema",
-                            "required": [
-                                "limits",
-                                "requests"
-                            ],
-                            "properties": {
-                                "limits": {
-                                    "type": "object",
-                                    "default": {},
-                                    "title": "The limits Schema",
-                                    "required": [
-                                        "cpu",
-                                        "memory"
-                                    ],
-                                    "properties": {
-                                        "cpu": {
-                                            "type": "string",
-                                            "default": "",
-                                            "title": "The cpu Schema"
-                                        },
-                                        "memory": {
-                                            "type": "string",
-                                            "default": "",
-                                            "title": "The memory Schema"
-                                        }
-                                    }
-                                },
-                                "requests": {
-                                    "type": "object",
-                                    "default": {},
-                                    "title": "The requests Schema",
-                                    "required": [
-                                        "cpu",
-                                        "memory"
-                                    ],
-                                    "properties": {
-                                        "cpu": {
-                                            "type": "string",
-                                            "default": "",
-                                            "title": "The cpu Schema"
-                                        },
-                                        "memory": {
-                                            "type": "string",
-                                            "default": "",
-                                            "title": "The memory Schema"
-                                        }
-                                    }
-                                }
-                            }
-                        },
+                        },   
                         "failedJobsHistoryLimit": {
                             "type": "integer",
                             "default": 0,
@@ -546,24 +250,21 @@
                             "type": "integer",
                             "default": 0,
                             "title": "The successfulJobsHistoryLimit Schema"
-                        },
+                        },    
                         "concurrencyPolicy": {
                             "type": "string",
                             "default": "",
                             "title": "The concurrencyPolicy Schema"
-                        },
+                        },     
                         "restartPolicy": {
                             "type": "string",
                             "default": "",
                             "title": "The restartPolicy Schema"
-                        },
+                        },      
                         "nodeSelector": {
                             "type": "object",
                             "default": {},
                             "title": "The nodeSelector Schema",
-                            "required": [
-                                "type"
-                            ],
                             "properties": {
                                 "type": {
                                     "type": "string",
@@ -580,10 +281,6 @@
                                 "type": "object",
                                 "default": {},
                                 "title": "A Schema",
-                                "required": [
-                                    "effect",
-                                    "operator"
-                                ],
                                 "properties": {
                                     "effect": {
                                         "type": "string",
@@ -602,9 +299,6 @@
                             "type": "object",
                             "default": {},
                             "title": "The affinity Schema",
-                            "required": [
-                                "nodeAffinity"
-                            ],
                             "properties": {
                                 "nodeAffinity": {
                                     "type": "object",
@@ -678,10 +372,10 @@
                                     }
                                 }
                             }
-                        }
+                        }    
                     }
                 }
             }
         }
     }
-}
+}                                                                                                                                                        

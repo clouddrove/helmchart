@@ -30,7 +30,7 @@
     "properties": {
       "replicaCount": {
           "type": "integer",
-          "default": 0,
+          "default": 1,
           "title": "The replicaCount Schema",
           "examples": [
               1
