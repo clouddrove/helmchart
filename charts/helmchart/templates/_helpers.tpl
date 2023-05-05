@@ -38,6 +38,7 @@ helm.sh/chart: {{ include "helmchart.chart" . }}
 {{ include "helmchart.selectorLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/created-by: "CloudDrove"
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 
 {{/*
@@ -46,13 +47,14 @@ Selector labels
 {{- define "helmchart.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "helmchart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
 {{- define "helmchart.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
+{{- if .Values.serviceAccount.enabled }}
 {{- default (include "helmchart.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}

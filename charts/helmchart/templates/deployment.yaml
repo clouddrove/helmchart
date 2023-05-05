@@ -37,10 +37,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          {{- if .Values.configmap.enabled }}
           envFrom:
+          {{- if .Values.configmap.enabled }}
             - configMapRef:
                 name: {{ include "helmchart.fullname" . }}-config
+          {{- end }}
+          {{- if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ include "helmchart.fullname" . }}-secret
           {{- end }}
           # livenessProbe:
           #   httpGet:
@@ -50,8 +54,10 @@ spec:
           #   httpGet:
           #     path: /
           #     port: http
+          {{- if .Values.resources.enabled }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
