@@ -1,0 +1,44 @@
+suite: Test cronjob
+values:
+  - ../values.yaml
+templates:
+  - cronjob.yaml
+chart:
+  version: 0.0.6
+  appVersion: v2
+
+tests:
+  - it: should render nothing if not enabled
+    asserts:
+      - hasDocuments:
+          count: 1 
+  - it: cronjob will present
+    template: templates/cronjob.yaml
+    documentIndex: 0
+    asserts:
+      - isAPIVersion:
+          of: batch/v1    
+      - isKind:
+          of: CronJob
+      - isAPIVersion:
+          of: batch/v1
+      - isNotNull:
+          path: spec
+      - isNotNull:
+          path: spec.schedule
+      - isNotNull:
+          path: spec.startingDeadlineSeconds
+      - isNotNull:
+          path: spec.concurrencyPolicy
+      - isNotNull:
+          path: spec.failedJobsHistoryLimit
+      - isNotNull:
+          path: spec.jobTemplate
+      - isNotNull:
+          path: spec.jobTemplate.spec
+      - isNotNull:
+          path: spec.jobTemplate.spec.template
+      - isNotNull:
+          path: spec.jobTemplate.spec.template.metadata.name
+      - isNotNull:
+          path: spec.jobTemplate.spec.template.metadata.labels                                                                  

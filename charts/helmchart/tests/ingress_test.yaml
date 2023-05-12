@@ -1,0 +1,32 @@
+suite: Test ingress
+values:
+  - ../values.yaml
+templates:
+  - templates/ingress.yaml
+tests:
+
+  - it: should render Ingress right if enabled
+    set:
+      ingress.enabled: true
+      service.port: 80
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: RELEASE-NAME-helmchart
+                port:
+                  number: 80
+      - isNotNull:
+          path: spec.tls
+  - it: should render nothing if not enabled
+    asserts:
+      - hasDocuments:
+          count: 1                                                                         

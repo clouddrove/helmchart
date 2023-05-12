@@ -1,0 +1,17 @@
+suite: Test HPA
+values:
+  - ../values.yaml
+templates:
+  - templates/hpa.yaml
+tests:
+  - it: should pass all kinds of assertion
+    set:
+      autoscaling.enabled: true
+      autoscaling.minReplicas: 1
+      autoscaling.maxReplicas: 100
+      autoscaling.targetCPUUtilizationPercentage: 80      
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: HorizontalPodAutoscaler
