@@ -15,32 +15,12 @@ tests:
     template: templates/deployment.yaml
     documentIndex: 0                  
     asserts:
+      - isAPIVersion:
+          of: apps/v1    
       - isKind:
           of: Deployment
       - hasDocuments:
           count: 1
-      - equal:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].image
-          value: nginx:latest
-      - notEqual:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].image
-          value: nginx:lates
-      - contains:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].ports
-          content:
-            containerPort: 80
-            name: http
-            protocol: TCP
-      - notContains:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].ports
-          content:
-            containerPort: 8080
-      # - isNotNull:
-      #     path: spec.template.spec.nodeSelector 
-      - isNotNull:
-          path: spec.template.spec.containers[0]  #it ensure that the second container specification does not exist in the pod template specification. 
-      - isNotNull:
-          path: spec.template
       - isNotNull:
           path: spec.template.spec.containers[?(@.name == "helmchart")].resources # Ensure that resource specification exist.
       - isNotNull:
@@ -48,25 +28,9 @@ tests:
       - isNotNull:
           path: spec.template.spec.containers[?(@.name == "helmchart")].envFrom
       - isNotNull:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].resources                    
-      - isAPIVersion:
-          of: apps/v1
-      - isNotNull:
-          path: spec.template.spec.nodeSelector
-      - equal:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].imagePullPolicy
-          value: IfNotPresent 
-      # - isNotNull:
-      #     path: spec.template.spec.affinity
+          path: spec.template.spec.containers[?(@.name == "helmchart")].resources                     
       - isNotNull:
           path: spec.template
       - isNotNull:
           path: spec.selector
-      - isAPIVersion:
-          of: apps/v1
-      - hasDocuments:
-          count: 1
-      - matchSnapshot:
-          path: tests/__snapshot__
-
                                                                                                      

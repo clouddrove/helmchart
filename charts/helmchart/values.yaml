@@ -8,7 +8,7 @@ replicaCount: 1
 image:
     # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
     # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.       
-  repository: nginx
+  repository: 4145678i87655.dkr.ecr.us-east-1.amazonaws.comoutline
     # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   pullPolicy: IfNotPresent
       # -- Overrides the image tag whose default is the chart version.
@@ -128,7 +128,8 @@ autoscaling:
 poddisruptionbudget:
   enabled: false
 
-nodeSelector: {}
+nodeSelector:
+  eks : test
     # -- nodeSelector specify restrictions on what node this pod should be scheduled on.
 
 tolerations: []

@@ -2,6 +2,7 @@ apiVersion: v2
 name: cronjob
 description: A chart for cron jobs
 version: 0.0.1
+appVersion: 0.0.1
 keywords:
   - cronjob
   - helm

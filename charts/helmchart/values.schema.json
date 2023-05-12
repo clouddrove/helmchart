@@ -45,7 +45,7 @@
         "properties": {
           "repository": {
             "type": "string",
-            "pattern": "^[a-zA-z0-9._-]+(\/)*[a-z0-9]+"
+            "pattern": "^[a-zA-z0-9._-]+(\/)*[a-z0-9]+[^:]*$"
           },
           "pullPolicy": {
             "type": "string",
