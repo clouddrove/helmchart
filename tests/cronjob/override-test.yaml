@@ -16,12 +16,18 @@ jobs:
       - username: fred
         password: password
         registry: docker.io
+    serviceAccount:
+      enabled: true
+      name: "ubuntu-serviceaccount-test"        
   # second cron
   hello-ubuntu:
     image:
       repository: ubuntu
       tag: latest
       imagePullPolicy: Always
+    serviceAccount:
+      enabled: true
+      name: "ubuntu-serviceaccount-test"      
     schedule: "*/5 * * * *"
     command: ["/bin/bash"]
     args:
@@ -53,6 +59,9 @@ jobs:
       repository: busybox
       tag: latest
       imagePullPolicy: Always
+    serviceAccount:
+      enabled: true
+      name: "ubuntu-serviceaccount-test"      
     # optional env vars
     env:
       - name: ECHO_VAR
@@ -69,8 +78,6 @@ jobs:
       - "echo $(date) - hello from $ECHO_VAR"
       - "echo $(date) - loaded secret $secret_data"
       - "echo $(date) - loaded config $config_data"
-    serviceAccount:
-      name: "busybox-serviceaccount"
     resources:
       limits:
         cpu: 50m

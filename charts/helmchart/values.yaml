@@ -51,7 +51,7 @@ podSecurityContext: {}
   # fsGroup: 2000
 
 securityContext: {}
-      # -- securityContext is a map that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions.     
+      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions.     
   # capabilities:
   #   drop:
   #   - ALL
@@ -60,11 +60,11 @@ securityContext: {}
   # runAsUser: 1000
 
 service: 
-    # -- service is a map that specifies the configuration for the Service resource that is created by the chart.
+    # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
   enabled: true
-    # -- Specifies whether a service account should be created.        
+    # -- Specifies whether a service should be created.        
   type: ClusterIP 
-    # -- The Service type, as defined in Kubernetes. Defaults to ClusterIP.
+    # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
   port: 80   
     # -- A map that specifies the port bindings of the service against the Pods in the Deployment.
 

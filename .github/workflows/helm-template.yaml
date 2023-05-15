@@ -16,3 +16,9 @@ jobs:
       env:
         CHART_LOCATION: ./charts/cronjob
         CHART_VALUES: ./tests/cronjob/override-test.yaml
+
+    - name: Run helm unittest
+      run: |
+        helm plugin install https://github.com/quintush/helm-unittest
+        helm unittest ./charts/helmchart
+

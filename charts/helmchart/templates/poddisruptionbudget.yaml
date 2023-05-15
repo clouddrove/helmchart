@@ -1,6 +1,6 @@
 {{- if .Values.poddisruptionbudget.enabled }}
 apiVersion: policy/v1
-kind: poddisruptionbudget
+kind: PodDisruptionBudget
 metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ include "helmchart.fullname" . }}
