@@ -3,7 +3,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - master
+      - feature/unittest
 
 jobs:
   release:
@@ -14,12 +14,28 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Build and Package Helm Chart
+        run: |
+          helm package ./charts/helmchart
+          helm repo index --url https://charts.clouddrove.com/charts/ ./charts/helmchart        
+
       - name: Configure Git
         run: |
           git config user.name "clouddrove-ci"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+      - name: Install Helm
+        uses: azure/setup-helm@v3          
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: helmchart ${{ github.run_number }}
+          body: |
+            helmchart ${{ github.run_number }}
+          draft: false
+          prerelease: false

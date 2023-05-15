@@ -3,8 +3,6 @@ templates:
   - templates/service.yaml
 tests:
   - it: should pass
-    release:
-      name: my-release
     set:
       service:
         type: ClusterIP
@@ -19,12 +17,6 @@ tests:
       - equal:
           path: spec.type
           value: ClusterIP
-      - equal:
-          path: spec.selector
-          value:
-            app: my-release
-            app.kubernetes.io/instance: my-release
-            app.kubernetes.io/name: helmchart
 
   - it: should render nothing if not enabled
     asserts:

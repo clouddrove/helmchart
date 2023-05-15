@@ -4,14 +4,19 @@ values:
 templates:
   - templates/hpa.yaml
 tests:
-  - it: should pass all kinds of assertion
-    set:
-      autoscaling.enabled: true
-      autoscaling.minReplicas: 1
-      autoscaling.maxReplicas: 100
-      autoscaling.targetCPUUtilizationPercentage: 80      
+  - it: should pass all kinds of assertion    
     asserts:
       - hasDocuments:
           count: 1
+      - isAPIVersion:
+          of: autoscaling/v1         
       - isKind:
           of: HorizontalPodAutoscaler
+      - isNotNull:
+          path: spec
+      - isNotNull:
+          path: spec.minReplicas
+      - isNotNull:
+          path: spec.maxReplicas
+      - isNotNull:
+          path: spec.metrics                              

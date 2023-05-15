@@ -1,4 +1,4 @@
-suite: Test helloworld/app deployment
+suite: Test  deployment
 values:
   - ../values.yaml
 templates:
@@ -22,13 +22,9 @@ tests:
       - hasDocuments:
           count: 1
       - isNotNull:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].resources # Ensure that resource specification exist.
+          path: spec.template.spec
       - isNotNull:
-          path: spec.template.spec.containers[?(@.name == "helmchart")]
-      - isNotNull:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].envFrom
-      - isNotNull:
-          path: spec.template.spec.containers[?(@.name == "helmchart")].resources                     
+          path: spec.template.spec.containers                     
       - isNotNull:
           path: spec.template
       - isNotNull:

@@ -41,7 +41,7 @@ jobs:
     # -- Service account to provide extra previleges to running pod  -- Required -- name can be changed
     serviceAccount:
       enabled: true
-      name: "ubuntu-serviceaccount"
+      name: "ubuntu-serviceaccount-test"
 
     # -- Provides privileges to running pod -- Optional -- numbers can be changed
     securityContext:

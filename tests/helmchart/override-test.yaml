@@ -20,9 +20,9 @@ nameOverride: "testing"
 fullnameOverride: "testing"       
 
 serviceAccount:
-  enabled: false          
+  enabled: true          
   annotations: {}       
-  name: ""              
+  name: "test-ubuntu"              
 
 podAnnotations: {}      
 
@@ -38,12 +38,12 @@ securityContext: {}
   # runAsUser: 1000
 
 service:              
-  enabled: false        
+  enabled: true        
   type: ClusterIP     
   port: 80            
 
 ingress:              
-  enabled: false      
+  enabled: true      
   className: ""
   annotations: {}     
     # kubernetes.io/ingress.class: nginx
@@ -90,7 +90,7 @@ metrics:
   targetPort: 3001
 
 cronJob: 
-  enabled: false
+  enabled: true
   schedule: "* * * * *"
   failedJobsHistoryLimit: 3
   resources:
@@ -98,6 +98,10 @@ cronJob:
     repository: nginx
     pullPolicy: IfNotPresent
     tag: "1.16.0"
+  serviceAccount:
+    enabled: true          
+    annotations: {}       
+    name: "test-cronubuntu"    
   secret:
     # -- Turn on and off secrets for CronJob resource.
     enabled: false

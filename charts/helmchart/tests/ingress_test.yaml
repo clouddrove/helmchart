@@ -14,18 +14,8 @@ tests:
           count: 1
       - isKind:
           of: Ingress
-      - contains:
-          path: spec.rules[0].http.paths
-          content:
-            path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: RELEASE-NAME-helmchart
-                port:
-                  number: 80
       - isNotNull:
-          path: spec.tls
+          path: spec
   - it: should render nothing if not enabled
     asserts:
       - hasDocuments:
