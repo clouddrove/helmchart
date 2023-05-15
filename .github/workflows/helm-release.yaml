@@ -22,11 +22,11 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.8.1
+          version: latest
 
       - name: Helm chart packaging
         run: |
-          VERSION=${{github.ref_name}}
+          VERSION=0.0.7
           helm package charts/helmchart --app-version=${VERSION:1} --version=${VERSION:1}
 
       - name: Run chart-releaser
