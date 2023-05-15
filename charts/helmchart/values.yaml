@@ -62,7 +62,7 @@ securityContext: {}
 service: 
     # -- service is a map that specifies the configuration for the Service resource that is created by the chart.
   enabled: true
-    # -- Specifies whether a service account should be created.        
+    # -- Specifies whether a service should be created.        
   type: ClusterIP 
     # -- The Service type, as defined in Kubernetes. Defaults to ClusterIP.
   port: 80   

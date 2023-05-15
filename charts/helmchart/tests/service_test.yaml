@@ -1,6 +1,9 @@
 suite: test service
 templates:
   - templates/service.yaml
+chart:
+  version: 0.0.6
+  appVersion: v2  
 tests:
   - it: should pass
     set:
@@ -20,6 +23,16 @@ tests:
 
   - it: should render nothing if not enabled
     asserts:
+      - isAPIVersion:
+          of: v1
+      - isKind:
+          of: Service    
       - hasDocuments:
-          count: 1             
+          count: 1
+      - isNotNull:
+         path: spec.type
+      - isNotNull:
+         path: spec.ports         
+      - isNotNull:
+         path: spec.selector     
                     
