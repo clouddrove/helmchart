@@ -33,7 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
+          tag_name: helm-${{ github.run_number }}
           release_name: helmchart ${{ github.run_number }}
           body: |
             helmchart ${{ github.run_number }}
