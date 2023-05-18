@@ -36,7 +36,7 @@ pdbMinAvailable: 30%
   # -- minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
 
 serviceAccount:
-  enabled: true  
+  enabled: false  
     # -- Specifies whether a service account should be created
   annotations: {}       
     # -- Annotations to add to the service account
@@ -61,7 +61,7 @@ securityContext: {}
 
 service: 
     # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
-  enabled: true
+  enabled: false
     # -- Specifies whether a service should be created.        
   type: ClusterIP 
     # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
