@@ -86,3 +86,15 @@ Return the appropriate apiVersion for Storage Class.
 {{- print "storage.k8s.io/v1beta1" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "helmchart.namespace" -}}
+{{- if .Values.namespaceOverride }}
+{{- .Values.namespaceOverride }}
+{{- else }}
+{{- .Release.Namespace }}
+{{- end }}
+{{- end }}
+
