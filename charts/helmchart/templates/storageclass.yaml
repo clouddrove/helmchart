@@ -1,25 +1,24 @@
 {{- if .Values.storageClass.create }}
-{{- if .Values.storageClass.aws }}
 apiVersion: {{ include "helmchart.storageClass.apiVersion" . }}
 kind: StorageClass
 metadata:
-  name: {{ .Values.storageClass.storageClassName }}
-provisioner: efs.csi.aws.com 
+  name: {{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}
+provisioner: {{ .Values.storageClass.provisioner }}
+{{- if .Values.storageClass.aws }}
 parameters:
   provisioningMode: efs-ap
   fileSystemId: {{ .Values.storageClass.fileSystemId }}
   directoryPerms: "700"
-{{- end }}
-{{ if .Values.storageClass.azure }}
-apiVersion: {{ include "helmchart.storageClass.apiVersion" . }}
-kind: StorageClass
-metadata:
-  name: {{ .Values.storageClass.storageClassName }}
-provisioner: file.csi.azure.com
+{{- else if .Values.storageClass.azure }}
 parameters:
   skuName: Premium_LRS
-reclaimPolicy: Retain
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
+{{- else }}
+parameters:
+  type: standard
 {{- end }}
+reclaimPolicy: {{ default "Retain" .Values.storageClass.persistence.persistentVolumeReclaimPolicy }}
+allowVolumeExpansion: {{ .Values.storageClass.allowVolumeExpansion }}
+mountOptions:
+  - debug
+volumeBindingMode: {{ .Values.storageClass.volumeBindingMode }}
 {{- end }}

@@ -1,7 +1,7 @@
 {{- if .Values.storageClass.persistence.enabled -}}
 {{- if not .Values.storageClass.existingClaim -}}
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolume
 metadata:
   name: {{ template "helmchart.fullname" . }}
   labels:
@@ -10,15 +10,17 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  accessModes:
-    - {{ .Values.storageClass.persistence.accessMode | quote }}
-  resources:
-    requests:
-      storage: {{ .Values.storageClass.persistence.size | quote }}
 {{- if not .Values.storageClass.create }}
   storageClassName: ""
 {{- else }}
   storageClassName: "{{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}"
 {{- end }}
+  capacity:
+    storage: {{ .Values.storageClass.persistence.size | quote }}
+  persistentVolumeReclaimPolicy: {{ default "Retain" .Values.storageClass.persistence.persistentVolumeReclaimPolicy }}
+  accessModes:
+    - {{ .Values.storageClass.persistence.accessMode | quote }}
+  hostPath:
+    path: {{ default ("/mnt/data") .Values.volume.hostPath }}
 {{- end -}}
 {{- end -}}

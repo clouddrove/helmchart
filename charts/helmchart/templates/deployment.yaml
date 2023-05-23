@@ -60,7 +60,7 @@ spec:
           {{- end }}
           {{- if .Values.volume.enabled }}
           volumeMounts:
-            - mountPath: "/usr/share/nginx/html"
+            - mountPath: {{ default ("/pvc") .Values.volume.mountPath }}
               name: {{ template "helmchart.fullname" . }}
           {{- end }}
       {{- with .Values.nodeSelector }}
