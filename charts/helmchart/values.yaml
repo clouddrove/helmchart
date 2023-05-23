@@ -103,15 +103,15 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-  # -- We usually recommend not to specify default resources and to leave this as a conscious. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.    
-  # enabled: false
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources: 
+  # -- Requests and Limits to be specified for each pod.
+  enabled: false
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
 
 autoscaling:      
   enabled: false 
