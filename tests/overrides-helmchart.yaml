@@ -15,15 +15,15 @@ image:
   tag: "latest"
 
 secret:
-  enabled: false 
+  enabled: true 
     # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
   secrets:
-    KEY: "value"
+    SEC_KEY: "sec-value"
 
 configmap:
-  enabled: false
+  enabled: true
   configs:
-    KEY: "value"
+    CONF_KEY: "conf-value"
 
 imagePullSecrets: [] 
   # -- imagePullSecrets lists the Secret resources that should be used for accessing private registries.
@@ -36,7 +36,7 @@ pdbMinAvailable: 30%
   # -- minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
 
 serviceAccount:
-  enabled: false  
+  enabled: true  
     # -- Specifies whether a service account should be created
   annotations: {}       
     # -- Annotations to add to the service account
@@ -61,9 +61,9 @@ securityContext: {}
 
 service: 
     # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
-  enabled: false
+  enabled: true
     # -- Specifies whether a service should be created.        
-  type: ClusterIP 
+  type: NodePort 
     # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
   port: 80   
     # -- A map that specifies the port bindings of the service against the Pods in the Deployment.
@@ -83,11 +83,18 @@ istio:
 
 ingress:    
     # -- ingress is a map that can be used to configure an Ingress resource for this service.
-  enabled: false 
+  enabled: true 
     # -- Specifies whether a ingress should be created
   className: ""
-  annotations: {}
-        # -- Annotations that should be added to the Service resource. This is injected directly in to the resource yaml.
+  annotations: 
+    # -- Annotations that should be added to the Service resource. This is injected directly in to the resource yaml.
+    # -- Sample annotations for AWS ALB
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    
+    # -- Sample annotations for Nginx
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:                        
@@ -105,7 +112,7 @@ ingress:
 
 resources: 
   # -- Requests and Limits to be specified for each pod.
-  enabled: false
+  enabled: true
   limits:
     cpu: 100m
     memory: 128Mi
@@ -114,11 +121,11 @@ resources:
     memory: 128Mi
 
 autoscaling:      
-  enabled: false 
+  enabled: true 
     # -- Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created
   minReplicas: 1
     # -- The minimum amount of replicas allowed
-  maxReplicas: 100
+  maxReplicas: 10
     # -- The maximum amount of replicas allowed
   targetCPUUtilizationPercentage: 80
       # -- The target average CPU utilization to be used with the metrics
@@ -176,11 +183,11 @@ metrics:
 
 volume:
   # -- Volume mounted to pods either as default or in the form of PVC
-  enabled: false
+  enabled: true
   # -- Path inside container where pvc will be mounted. default is set to "/app"
-  mountPath: ""
+  mountPath: "/usr/share/nginx/html"
   # -- Path inside node which will be used as pvc. default is set to "/mnt/data"
-  hostPath: ""
+  hostPath: "/var/www/html"
 
 storageClass:
   # -- Whether to create a custom Storage Class, Default is gp2
@@ -206,16 +213,16 @@ storageClass:
   provisioner: ""
 
   # -- Allow volume expansion
-  allowVolumeExpansion: false
+  allowVolumeExpansion: true
 
   # -- Volume binding modes, other are `WaitForFirstConsumer`
   volumeBindingMode: Immediate
 
   # -- Enable persistent volume
   persistence:
-    enabled: false
+    enabled: true
     # -- Mode of access this persistent volume, other modes are `ReadWriteMany`, `ReadOnlyMany`
     accessMode: ReadWriteOnce
     size: 2Gi
     # -- Reclaim Policy for Persistent Volume. Default is set to `Retain`. Other valid values are `Delete`, `Recycle`
-    persistentVolumeReclaimPolicy: ""
+    persistentVolumeReclaimPolicy: "Delete"
