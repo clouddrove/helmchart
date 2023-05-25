@@ -1,0 +1,109 @@
+# -- Visit https://crontab.guru/ to get the schedule for your cronjob
+
+#                         * * * * *
+#     Minutes ____________| | | | |
+#     Hours ________________| | | |
+#     Day of The Month _______| | |
+#     Month ____________________| |
+#     Day of The Week ____________|
+
+# -- Secrets that can be used as Environment variable in `base64 encoded` form -- Optional -- secrets can be changed
+secret:
+  enabled: true
+  secrets:
+    SECRET_1: "this is secret"
+
+# -- ConfigMap that can be used as Environment variable in Plaintext -- Optional -- configs can be changed
+configmap:
+  enabled: true
+  configs:
+    CONFIG_1: "this is config"
+
+jobs:
+  # -- Modify below `job-name-1` to fulfill your requirement
+  # -- You can use multiple job in same values.yaml with different names of each job.
+  # -- job-name-1 is the name of your job -- Required -- name can be changed
+  job-name-1:
+
+    # -- Valid Repository and tag of the image -- Required -- can be changed
+    image:
+      repository: ubuntu
+      tag: latest
+      imagePullPolicy: IfNotPresent
+              
+    # -- When using private repositories that requires login before using their image -- Optional -- can be changed
+    imagePullSecrets: []
+    # - username: clouddrove
+    #   password: changeme
+    #   email: docker@clouddrove.com
+    #   registry: docker.io
+
+    # -- Service account to provide extra previleges to running pod  -- Required -- name can be changed
+    serviceAccount:
+      enabled: true
+      name: "ubuntu-serviceaccount-test"
+
+    # -- Provides privileges to running pod -- Optional -- numbers can be changed
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 2000
+
+    # -- For scheduling pod on node and limiting resource consumption of pods. `limits` must always greater than or equal to `request` -- Optinal -- values can be changed
+    resources:
+      limits:
+        cpu: 50m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 256Mi
+
+    # -- Environment variable of running pod -- Optional -- can be changed and added
+    env:
+    - name: ECHO_VAR
+      value: "ubuntu"
+
+    # -- we can use Secrets and ConfigMap for environment variables -- Optional
+    envFrom: 
+    - secretRef:
+        name: cron-secret
+    - configMapRef:
+        name: cron-config
+
+    # -- Commands to execute inside the container created by cronjob -- Optional -- can be changed
+    command: ["/bin/bash"]
+    args:
+      - "-c"
+      - "echo $(date) - hello from ubuntu"
+
+    # -- Schedule to when to create & run the job on kubernetes-cluster -- Required -- can be changed
+    schedule: "*/2 * * * *"
+
+    # -- JobsHistoryLimit is that how many jobs can live on cluster after completion or failure  -- Optinal -- can be changed
+    failedJobsHistoryLimit: 1
+    successfulJobsHistoryLimit: 3
+
+    # -- concurrencyPolicy is used to show dependency of one job to another. Other values are `Forbid`,`Replace` -- Optional -- can be changed
+    concurrencyPolicy: Allow
+    restartPolicy: OnFailure
+
+    # -- To schedule cronjob on specific node having label as `type=infra` -- Optinak -- can be changed
+    nodeSelector: {}
+      # type: infra
+    tolerations: []
+    # - effect: NoSchedule
+    #   operator: Exists
+
+    # --  It is similar to nodeSelector but provides more granular control over the selection process. -- Optional -- can be changed
+    affinity: {}
+      # nodeAffinity:
+      #   requiredDuringSchedulingIgnoredDuringExecution:
+      #     nodeSelectorTerms:
+      #     - matchExpressions:
+      #       - key: kubernetes.io/e2e-az-name
+      #         operator: In
+      #         values:
+      #         - e2e-az1
+      #         - e2e-az2
+
+  # job-name-2: 
