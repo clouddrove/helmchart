@@ -94,7 +94,7 @@ helmchart
    - using `--debug` flag to get more information of helm installation.
    - Check the STATUS of helmchart `helm list` it should be deployed
    ```bash
-    $ helm list                 
+    $ helm list --namespace=clouddrove                
     NAME      	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART          	APP VERSION
     clouddrove	clouddrove  	1       	2023-05-23 20:28:39.571788019 +0530 IST	deployed	helmchart-0.0.6	0.0.6  
    ```
