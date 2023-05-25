@@ -3,10 +3,15 @@ name: Release Charts
 on:
   push:
     branches:
-      - feat/helm-releaser
+      - master
 
 jobs:
   release:
+    permissions:
+      contents: write # to push chart release and create a release (helm/chart-releaser-action)
+      packages: write # needed for ghcr access
+      id-token: write # needed for keyless signing
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,8 +31,5 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
-        with:
-          charts_dir: ./charts/helmchart
-          mark_as_latest: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB }}"
