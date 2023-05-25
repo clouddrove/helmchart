@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/unittest
+      - fix/tests-and-docs
 
 jobs:
   release:
@@ -28,5 +29,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.5.0
         with:
           charts_dir: ./charts/helmchart
+          mark_as_latest: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB }}"

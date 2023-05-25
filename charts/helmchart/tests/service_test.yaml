@@ -1,4 +1,7 @@
 suite: test service
+values:
+  - ../values.yaml
+  - ../config/override-values.yaml 
 templates:
   - templates/service.yaml
 chart:

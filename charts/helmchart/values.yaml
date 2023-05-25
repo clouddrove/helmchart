@@ -36,7 +36,7 @@ pdbMinAvailable: 30%
   # -- minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
 
 serviceAccount:
-  enabled: true  
+  enabled: false  
     # -- Specifies whether a service account should be created
   annotations: {}       
     # -- Annotations to add to the service account
@@ -61,7 +61,7 @@ securityContext: {}
 
 service: 
     # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
-  enabled: true
+  enabled: false
     # -- Specifies whether a service should be created.        
   type: ClusterIP 
     # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
@@ -73,9 +73,9 @@ istio:
   enabled: false
   # -- virtualService is required when using istio.
   virtualService:
-    hosts: 
-      - test.example.com
-      - test-2.example.com
+    hosts: []
+      # - test.example.com
+      # - test-2.example.com
   # -- 
   gateway:
     names: 
@@ -92,7 +92,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:                        
         # Sets up the host routes for the ingress resource.
-    - host: chart-example.local
+    - host: test.example.com
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -103,9 +103,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources:
+resources: 
+  # -- Requests and Limits to be specified for each pod.
   enabled: false
-  # -- We usually recommend not to specify default resources and to leave this as a conscious.  We usually recommend not to specify default resources and to leave this as a conscious. resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.    
   limits:
     cpu: 100m
     memory: 128Mi
@@ -168,7 +168,52 @@ cronJob:
 metrics:
   # -- Whether or not metrics should be created, if false the metrics will not be created
   enabled: false   
-    # -- portName specify the name of the port for the metrics resource.  
+  # -- portName specify the name of the port for the metrics resource.  
   portName: "prometheus" 
   port: 3001     
   targetPort: 3001 
+
+volume:
+  # -- Volume mounted to pods either as default or in the form of PVC
+  enabled: false
+  # -- Path inside container where pvc will be mounted. default is set to "/tmp"
+  mountPath: ""
+  hostPath: ""
+
+storageClass:
+  # -- Whether to create a custom Storage Class, Default is gp2
+  create: false
+
+  # -- Use existing PVC by mentioning name of PVC
+  existingClaim: ""
+
+  # Override name of storage-class, default is set to helmchart.fullname. 
+  storageClassName: ""
+
+  # -- PVC configurations for AWS Cloud Provider
+  aws: false
+  fileSystemId: ""
+  
+  # -- PVC configurations for Azure Cloud Provider
+  azure: false
+  
+  # -- PVC configurations for GCP Cloud Provider
+  gcp: false
+
+  # -- Provisioner as per the Cloud Provider [aws: `efs.csi.aws.com` `ebs.csi.aws.com`] [azure: `file.csi.azure.com`] [minikube: `k8s.io/minikube-hostpath`]
+  provisioner: ""
+
+  # -- Allow volume expansion
+  allowVolumeExpansion: false
+
+  # -- Volume binding modes, other are `WaitForFirstConsumer`
+  volumeBindingMode: Immediate
+
+  # -- Enable persistent volume
+  persistence:
+    enabled: false
+    # -- Mode of access this persistent volume, other modes are `ReadWriteMany`, `ReadOnlyMany`
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    # -- Reclaim Policy for Persistent Volume. Default is set to `Retain`. Other valid values are `Delete`, `Recycle`
+    persistentVolumeReclaimPolicy: ""

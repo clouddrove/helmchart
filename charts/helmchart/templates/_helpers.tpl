@@ -60,3 +60,41 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Return the appropriate apiVersion for Horizontal Pod Autoscaler.
+*/}}
+{{- define "helmchart.hpa.apiVersion" -}}
+{{- if $.Capabilities.APIVersions.Has "autoscaling/v2" }}
+{{- print "autoscaling/v2" }}
+{{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta2" }}
+{{- print "autoscaling/v2beta2" }}
+{{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta1" }}
+{{- print "autoscaling/v2beta1" }}
+{{- else }}
+{{- print "autoscaling/v1" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Return the appropriate apiVersion for Storage Class.
+*/}}
+{{- define "helmchart.storageClass.apiVersion" -}}
+{{- if $.Capabilities.APIVersions.Has "storage.k8s.io/v1" }}
+{{- print "storage.k8s.io/v1" }}
+{{- else }}
+{{- print "storage.k8s.io/v1beta1" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "helmchart.namespace" -}}
+{{- if .Values.namespaceOverride }}
+{{- .Values.namespaceOverride }}
+{{- else }}
+{{- .Release.Namespace }}
+{{- end }}
+{{- end }}
+

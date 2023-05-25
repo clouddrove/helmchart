@@ -58,6 +58,11 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
+          {{- if .Values.volume.enabled }}
+          volumeMounts:
+            - mountPath: {{ default ("/pvc") .Values.volume.mountPath }}
+              name: {{ template "helmchart.fullname" . }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -69,4 +74,10 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.volume.enabled }}
+      volumes:
+        - name: {{ template "helmchart.fullname" . }}
+          persistentVolumeClaim:
+            claimName: {{ template "helmchart.fullname" . }}
       {{- end }}

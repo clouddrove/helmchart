@@ -1,0 +1,139 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+secret:
+  enabled: false 
+  secrets:
+    KEY: "value"
+
+configmap:
+  enabled: false
+  configs:
+    KEY: "value"
+
+imagePullSecrets: [] 
+
+nameOverride: "" 
+
+fullnameOverride: "" 
+
+pdbMinAvailable: 30% 
+
+serviceAccount:
+  enabled: true  
+  annotations: {}       
+  name: "" 
+
+podAnnotations: {} 
+
+podSecurityContext: {} 
+
+securityContext: {}
+
+service: 
+  enabled: true
+  type: ClusterIP 
+  port: 80   
+
+istio:
+  enabled: false
+  virtualService:
+    hosts: 
+      - test.example.com
+      - test-2.example.com
+  gateway:
+    names: 
+      - "istio-system/istio-gateway"
+
+ingress:    
+  enabled: false 
+  className: ""
+  annotations: {}
+  hosts:                        
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+  tls: []
+
+resources:
+  enabled: false
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:      
+  enabled: true 
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+poddisruptionbudget:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {} 
+
+cronJob: 
+  enabled: false
+  schedule: ""
+  startingDeadlineSeconds: 3600
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  resources: {}
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "1.16.0" 
+  secret:
+    enabled: false
+  configmap:
+    enabled: false
+
+metrics:
+  enabled: false   
+  portName: "prometheus" 
+  port: 3001     
+  targetPort: 3001 
+
+
+volume:
+  enabled: true
+  mountPath: "/usr/share/nginx/html"
+  hostPath: "/var/www/html"
+
+storageClass:
+  create: true
+  existingClaim: ""
+  # storageClassName: "mystorageclass"
+  
+  aws: false
+  fileSystemId: fs-abcd1234xyz
+  
+  azure: false
+  
+  gcp: false
+
+  provisioner: "k8s.io/minikube-hostpath"
+  allowVolumeExpansion: false
+  volumeBindingMode: Immediate
+
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 512Mi
+    persistentVolumeReclaimPolicy: ""
+
+statefulSets:
+  enabled: true

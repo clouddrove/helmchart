@@ -1,6 +1,7 @@
 suite: Test  deployment
 values:
   - ../values.yaml
+  - ../config/override-values.yaml 
 templates:
   - deployment.yaml
 chart:
