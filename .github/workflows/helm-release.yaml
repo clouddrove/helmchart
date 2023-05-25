@@ -3,8 +3,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - feature/unittest
-      - fix/tests-and-docs
+      - feat/helm-releaser
 
 jobs:
   release:
