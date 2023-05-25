@@ -34,6 +34,6 @@ jobs:
         with:
           charts_dir: ./charts/
           mark_as_latest: true
-          skip-existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB }}"
+          CR_SKIP_EXISTING: true
