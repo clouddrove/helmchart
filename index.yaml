@@ -2,9 +2,10 @@ apiVersion: v1
 entries:
   helmchart:
   - apiVersion: v2
-    created: "2023-04-23T05:22:28.819085+02:00"
+    appVersion: 0.1.0
+    created: "2023-06-06T15:48:55.401761081Z"
     description: A Helm chart for Kubernetes
-    digest: 9351871431f63dddc5fcf8bcfa2af3d562e6963125db35cd2c53e9576a1f3568
+    digest: 3ab0b53e880cc6928ebc0dbd386b5fe421222e4cd6ef6a652ae55d6ea3143162
     home: https://github.com/clouddrove/helmchart
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -18,6 +19,46 @@ entries:
     name: helmchart
     type: application
     urls:
-    - https://charts.clouddrove.com/charts/helmchart-0.0.4.tgz
-    version: 0.0.6
-generated: "2023-04-23T05:22:28.817332+02:00"
+    - https://charts.clouddrove.com/charts/helmchart-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-06-06T15:48:55.402916982Z"
+    description: A Helm chart for Kubernetes
+    digest: 987807f8c5dac73f804614507c49c9d04f700a331011cd2009bcf11ef968e2ea
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/.cr-release-packages/helmchart-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
+    appVersion: 0.0.8
+    created: "2023-06-06T15:48:55.404049283Z"
+    description: A Helm chart for Kubernetes
+    digest: 992f0668bf79708ed920b2f310b3990c28882a92a8ac1b937ea23dfdf00ab0a7
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/charts/helmchart-0.0.8.tgz
+    version: 0.0.8
+generated: "2023-06-06T15:48:55.400033279Z"
