@@ -45,5 +45,5 @@ jobs:
           helm repo index --url https://charts.clouddrove.com/charts/ .
           rm -rf helmchart-*
           git add index.yaml
-          git commit -m "updated index.yaml"
+          git commit -m "fix: updated index.yaml"
           git push origin $(git symbolic-ref --short HEAD)
