@@ -38,3 +38,9 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB }}"
           CR_SKIP_EXISTING: true
+      
+      - name: Pushing chart on Remote repository
+        run: |
+          helm package ./charts/helmchart
+          helm repo index --url https://charts.clouddrove.com/charts/ .
+          rm -rf helmchart-*
