@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - feat/helm-releaser
 
 jobs:
   release:
