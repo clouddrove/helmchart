@@ -12,7 +12,7 @@ Below is an installer script that will automatically grab the latest version of 
 Binary downloads of the Helm client can be found on [the Releases page](https://github.com/helm/helm/releases/latest).
 For installation in different Operating Systems you can follow [this guide.](https://helm.sh/docs/intro/install/)
 
-## Clouddrove helmchart structure
+## CloudDrove helmchart structure
 ```yaml
 helmchart
 ├── Chart.yaml
@@ -47,7 +47,7 @@ helmchart
 
 - `values.yaml` : This file is important to templates and contains the default values for a chart. These values can be overridden by users in helmchart/config/override-values.yaml and then can be used during helm install/upgrade by specifying path of this override-values.yaml.
 
-## Installing Clouddrove helmchart in your Kubernetes Cluster
+## Installing CloudDrove helmchart in your Kubernetes Cluster
    1. Add clouddrove helm repository in your local. 
       ```yaml
        $ helm repo add clouddrove https://charts.clouddrove.com/ 
