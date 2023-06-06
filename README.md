@@ -147,7 +147,7 @@ helmchart
    - Follow the same steps deploy this chart and get the IP & NodePort of second application to open webpage on your browser.
 
 
-## Uninstalling Cloudrove/helmchart
+## Uninstalling Clouddrove/helmchart
    1. List the helm release in clouddrove namespace
       ```yaml
        $ helm list --namespace=clouddrove                                                                                  
