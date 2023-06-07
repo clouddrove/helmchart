@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [helmchart-0.0.4] - 2023-06-07
+### :white_check_mark: Tests
+- [`ece147b`](https://github.com/clouddrove/helmchart/commit/ece147b65f9d17b8151c760e4a069b7e599ea872) - new release 0.0.4 *(PR [#37](https://github.com/clouddrove/helmchart/pull/37) by [@h1manshu98](https://github.com/h1manshu98))*
+
+
 ## [helmchart-0.0.8] - 2023-06-06
 ### :bug: Bug Fixes
 - [`bdc41b2`](https://github.com/clouddrove/helmchart/commit/bdc41b2505dddb9c1eeb73de6121cf50e5082948) - changed release branch to master *(commit by [@anmolnagpal](https://github.com/anmolnagpal))*
@@ -34,3 +39,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [helmchart-0.0.7]: https://github.com/clouddrove/helmchart/compare/v44...helmchart-0.0.7
 [helmchart-0.0.8]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.7...helmchart-0.0.8
+[helmchart-0.0.4]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.3...helmchart-0.0.4
