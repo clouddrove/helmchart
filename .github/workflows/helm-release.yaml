@@ -33,12 +33,13 @@ jobs:
           version: latest   
 
       - name: Helm package
-        run: |
-          cd charts 
-          helm package cronjob helmchart
-          git add .
-          git commit -m "feat: packaged charts"
-          git push origin master
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB }}
+          charts_url: https://charts.clouddrove.com/
+          charts_dir: ./charts
+          branch: master
+          target_dir: ./charts
 
 
       - name: Releasing tags and publishing charts
