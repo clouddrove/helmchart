@@ -41,6 +41,13 @@ jobs:
           branch: master
           target_dir: ./charts
 
+      - uses: actions/checkout@v3
+      - name: Update index.yaml
+        run: |
+          mv charts/index.yaml .
+          git add index.yaml
+          git commit -m "feat: updated index.yaml for latest release"
+          git push origin master          
 
       - name: Releasing tags and publishing charts
         uses: helm/chart-releaser-action@v1.5.0
