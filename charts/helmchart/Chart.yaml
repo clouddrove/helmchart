@@ -2,8 +2,8 @@ apiVersion: v2
 name: helmchart
 type: application
 description: A Helm chart for Kubernetes
-version: 0.0.2
-appVersion: 0.0.2
+version: 0.0.3
+appVersion: 0.0.3
 icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
 keywords:
     - helm
