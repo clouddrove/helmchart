@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - feat/helm-releaser
 
 jobs:
   release:
@@ -30,12 +29,19 @@ jobs:
         with:
           version: latest   
 
-      - uses: actions/checkout@v2
-      - name: Publish Helm charts
+      - name: Publish charts to clouddrove helmchart repository
         uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           charts_url: https://charts.clouddrove.com/
           charts_dir: ./charts
-          branch: feat/helm-releaser
+          branch: master
           target_dir: ./charts
+
+      - name: Releasing tags
+        uses: helm/chart-releaser-action@v1.5.0
+        with:
+          charts_dir: ./charts
+          mark_as_latest: true
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB }}"
