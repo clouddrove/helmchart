@@ -30,20 +30,12 @@ jobs:
         with:
           version: latest   
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
+      - uses: actions/checkout@v2
+      - name: Publish Helm charts
+        uses: stefanprodan/helm-gh-pages@master
         with:
-          charts_dir: ./charts/
-          mark_as_latest: true
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB }}"
-          CR_SKIP_EXISTING: true
-      
-      - name: Pushing chart on Remote repository
-        run: |
-          helm package ./charts/helmchart
-          helm repo index --url https://charts.clouddrove.com/charts/ .
-          rm -rf helmchart-*
-          git add index.yaml
-          git commit -m "fix: updated index.yaml"
-          git push origin $(git symbolic-ref --short HEAD)
+          token: ${{ secrets.GITHUB_TOKEN }}
+          charts_url: https://charts.clouddrove.com/
+          charts_dir: ./charts
+          branch: feat/helm-releaser
+          target_dir: ./charts
