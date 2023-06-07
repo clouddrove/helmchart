@@ -32,16 +32,16 @@ jobs:
         with:
           version: latest   
 
-      - name: Publish charts to clouddrove helmchart repository
-        uses: stefanprodan/helm-gh-pages@master
-        with:
-          token: ${{ secrets.GITHUB }}
-          charts_url: https://charts.clouddrove.com/
-          charts_dir: ./charts
-          branch: master
-          target_dir: .
+      - name: Helm package
+        run: |
+          cd charts 
+          helm package cronjob helmchart
+          git add .
+          git commit -m "feat: packaged charts"
+          git push origin master
 
-      - name: Releasing tags
+
+      - name: Releasing tags and publishing charts
         uses: helm/chart-releaser-action@v1.5.0
         with:
           charts_dir: ./charts
