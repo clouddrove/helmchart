@@ -32,7 +32,7 @@ jobs:
       - name: Publish charts to clouddrove helmchart repository
         uses: stefanprodan/helm-gh-pages@master
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB }}
           charts_url: https://charts.clouddrove.com/
           charts_dir: ./charts
           branch: master
