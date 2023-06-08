@@ -38,7 +38,7 @@ jobs:
           token: ${{ secrets.GITHUB }}
           charts_url: https://charts.clouddrove.com/
           charts_dir: ./charts
-          branch: master
+          # branch: master
           target_dir: ./charts
           index_dir: .
        
