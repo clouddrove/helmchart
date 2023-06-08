@@ -32,25 +32,16 @@ jobs:
         with:
           version: latest   
 
-      # - name: Helm package
-      #   uses: stefanprodan/helm-gh-pages@master
-      #   with:
-      #     token: ${{ secrets.GITHUB }}
-      #     charts_url: https://charts.clouddrove.com/
-      #     charts_dir: ./charts
-      #     branch: master
-      #     target_dir: ./charts
-
-      # - uses: actions/checkout@v3
-      # - name: Moving index.yaml to root directory
-      #   env:
-      #     TOKEN: ${{ secrets.GITHUB }}
-      #   run: |
-      #     git pull origin master
-      #     mv charts/index.yaml .
-      #     git add index.yaml
-      #     git commit -m "feat: updated index.yaml for latest release"
-      #     git push origin master          
+      - name: Helm package
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB }}
+          charts_url: https://charts.clouddrove.com/
+          charts_dir: ./charts
+          branch: master
+          target_dir: ./charts
+          index_dir: .
+       
 
       - name: Releasing tags and publishing charts
         uses: helm/chart-releaser-action@v1.5.0
