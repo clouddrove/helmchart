@@ -40,20 +40,14 @@ jobs:
           charts_dir: ./charts
           branch: master
           target_dir: ./charts
-
-      - uses: actions/checkout@v3
-      - name: Update index.yaml
-        run: |
-          git pull origin master
-          mv charts/index.yaml .
-          git add index.yaml
-          git commit -m "feat: updated index.yaml for latest release"
-          git push origin master          
+          index_dir: .
+       
 
       - name: Releasing tags and publishing charts
         uses: helm/chart-releaser-action@v1.5.0
         with:
           charts_dir: ./charts
+          charts_repo_url: https://charts.clouddrove.com/
           mark_as_latest: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB }}"
