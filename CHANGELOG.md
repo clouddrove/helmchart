@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [helmchart-0.0.8] - 2023-06-08
+### :memo: Documentation Changes
+- [`88e8bc8`](https://github.com/clouddrove/helmchart/commit/88e8bc80426b872de7ed0eb844b63a04a0d50260) - update CHANGELOG.md for helmchart-0.0.5 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [helmchart-0.0.5] - 2023-06-07
 ### :memo: Documentation Changes
 - [`e11f927`](https://github.com/clouddrove/helmchart/commit/e11f927b0a410655d469d94b01166c1279fff14e) - update CHANGELOG.md for helmchart-0.0.4 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
@@ -46,3 +51,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [helmchart-0.0.8]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.7...helmchart-0.0.8
 [helmchart-0.0.4]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.3...helmchart-0.0.4
 [helmchart-0.0.5]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.4...helmchart-0.0.5
+[helmchart-0.0.8]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.5...helmchart-0.0.8
