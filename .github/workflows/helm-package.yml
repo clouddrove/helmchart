@@ -1,0 +1,34 @@
+name: Packaging helm charts
+
+on: [pull_request]
+
+jobs:
+
+  helm-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Helm package
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB }}
+          charts_url: https://charts.clouddrove.com/
+          charts_dir: ./charts
+          branch: $(git symbolic-ref --short HEAD)
+          target_dir: ./charts
+
+      - uses: actions/checkout@v3
+      - name: Moving index.yaml to root directory
+        env:
+          TOKEN: ${{ secrets.GITHUB }}
+        run: |
+          git pull origin $(git symbolic-ref --short HEAD)
+          cp charts/index.yaml .
+          git add .
+          git commit -m "feat: New Helm Charts are released"
+          git push origin $(git symbolic-ref --short HEAD)      
+    
