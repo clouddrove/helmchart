@@ -1,0 +1,14 @@
+apiVersion: v2
+name: cronjob
+description: A chart for cron jobs
+version: 0.0.1
+appVersion: 0.0.1
+keywords:
+  - cronjob
+  - helm
+  - k8s
+home: "https://github.com/clouddrove/helmchart"
+maintainers:
+  - name: CloudDrove Inc.
+    email: hello@clouddrove.com
+

@@ -1,0 +1,16 @@
+apiVersion: v2
+name: helmchart
+type: application
+description: A Helm chart for Kubernetes
+version: 0.0.1
+appVersion: 0.0.1
+icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+keywords:
+    - helm
+    - chart  
+    - k8s
+    - helm-chart 
+home: https://github.com/clouddrove/helmchart
+maintainers:
+    - name: CloudDrove Inc
+      email: hello@clouddrove.com

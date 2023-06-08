@@ -1,0 +1,18 @@
+{{- if .Values.istio.enabled -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "helmchart.fullname" . }}-istio-gateway
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - hosts:
+    {{- range .Values.istio.virtualService.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+    port:
+      number: {{ .Values.service.port }}
+      name: http
+      protocol: HTTP
+{{- end }}

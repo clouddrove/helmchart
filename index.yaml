@@ -1,0 +1,82 @@
+apiVersion: v1
+entries:
+  cronjob:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2023-06-08T08:30:33.045279821Z"
+    description: A chart for cron jobs
+    digest: 2ca88c67bd9620fef994464ce121e686360ba4a8d48e55950afeac31f4aaa106
+    home: https://github.com/clouddrove/helmchart
+    keywords:
+    - cronjob
+    - helm
+    - k8s
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc.
+    name: cronjob
+    urls:
+    - https://charts.clouddrove.com/charts/cronjob-0.0.1.tgz
+    version: 0.0.1
+  helmchart:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-06-06T15:48:55.401761081Z"
+    description: A Helm chart for Kubernetes
+    digest: 3ab0b53e880cc6928ebc0dbd386b5fe421222e4cd6ef6a652ae55d6ea3143162
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/helmchart-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
+    appVersion: 0.0.8
+    created: "2023-06-08T08:30:33.046808787Z"
+    description: A Helm chart for Kubernetes
+    digest: f863920d5db6d21028da823396585a517173ce4ada09a4190fcfe7b32d6ef28a
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/helmchart-0.0.8.tgz
+    version: 0.0.8
+  - apiVersion: v2
+    appVersion: 0.0.4
+    created: "2023-06-07T13:20:32.637935983Z"
+    description: A Helm chart for Kubernetes
+    digest: 68b54ca845172c7c7fb5770967654a8a1051b34bc781f41c342085e7bea807a9
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/helmchart-0.0.4.tgz
+    version: 0.0.4
+generated: "2023-06-08T08:30:33.04384546Z"
