@@ -12,3 +12,4 @@ jobs:
     with:
      directory: 'charts/helmchart' # specify your working folder from repo
      continue_on_error: true
+     var_file: ./tests/overrides-helmchart.yaml
