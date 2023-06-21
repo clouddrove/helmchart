@@ -3,10 +3,11 @@ replicaCount: 1
 image:
   repository: nginx
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "stable-alpine3.17"
+  digest: "sha256:5e1ccef1e821253829e415ac1e3eafe46920aab0bf67e0fe8a104c57dbfffdf7"
 
 secret:
-  enabled: false 
+  enabled: false
   secrets:
     KEY: "value"
 
@@ -26,17 +27,33 @@ pdbMinAvailable: 30%
 serviceAccount:
   enabled: true  
   annotations: {}       
-  name: "" 
+  name: ""
+  automountServiceAccountToken: false 
 
 podAnnotations: {} 
 
-podSecurityContext: {} 
+podSecurityContext: 
+  runAsUser: 10000
+  runAsGroup: 3000
+  fsGroup: 2000
+  seccompProfile:
+    type: RuntimeDefault  
 
-securityContext: {}
+securityContext: 
+  capabilities:
+    drop:
+      - ALL
+  runAsUser: 10000
+  runAsGroup: 3000
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  seccompProfile:
+    type: RuntimeDefault    
 
 service: 
   enabled: true
-  type: ClusterIP 
+  # type: ClusterIP 
+  type: NodePort 
   port: 80   
 
 istio:
@@ -61,8 +78,9 @@ ingress:
 
   tls: []
 
+resource:
+  enabled: true
 resources:
-  enabled: false
   limits:
     cpu: 100m
     memory: 128Mi
@@ -77,7 +95,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 poddisruptionbudget:
-  enabled: false
+  enabled: true
+  minAvailable: 30%
 
 nodeSelector: {}
 
@@ -109,12 +128,12 @@ metrics:
 
 
 volume:
-  enabled: true
+  enabled: false
   mountPath: "/usr/share/nginx/html"
   hostPath: "/var/www/html"
 
 storageClass:
-  create: true
+  create: false
   existingClaim: ""
   # storageClassName: "mystorageclass"
   
@@ -130,10 +149,21 @@ storageClass:
   volumeBindingMode: Immediate
 
   persistence:
-    enabled: true
+    enabled: false
     accessMode: ReadWriteOnce
     size: 512Mi
     persistentVolumeReclaimPolicy: ""
 
 statefulSets:
+  enabled: false
+
+healthCheckProbes:
   enabled: true
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http

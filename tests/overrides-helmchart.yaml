@@ -134,7 +134,7 @@ autoscaling:
 
 poddisruptionbudget:
   enabled: false
-  minAvailable: 1
+  minAvailable: 
 
 nodeSelector: {}
     # -- nodeSelector specify restrictions on what node this pod should be scheduled on.
