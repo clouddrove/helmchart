@@ -32,23 +32,20 @@ serviceAccount:
 
 podAnnotations: {} 
 
-podSecurityContext: 
-  runAsUser: 10000
+podSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  fsGroup: 0
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  capabilities:
+    add: ["NET_ADMIN", "SYS_TIME"]
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: false
   runAsGroup: 3000
   fsGroup: 2000
-  seccompProfile:
-    type: RuntimeDefault  
-
-securityContext: 
-  capabilities:
-    drop:
-      - ALL
-  runAsUser: 10000
-  runAsGroup: 3000
-  readOnlyRootFilesystem: true
-  allowPrivilegeEscalation: false
-  seccompProfile:
-    type: RuntimeDefault    
 
 service: 
   enabled: true

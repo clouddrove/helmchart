@@ -50,23 +50,9 @@ podAnnotations: {}
 
 podSecurityContext: {} 
   # -- podSecurityContext holds pod-level security access control settings.
-  # runAsUser: 10000
-  # runAsGroup: 3000
-  # fsGroup: 2000
-  # seccompProfile:
-  #   type: RuntimeDefault   
 
 securityContext: {}
-      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions.     
-  # capabilities:
-  #   drop:
-  #     - ALL
-  # runAsUser: 10000
-  # runAsGroup: 3000
-  # readOnlyRootFilesystem: true
-  # allowPrivilegeEscalation: false
-  # seccompProfile:
-  #   type: RuntimeDefault   
+      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. securityContext takes precedence over podSecurityContext    
 
 service: 
     # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
