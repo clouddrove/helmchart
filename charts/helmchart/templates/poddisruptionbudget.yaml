@@ -2,7 +2,7 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "helmchart.namespace" . }}
   name: {{ include "helmchart.fullname" . }}
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}

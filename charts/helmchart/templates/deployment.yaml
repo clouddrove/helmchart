@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "helmchart.fullname" . }}
+  namespace: {{ include "helmchart.namespace" . }}
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:
@@ -25,13 +26,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "helmchart.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- if .Values.image.digest }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@{{ .Values.image.digest }}"
+          {{- else }}  
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          {{- end }}  
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -46,15 +52,17 @@ spec:
             - secretRef:
                 name: {{ include "helmchart.fullname" . }}-secret
           {{- end }}
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          {{- if .Values.resources.enabled }}
+          {{- if .Values.healthCheckProbes.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.healthCheckProbes.livenessProbe.httpGet.path }}
+              port: {{ .Values.healthCheckProbes.livenessProbe.httpGet.port }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.healthCheckProbes.readinessProbe.httpGet.path }}
+              port: {{ .Values.healthCheckProbes.readinessProbe.httpGet.port }}
+          {{- end }}
+          {{- if .Values.resource.enabled }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}

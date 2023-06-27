@@ -13,6 +13,8 @@ image:
   pullPolicy: IfNotPresent
       # -- Overrides the image tag whose default is the chart version.
   tag: "latest"
+      # -- Specify digest of image. Tags can be overriden but each tag will contain different digest than previous.
+  digest: ""
 
 secret:
   enabled: false 
@@ -48,16 +50,9 @@ podAnnotations: {}
 
 podSecurityContext: {} 
   # -- podSecurityContext holds pod-level security access control settings.
-  # fsGroup: 2000
 
 securityContext: {}
-      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions.     
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. securityContext takes precedence over podSecurityContext    
 
 service: 
     # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
@@ -103,9 +98,10 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+resource: 
+  enabled: false
 resources: 
   # -- Requests and Limits to be specified for each pod.
-  enabled: false
   limits:
     cpu: 100m
     memory: 128Mi
@@ -219,3 +215,15 @@ storageClass:
     size: 2Gi
     # -- Reclaim Policy for Persistent Volume. Default is set to `Retain`. Other valid values are `Delete`, `Recycle`
     persistentVolumeReclaimPolicy: ""
+
+healthCheckProbes:
+  # -- liveness and readiness probes in deployment
+  enabled: false
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
