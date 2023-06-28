@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - master
-      - fix/helm-docs
-    # paths:
-    #   - 'charts/helmchart/**'
-    #   - 'charts/cronjob/**'
+    paths:
+      - 'charts/helmchart/**'
+      - 'charts/cronjob/**'
     
 jobs:
   install-helm-docs:
