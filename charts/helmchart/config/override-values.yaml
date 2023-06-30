@@ -7,14 +7,14 @@ image:
   digest: "sha256:5e1ccef1e821253829e415ac1e3eafe46920aab0bf67e0fe8a104c57dbfffdf7"
 
 secret:
-  enabled: false
+  enabled: true
   secrets:
-    KEY: "value"
+    SECRET_KEY: "secret"
 
 configmap:
-  enabled: false
+  enabled: true
   configs:
-    KEY: "value"
+    CONFIG_KEY: "configmap"
 
 imagePullSecrets: [] 
 
@@ -64,7 +64,7 @@ istio:
       - "istio-system/istio-gateway"
 
 ingress:    
-  enabled: false 
+  enabled: true 
   className: ""
   annotations: {}
   hosts:                        
