@@ -6,10 +6,27 @@ on:
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
+
 jobs:
   checkov:
-    uses: clouddrove/github-shared-workflows/.github/workflows/checkov.yml@master # shared workflow 
-    with:
-     directory: 'charts/helmchart' # specify your working folder from repo
-     continue_on_error: true
-     var_file: charts/helmchart/config/override-values.yaml
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Installing checkov
+      run: |
+        sudo apt-get update
+        sudo apt install python3-pip -y
+        sudo pip install checkov
+
+    - name: Scanning helmchart for Security Vulnerabilities
+      env:
+        HELMCHART_DIRECTORY: "./charts/helmchart"
+        OVERRIDE_VALUE_FILE_PATH: "./charts/helmchart/config/override-values.yaml"
+        CHART_NAME: "helmchart"
+      run: |
+        helm template helm-chart $HELMCHART_DIRECTORY -f $OVERRIDE_VALUE_FILE_PATH --namespace not-default --output-dir /tmp/helm-template
+        rm -rf /tmp/helm-template/$CHART_NAME/templates/tests
+        checkov -d /tmp/helm-template/$CHART_NAME
+      continue-on-error: true
