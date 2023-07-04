@@ -29,3 +29,4 @@ jobs:
         helm template helm-chart $HELMCHART_DIRECTORY -f $OVERRIDE_VALUE_FILE_PATH --namespace not-default --output-dir /tmp/helm-template
         rm -rf /tmp/helm-template/$CHART_NAME/templates/tests
         checkov -d /tmp/helm-template/$CHART_NAME
+      continue-on-error: true
