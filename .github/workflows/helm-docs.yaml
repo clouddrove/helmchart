@@ -11,9 +11,10 @@ on:
 jobs:
   install-helm-docs:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Install Helm Docs
-      uses: envoy/install-helm-docs@v1.0.0
-      with:
-        # Helm Docs Version to install (Mandatory)
-        helm_docs_version: 1.7.0
+      - name: Install Helm Docs
+        uses: envoy/install-helm-docs@v1.0.0
+        with:
+          # Helm Docs Version to install (Mandatory)
+          helm_docs_version: 1.7.0
