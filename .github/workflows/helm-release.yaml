@@ -50,5 +50,6 @@ jobs:
           charts_dir: charts
           charts_repo_url: https://charts.clouddrove.com/
           mark_as_latest: true
+          skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB }}"
