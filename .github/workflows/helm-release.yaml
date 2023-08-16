@@ -2,8 +2,8 @@ name: Release Charts
 
 on:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
     paths:
       - 'charts/helmchart/**'
       - 'charts/cronjob/**'
