@@ -3,11 +3,11 @@ name: Release Charts
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
-    paths:
-      - 'charts/helmchart/**'
-      - 'charts/cronjob/**'
+    # branches:
+    #   - master
+    # paths:
+    #   - 'charts/helmchart/**'
+    #   - 'charts/cronjob/**'
 
 jobs:
   release:
