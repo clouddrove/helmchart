@@ -1,0 +1,18 @@
+{{- if .Values.destination.enabled -}}
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: {{ include "helmchart.fullname" . }}
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+spec:
+  host: {{ include "helmchart.fullname" . }}
+  subsets:
+    - name: v1
+      labels:
+        {{- include "helmchart.selectorLabels" . | nindent 8 }}
+    - name: v2
+      labels:
+        {{- include "helmchart.selectorLabels" . | nindent 8 }}-v2
+{{- end -}}

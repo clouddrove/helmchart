@@ -54,17 +54,17 @@ service:
   port: 80   
 
 istio:
-  enabled: false
+  enabled: true
   virtualService:
     hosts: 
-      - test.example.com
-      - test-2.example.com
+      - split.tech-tycoons.clouddrove.ca
+      # - test-2.example.com
   gateway:
     names: 
       - "istio-system/istio-gateway"
 
 ingress:    
-  enabled: true 
+  enabled: false 
   className: ""
   annotations: {}
   hosts:                        
@@ -74,6 +74,17 @@ ingress:
           pathType: ImplementationSpecific
 
   tls: []
+
+
+#####----------------------------split-Traffic----------------------#####
+deployment2:
+  enabled: true
+
+destination:
+  enabled: true
+
+
+#################################################
 
 resource:
   enabled: true
