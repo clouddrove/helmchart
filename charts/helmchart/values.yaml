@@ -56,7 +56,7 @@ securityContext: {}
 
 service: 
     # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
-  enabled: false
+  enabled: true
     # -- Specifies whether a service should be created.        
   type: ClusterIP 
     # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
@@ -64,17 +64,27 @@ service:
     # -- A map that specifies the port bindings of the service against the Pods in the Deployment.
 
 istio:
-  # -- We can either use Istio or Ingress for an application deployment.
-  enabled: false
+  # -- We can either use Istio or Ingress for an application deployment. Set `enabled: true` if istio is already installed.
+  enabled: true
   # -- virtualService is required when using istio.
   virtualService:
-    hosts: []
+    # hosts: []
+    hosts: 
       # - test.example.com
       # - test-2.example.com
-  # -- 
+  
   gateway:
+    # -- Set `enabled: true` to install Gateway for istio using this helmchart.
+    enabled: false
+    
+    # -- Provide name of namespace where your istio is installed. Gateway and Istio has to be in same namespace.
+    namespace: "istio-system"
+    
+    # -- Provide name of istio gateways here, this option is only applicable when istio gateway is already present in kubernetes cluster and not being managed by this helmchart.
     names: 
       - "istio-system/istio-gateway"
+    # -- Provide selector for istio gateway to select istio service.
+    selector: "ingress"
 
 ingress:    
     # -- ingress is a map that can be used to configure an Ingress resource for this service.
