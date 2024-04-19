@@ -41,7 +41,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
               protocol: TCP
           envFrom:
           {{- if .Values.configmap.enabled }}
@@ -53,14 +53,7 @@ spec:
                 name: {{ include "helmchart.fullname" . }}-secret
           {{- end }}
           {{- if .Values.healthCheckProbes.enabled }}
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.healthCheckProbes.livenessProbe.httpGet.path }}
-              port: {{ .Values.healthCheckProbes.livenessProbe.httpGet.port }}
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.healthCheckProbes.readinessProbe.httpGet.path }}
-              port: {{ .Values.healthCheckProbes.readinessProbe.httpGet.port }}
+          {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
           {{- end }}
           {{- if .Values.resource.enabled }}
           resources:
