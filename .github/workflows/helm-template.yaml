@@ -7,12 +7,12 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: helm-check-helmchart
-      uses: igabaydulin/helm-check-action@0.2.0
+      uses: igabaydulin/helm-check-action@0.2.1
       env:
         CHART_LOCATION: ./charts/helmchart
         CHART_VALUES: ./tests/overrides-helmchart.yaml
     - name: helm-check-cronjob
-      uses: igabaydulin/helm-check-action@0.2.0
+      uses: igabaydulin/helm-check-action@0.2.1
       env:
         CHART_LOCATION: ./charts/cronjob
         CHART_VALUES: ./tests/overrides-cronjob.yaml
