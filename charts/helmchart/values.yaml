@@ -73,6 +73,7 @@ istio:
   enabled: false
   # -- virtualService is required when using istio.
   virtualService:
+    enabled: false
     hosts: []
       # - test.example.com
       # - test-2.example.com

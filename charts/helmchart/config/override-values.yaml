@@ -57,6 +57,7 @@ service:
 istio:
   enabled: false
   virtualService:
+    enabled: true
     hosts: 
       - test.example.com
       - test-2.example.com
@@ -73,7 +74,6 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-
   tls: []
 
 resource:
