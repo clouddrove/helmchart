@@ -19,7 +19,6 @@
       "securityContext",
       "service",
       "ingress",
-      "resources",
       "autoscaling",
       "poddisruptionbudget",
       "nodeSelector",
@@ -291,72 +290,7 @@
             }
         }
     },
-    "resources": {
-      "type": "object",
-      "default": {},
-      "title": "The resources Schema",
-      "required": [
-          "limits",
-          "requests"
-      ],
-      "properties": {
-          "limits": {
-              "type": "object",
-              "default": {},
-              "title": "The limits Schema",
-              "required": [
-                  "cpu",
-                  "memory"
-              ],
-              "properties": {
-                  "cpu": {
-                      "type": "string",
-                      "default": "",
-                      "title": "The cpu Schema",
-                      "examples": [
-                          "100m"
-                      ]
-                  },
-                  "memory": {
-                      "type": "string",
-                      "default": "",
-                      "title": "The memory Schema",
-                      "examples": [
-                          "128Mi"
-                      ]
-                  }
-              }
-          },
-          "requests": {
-              "type": "object",
-              "default": {},
-              "title": "The requests Schema",
-              "required": [
-                  "cpu",
-                  "memory"
-              ],
-              "properties": {
-                  "cpu": {
-                      "type": "string",
-                      "default": "",
-                      "title": "The cpu Schema",
-                      "examples": [
-                          "100m"
-                      ]
-                  },
-                  "memory": {
-                      "type": "string",
-                      "default": "",
-                      "title": "The memory Schema",
-                      "examples": [
-                          "128Mi"
-                      ]
-                  }
-              }
-          }
-      }
-      },
-      "autoscaling": {
+    "autoscaling": {
         "type": "object",
         "default": {},
         "title": "The autoscaling Schema",

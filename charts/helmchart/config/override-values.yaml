@@ -49,13 +49,15 @@ securityContext:
 
 service: 
   enabled: true
-  # type: ClusterIP 
   type: NodePort 
-  port: 80   
+  port: 80  
+  containerPort: 80
+  targetPort: http
 
 istio:
   enabled: false
   virtualService:
+    enabled: true
     hosts: 
       - test.example.com
       - test-2.example.com
@@ -72,15 +74,14 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-
   tls: []
 
 resource:
   enabled: true
-resources:
+resources: 
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 200m
+    memory: 512Mi
   requests:
     cpu: 100m
     memory: 128Mi
@@ -153,14 +154,3 @@ storageClass:
 
 statefulSets:
   enabled: false
-
-healthCheckProbes:
-  enabled: true
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http

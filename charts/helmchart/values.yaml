@@ -16,25 +16,26 @@ image:
       # -- Specify digest of image. Tags can be overriden but each tag will contain different digest than previous.
   digest: ""
 
+imagePullSecrets: [] 
+  # -- imagePullSecrets lists the Secret resources that should be used for accessing private registries.
+
 secret:
   enabled: false 
     # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
-  secrets:
-    KEY: "value"
+  secrets: {}
+    # KEY: "value"
 
 configmap:
   enabled: false
-  configs:
-    KEY: "value"
+  configs: {}
+    # KEY: "value"
 
-imagePullSecrets: [] 
-  # -- imagePullSecrets lists the Secret resources that should be used for accessing private registries.
 nameOverride: "" 
 
 fullnameOverride: "" 
   # -- fullnameOverride is a string that allows overriding the default fullname that appears as the application name and is used as the application name by kubernetes.
 
-pdbMinAvailable: 30% 
+pdbMinAvailable: ""
   # -- minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
 
 serviceAccount:
@@ -61,15 +62,19 @@ service:
   type: ClusterIP 
     # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
   port: 80   
-    # -- A map that specifies the port bindings of the service against the Pods in the Deployment.
+    # -- port: on which the kubernetes service is exposed
+  containerPort: ""
+    # -- Port number on which the container is accepting traffic.
+  targetPort: ""
+    # -- Port number on which the pod is accepting traffic.
 
 istio:
   # -- We can either use Istio or Ingress for an application deployment. Set `enabled: true` if istio is already installed.
-  enabled: true
+  enabled: false
   # -- virtualService is required when using istio.
   virtualService:
-    # hosts: []
-    hosts: 
+    enabled: false
+    hosts: []
       # - test.example.com
       # - test-2.example.com
   
@@ -110,14 +115,14 @@ ingress:
 
 resource: 
   enabled: false
-resources: 
+resources: {}
   # -- Requests and Limits to be specified for each pod.
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
+  # limits: 
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests: 
+  #   cpu: 100m
+  #   memory: 128Mi
 
 autoscaling:      
   enabled: false 
@@ -229,11 +234,24 @@ storageClass:
 healthCheckProbes:
   # -- liveness and readiness probes in deployment
   enabled: false
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http
+  probes: {}
+    # livenessProbe:
+    #   failureThreshold: 3
+    #   httpGet:
+    #     path: /healthcheck
+    #     port: 80
+    #     scheme: HTTP
+    #   initialDelaySeconds: 60
+    #   periodSeconds: 10
+    #   successThreshold: 1
+    #   timeoutSeconds: 2
+    # readinessProbe:
+    #   failureThreshold: 3
+    #   httpGet:
+    #     path: /healthcheck
+    #     port: 80
+    #     scheme: HTTP
+    #   initialDelaySeconds: 60
+    #   periodSeconds: 10
+    #   successThreshold: 1
+    #   timeoutSeconds: 2      
