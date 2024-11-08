@@ -98,3 +98,12 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
 {{- end }}
 {{- end }}
 
+{{/*
+Pod labels
+*/}}
+{{- define "helmchart.podLabels" -}}
+{{- range $key, $value := .Values.podLabels }}
+{{ $key }}: {{ $value | quote }}
+{{- end -}}
+{{- end -}}
+
