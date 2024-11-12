@@ -12,7 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "helmchart.selectorLabels" . | nindent 6 }}
-      
+      {{- include "helmchart.podLabels" . | nindent 6  }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -76,7 +76,7 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}on
       {{- end }}
       {{- if .Values.volume.enabled }}
       volumes:

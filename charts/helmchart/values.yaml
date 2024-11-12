@@ -235,25 +235,6 @@ healthCheckProbes:
   # -- liveness and readiness probes in deployment
   enabled: false
   probes: {}
-    # livenessProbe:
-    #   failureThreshold: 3
-    #   httpGet:
-    #     path: /healthcheck
-    #     port: 80
-    #     scheme: HTTP
-    #   initialDelaySeconds: 60
-    #   periodSeconds: 10
-    #   successThreshold: 1
-    #   timeoutSeconds: 2
-    # readinessProbe:
-    #   failureThreshold: 3
-    #   httpGet:
-    #     path: /healthcheck
-    #     port: 80
-    #     scheme: HTTP
-    #   initialDelaySeconds: 60
-    #   periodSeconds: 10
-    #   successThreshold: 1
-    #   timeoutSeconds: 2  
 podLabels: 
   ManagedBy: Clouddrove
+  
