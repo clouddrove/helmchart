@@ -22,6 +22,7 @@ jobs:
     - name: Installing checkov
       run: |
         sudo apt-get update
+        sudo apt-get remove python-urllib3
         sudo pip3 install --upgrade --force-reinstall checkov
 
     - name: Scanning helmchart for Security Vulnerabilities
