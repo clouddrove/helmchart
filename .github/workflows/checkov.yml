@@ -22,7 +22,7 @@ jobs:
     - name: Installing checkov
       run: |
         sudo apt-get update
-        sudo pip3 install -U checkov
+        sudo pip3 install --upgrade --force-reinstall checkov
 
     - name: Scanning helmchart for Security Vulnerabilities
       env:
