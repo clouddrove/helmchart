@@ -76,7 +76,7 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 8 }}on
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if .Values.volume.enabled }}
       volumes:
