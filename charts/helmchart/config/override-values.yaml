@@ -18,6 +18,11 @@ configmap:
 
 imagePullSecrets: [] 
 
+commands:
+  - /bin/sh
+  - -c
+  - echo "Hello, from CloudDrove!"
+
 nameOverride: "" 
 
 fullnameOverride: "" 
@@ -96,11 +101,24 @@ poddisruptionbudget:
   enabled: true
   minAvailable: 30%
 
-nodeSelector: {}
+nodeSelector:
+  kubernetes.io/os: linux
 
-tolerations: []
+tolerations:
+  - key: "clouddrove"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
 
-affinity: {} 
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "kubernetes.io/os"
+          operator: In
+          values:
+          - "linux" 
 
 cronJob: 
   enabled: false

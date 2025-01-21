@@ -15,4 +15,5 @@ spec:
       name: http
   selector:
     {{- include "helmchart.selectorLabels" . | nindent 4 }}
+    {{- include "helmchart.podLabels" . | nindent 4 }}
 {{- end }}    

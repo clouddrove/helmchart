@@ -19,6 +19,11 @@ image:
 imagePullSecrets: [] 
   # -- imagePullSecrets lists the Secret resources that should be used for accessing private registries.
 
+commands: []
+  # - /bin/sh
+  # - -c
+  # - echo "Hello, from CloudDrove!"
+  
 secret:
   enabled: false 
     # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
@@ -235,23 +240,6 @@ healthCheckProbes:
   # -- liveness and readiness probes in deployment
   enabled: false
   probes: {}
-    # livenessProbe:
-    #   failureThreshold: 3
-    #   httpGet:
-    #     path: /healthcheck
-    #     port: 80
-    #     scheme: HTTP
-    #   initialDelaySeconds: 60
-    #   periodSeconds: 10
-    #   successThreshold: 1
-    #   timeoutSeconds: 2
-    # readinessProbe:
-    #   failureThreshold: 3
-    #   httpGet:
-    #     path: /healthcheck
-    #     port: 80
-    #     scheme: HTTP
-    #   initialDelaySeconds: 60
-    #   periodSeconds: 10
-    #   successThreshold: 1
-    #   timeoutSeconds: 2      
+podLabels: 
+  ManagedBy: Clouddrove
+  
