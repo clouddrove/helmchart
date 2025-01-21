@@ -45,6 +45,10 @@ spec:
             - name: http
               containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
               protocol: TCP
+          {{- if .Values.commands }}
+          command:
+            {{- toYaml .Values.commands | nindent 12 }}
+          {{- end }}              
           envFrom:
           {{- if .Values.configmap.enabled }}
             - configMapRef:
