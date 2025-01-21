@@ -12,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "helmchart.selectorLabels" . | nindent 6 }}
+      {{- include "helmchart.podLabels" . | nindent 6  }}
   template:
     metadata:
       annotations:
@@ -22,6 +23,7 @@ spec:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         {{- include "helmchart.selectorLabels" . | nindent 8 }}
+        {{- include "helmchart.podLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
