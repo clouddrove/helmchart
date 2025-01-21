@@ -18,6 +18,11 @@ configmap:
 
 imagePullSecrets: [] 
 
+commands:
+  - /bin/sh
+  - -c
+  - echo "Hello, from CloudDrove!"
+
 nameOverride: "" 
 
 fullnameOverride: "" 
