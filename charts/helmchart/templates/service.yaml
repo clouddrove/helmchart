@@ -3,7 +3,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "helmchart.fullname" . }}
-  namespace: {{ include "helmchart.namespace" . }}
+  namespace: 
+    {{- if .Values.image.digest }}
+    image: {{.Values.namespaces}}
+    {{- else }}
+    image:  {{ include "helmchart.namespaces" . }}
+    {{- end }}
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:

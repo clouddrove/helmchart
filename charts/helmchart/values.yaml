@@ -57,10 +57,16 @@ podAnnotations: {}
 podSecurityContext: {} 
   # -- podSecurityContext holds pod-level security access control settings.
 
-securityContext: {}
-      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. securityContext takes precedence over podSecurityContext    
+securityContext: 
+  capabilities:
+    drop:
+      - ALL 
 
-service: 
+
+      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. securityContext takes precedence over podSecurityContext    
+namespaces: {}
+    # -- namespaces is a map that specifies the configuration for the Namespace resource that is created by the chart.
+
     # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
   enabled: true
     # -- Specifies whether a service should be created.        
@@ -120,14 +126,14 @@ ingress:
 
 resource: 
   enabled: false
-resources: {}
+  resources: 
   # -- Requests and Limits to be specified for each pod.
-  # limits: 
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests: 
-  #   cpu: 100m
-  #   memory: 128Mi
+    limits: 
+      cpu: 100m
+      memory: 128Mi
+    requests: 
+      cpu: 100m
+      memory: 128Mi
 
 autoscaling:      
   enabled: false 

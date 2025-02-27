@@ -21,6 +21,7 @@ spec:
           restartPolicy: Never
           containers:
           - name: {{ include "helmchart.fullname" . }}
+            securityContext: {{- toYaml .Values.securityContext | nindent 12 }}
             image: "{{ .Values.cronJob.image.repository }}:{{ .Values.cronJob.image.tag }}"
             imagePullPolicy: {{ .Values.cronJob.image.pullPolicy }}
             resources:

@@ -44,6 +44,7 @@ spec:
           - image: {{ $job.image.repository }}:{{ $job.image.tag }}
             imagePullPolicy: {{ $job.image.imagePullPolicy }}
             name: {{ $jobname }}
+            securityContext: {{.Values.securityContext | nindent 12 }}
             {{- with $job.env }}
             env:
 {{ toYaml . | indent 12 }}
