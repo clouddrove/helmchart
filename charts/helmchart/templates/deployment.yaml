@@ -44,17 +44,21 @@ spec:
           {{- end }}  
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
+            {{- range $key, $value := .Values.service}}
             - name: http
-              containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
+              containerPort: {{ $value.containerPort | default $value.port }}
               protocol: TCP
+              {{- end }}    
           {{- if .Values.commands }}
           command:
             {{- toYaml .Values.commands | nindent 12 }}
           {{- end }}              
           envFrom:
-          {{- if .Values.configmap.enabled }}
+          {{- if .Values.configmaps.enabled }}
+          {{- range .Values.configmaps.config }} 
             - configMapRef:
-                name: {{ include "helmchart.fullname" . }}-config
+                name: {{ include "helmchart.fullname" $ }}-{{ .name }}-config
+          {{- end }}
           {{- end }}
           {{- if .Values.secret.enabled }}
             - secretRef:

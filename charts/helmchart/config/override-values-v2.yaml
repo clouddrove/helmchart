@@ -1,0 +1,17 @@
+service:
+    service1:
+        type: ClusterIP
+        port: 80
+        containerPort: 8080
+        targetPort: 8080
+configmaps:
+  enabled: true
+  config:
+    - name: config1
+      data:
+        key1: "value1"
+        key2: "value2"
+    - name: config2
+      data:
+        keyA: "valueA"
+        keyB: "valueB"
