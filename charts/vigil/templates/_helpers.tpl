@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "helmchart.name" -}}
+{{- define "vigil.name" -}}
 {{- .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
