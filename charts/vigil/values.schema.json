@@ -1,0 +1,427 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+      "replicaCount",
+      "image",
+      "secret",
+      "configmap",
+      "imagePullSecrets",
+      "nameOverride",
+      "fullnameOverride",
+      "pdbMinAvailable",
+      "serviceAccount",
+      "podAnnotations",
+      "podSecurityContext",
+      "securityContext",
+      "service",
+      "ingress",
+      "autoscaling",
+      "poddisruptionbudget",
+      "nodeSelector",
+      "tolerations",
+      "affinity",
+      "metrics"          
+    ],
+    "properties": {
+      "replicaCount": {
+          "type": "integer",
+          "default": 1,
+          "title": "The replicaCount Schema",
+          "examples": [
+              1
+          ]
+      },        
+      "image": {
+        "type": "object",
+        "required": [
+          "repository",
+          "pullPolicy"
+        ],
+        "properties": {
+          "repository": {
+            "type": "string",
+            "pattern": "^[a-zA-z0-9._-]+(\/)*[a-z0-9]+[^:]*$"
+          },
+          "pullPolicy": {
+            "type": "string",
+            "pattern": "^(Always|Never|IfNotPresent)$"
+          }
+        }
+      },
+      "secret": {
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "pattern": "^(true|false)$"
+          }
+        }
+      },
+      "configmap": {
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "pattern": "^(true|false)$"
+          }
+        }
+      },
+      "imagePullSecrets": {
+        "type": "array",
+        "default": [],
+        "title": "The imagePullSecrets Schema",
+        "items": {},
+        "examples": [
+            []
+        ]
+      },
+      "nameOverride": {
+        "type": "string",
+        "default": "",
+        "title": "The nameOverride Schema",
+        "examples": [
+            ""
+        ]
+      },
+      "fullnameOverride": {
+        "type": "string",
+        "default": "",
+        "title": "The fullnameOverride Schema",
+        "examples": [
+            ""
+        ]
+      },
+      "pdbMinAvailable": {
+        "type": "string",
+        "default": "",
+        "title": "The pdbMinAvailable Schema",
+        "examples": [
+            "30%"
+        ]
+      },
+      "serviceAccount": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "annotations",
+          "name"          
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "pattern": "^(true|false)$"
+          }
+        },
+        "annotations": {
+          "type": "object",
+          "default": {},
+          "title": "The annotations Schema",
+          "required": [],
+          "properties": {},
+          "examples": [{}]
+        }                                   
+      },
+        "podAnnotations": {
+          "type": "object",
+          "required": [],
+          "properties": {},
+          "default": {}        
+        },
+        "podSecurityContext": {
+            "type": "object",
+            "default": {},
+            "title": "The podSecurityContext Schema",
+            "required": [],
+            "properties": {}
+        },
+        "securityContext": {
+            "type": "object",
+            "default": {},
+            "title": "The securityContext Schema",
+            "required": [],
+            "properties": {}
+        },
+        "service": {
+          "type": "object",
+          "default": {},
+          "title": "The service Schema",
+          "required": [
+              "enabled",
+              "type",
+              "port"
+          ],
+          "properties": {
+              "enabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "title": "The enabled Schema",
+                  "examples": [
+                      true
+                  ]
+              },
+              "type": {
+                  "type": "string",
+                  "default": "",
+                  "title": "The type Schema",
+                  "examples": [
+                      "ClusterIP"
+                  ]
+              },
+              "port": {
+                  "type": "integer",
+                  "default": 0,
+                  "title": "The port Schema",
+                  "examples": [
+                      80
+                  ]
+              }
+          }                              
+      },
+      "ingress": {
+        "type": "object",
+        "default": {},
+        "title": "The ingress Schema",
+        "required": [
+            "enabled",
+            "className",
+            "annotations",
+            "hosts",
+            "tls"
+        ],
+        "properties": {
+            "enabled": {
+                "type": "boolean",
+                "default": false,
+                "title": "The enabled Schema",
+                "examples": [
+                    false
+                ]
+            },
+            "className": {
+                "type": "string",
+                "default": "",
+                "title": "The className Schema",
+                "examples": [
+                    ""
+                ]
+            },
+            "annotations": {
+                "type": "object",
+                "default": {},
+                "title": "The annotations Schema",
+                "required": [],
+                "properties": {},
+                "examples": [{}]
+            },
+            "hosts": {
+                "type": "array",
+                "default": [],
+                "title": "The hosts Schema",
+                "items": {
+                    "type": "object",
+                    "default": {},
+                    "title": "A Schema",
+                    "required": [
+                        "host",
+                        "paths"
+                    ],
+                    "properties": {
+                        "host": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The host Schema",
+                            "examples": [
+                                "chart-example.local"
+                            ]
+                        },
+                        "paths": {
+                            "type": "array",
+                            "default": [],
+                            "title": "The paths Schema",
+                            "items": {
+                                "type": "object",
+                                "default": {},
+                                "title": "A Schema",
+                                "required": [
+                                    "path",
+                                    "pathType"
+                                ],
+                                "properties": {
+                                    "path": {
+                                        "type": "string",
+                                        "default": "",
+                                        "title": "The path Schema",
+                                        "examples": [
+                                            "/"
+                                        ]
+                                    },
+                                    "pathType": {
+                                        "type": "string",
+                                        "default": "",
+                                        "title": "The pathType Schema",
+                                        "examples": [
+                                            "ImplementationSpecific"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tls": {
+                "type": "array",
+                "default": [],
+                "title": "The tls Schema",
+                "items": {},
+                "examples": [
+                    []
+                ]
+            }
+        }
+    },
+    "autoscaling": {
+        "type": "object",
+        "default": {},
+        "title": "The autoscaling Schema",
+        "required": [
+            "enabled",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage"
+        ],
+        "properties": {
+            "enabled": {
+                "type": "boolean",
+                "default": false,
+                "title": "The enabled Schema",
+                "examples": [
+                    false
+                ]
+            },
+            "minReplicas": {
+                "type": "integer",
+                "default": 0,
+                "title": "The minReplicas Schema",
+                "examples": [
+                    1
+                ]
+            },
+            "maxReplicas": {
+                "type": "integer",
+                "default": 0,
+                "title": "The maxReplicas Schema",
+                "examples": [
+                    100
+                ]
+            },
+            "targetCPUUtilizationPercentage": {
+                "type": "integer",
+                "default": 0,
+                "title": "The targetCPUUtilizationPercentage Schema",
+                "examples": [
+                    80
+                ]
+            }
+        }
+    },
+    "poddisruptionbudget": {
+        "type": "object",
+        "default": {},
+        "title": "The poddisruptionbudget Schema",
+        "required": [
+            "enabled"
+        ],
+        "properties": {
+            "enabled": {
+                "type": "boolean",
+                "default": false,
+                "title": "The enabled Schema",
+                "examples": [
+                    false
+                ]
+            }
+        }
+    },
+    "nodeSelector": {
+        "type": "object",
+        "default": {},
+        "title": "The nodeSelector Schema",
+        "required": [],
+        "properties": {},
+        "examples": [{}]
+    },
+    "tolerations": {
+        "type": "array",
+        "default": [],
+        "title": "The tolerations Schema",
+        "items": {},
+        "examples": [
+            []
+        ]
+    },
+    "affinity": {
+        "type": "object",
+        "default": {},
+        "title": "The affinity Schema",
+        "required": [],
+        "properties": {},
+        "examples": [{}]
+    },
+    "metrics": {
+        "type": "object",
+        "default": {},
+        "title": "The metrics Schema",
+        "required": [
+            "enabled",
+            "portName",
+            "port",
+            "targetPort"
+        ],
+        "properties": {
+            "enabled": {
+                "type": "boolean",
+                "default": false,
+                "title": "The enabled Schema",
+                "examples": [
+                    true
+                ]
+            },
+            "portName": {
+                "type": "string",
+                "default": "",
+                "title": "The portName Schema",
+                "examples": [
+                    "prometheus"
+                ]
+            },
+            "port": {
+                "type": "integer",
+                "default": 0,
+                "title": "The port Schema",
+                "examples": [
+                    3001
+                ]
+            },
+            "targetPort": {
+                "type": "integer",
+                "default": 0,
+                "title": "The targetPort Schema",
+                "examples": [
+                    3001
+                ]
+            }
+        }
+      }
+    }
+  }    

@@ -1,0 +1,174 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "stable-alpine3.17"
+  digest: "sha256:5e1ccef1e821253829e415ac1e3eafe46920aab0bf67e0fe8a104c57dbfffdf7"
+
+secret:
+  enabled: true
+  secrets:
+    SECRET_KEY: "secret"
+
+configmap:
+  enabled: true
+  configs:
+    CONFIG_KEY: "configmap"
+
+imagePullSecrets: [] 
+
+commands:
+  - /bin/sh
+  - -c
+  - echo "Hello, from hugin!"
+
+nameOverride: "" 
+
+fullnameOverride: "" 
+
+pdbMinAvailable: 30% 
+
+serviceAccount:
+  enabled: true  
+  annotations: {}       
+  name: ""
+  automountServiceAccountToken: false 
+
+podAnnotations: {} 
+
+podSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  fsGroup: 0
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  capabilities:
+    add: ["NET_ADMIN", "SYS_TIME"]
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: false
+  runAsGroup: 3000
+  fsGroup: 2000
+
+service: 
+  enabled: true
+  type: NodePort 
+  port: 80  
+  containerPort: 80
+  targetPort: http
+
+istio:
+  enabled: false
+  virtualService:
+    enabled: true
+    hosts: 
+      - test.example.com
+      - test-2.example.com
+  gateway:
+    names: 
+      - "istio-system/istio-gateway"
+
+ingress:    
+  enabled: true 
+  className: ""
+  annotations: {}
+  hosts:                        
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resource:
+  enabled: true
+resources: 
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:      
+  enabled: true 
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+poddisruptionbudget:
+  enabled: true
+  minAvailable: 30%
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+tolerations:
+  - key: "hugin"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "kubernetes.io/os"
+          operator: In
+          values:
+          - "linux" 
+
+cronJob: 
+  enabled: false
+  schedule: ""
+  startingDeadlineSeconds: 3600
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  resources: {}
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "1.16.0" 
+  secret:
+    enabled: false
+  configmap:
+    enabled: false
+
+metrics:
+  enabled: false   
+  portName: "prometheus" 
+  port: 3001     
+  targetPort: 3001 
+
+
+volume:
+  enabled: false
+  mountPath: "/usr/share/nginx/html"
+  hostPath: "/var/www/html"
+
+storageClass:
+  create: false
+  existingClaim: ""
+  # storageClassName: "mystorageclass"
+  
+  aws: false
+  fileSystemId: fs-abcd1234xyz
+  
+  azure: false
+  
+  gcp: false
+
+  provisioner: "k8s.io/minikube-hostpath"
+  allowVolumeExpansion: false
+  volumeBindingMode: Immediate
+
+  persistence:
+    enabled: false
+    accessMode: ReadWriteOnce
+    size: 512Mi
+    persistentVolumeReclaimPolicy: ""
+
+statefulSets:
+  enabled: false
