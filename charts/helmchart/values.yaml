@@ -102,7 +102,6 @@ ingress:
     # -- Specifies whether a ingress should be created
   className: ""
   annotations: {}
-        # -- Annotations that should be added to the Service resource. This is injected directly in to the resource yaml.
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:                        
@@ -240,6 +239,35 @@ healthCheckProbes:
   # -- liveness and readiness probes in deployment
   enabled: false
   probes: {}
-podLabels: 
-  ManagedBy: Clouddrove
-  
+    # livenessProbe:
+    #   enabled: true
+    #   httpGet:
+    #     path: /healthz
+    #     port: http
+    #   initialDelaySeconds: 10
+    #   periodSeconds: 10
+    #   timeoutSeconds: 2
+    #   failureThreshold: 3
+    #   successThreshold: 1
+    #
+    # readinessProbe:
+    #   enabled: true
+    #   httpGet:
+    #     path: /readyz
+    #     port: http
+    #   initialDelaySeconds: 5
+    #   periodSeconds: 5
+    #   timeoutSeconds: 2
+    #   failureThreshold: 3
+    #   successThreshold: 1
+
+podLabels: {}
+  # -- podLabels allows you to add custom labels to the pods.
+  # ManagedBy: Clouddrove
+
+deploymentStrategy: {}
+  # -- Defines how updates to the Deployment are rolled out.
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
