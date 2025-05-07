@@ -1,15 +1,18 @@
-{{- if .Values.configmap.enabled }}
+{{- if .Values.configmaps.enabled }}
+  {{- range .Values.configmaps.config}}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "helmchart.fullname" . }}-config
-  namespace: {{ include "helmchart.namespace" . }}
+  name: {{ include "helmchart.fullname" $ }}-{{.name}}-config
+  namespace: {{ include "helmchart.namespace" $ }}
   labels:
     {{- include "helmchart.labels" $ | nindent 4 }}
   annotations:
-    "helm.sh/hook-weight": "4"    
+    "helm.sh/hook-weight": "4"
 data:
-{{- with .Values.configmap.configs }}
-  {{- toYaml . | nindent 2 -}}
-  {{- end}}
-{{- end}}
+  {{- range $key, $val := .data }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}
