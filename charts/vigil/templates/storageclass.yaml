@@ -1,8 +1,8 @@
 {{- if .Values.storageClass.create }}
-apiVersion: {{ include "helmchart.storageClass.apiVersion" . }}
+apiVersion: {{ include "vigil.storageClass.apiVersion" . }}
 kind: StorageClass
 metadata:
-  name: {{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}
+  name: {{ default (include "vigil.fullname" .) .Values.storageClass.storageClassName }}
 provisioner: {{ .Values.storageClass.provisioner }}
 {{- if .Values.storageClass.aws }}
 parameters:

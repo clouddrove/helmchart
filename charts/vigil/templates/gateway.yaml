@@ -3,7 +3,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ include "helmchart.fullname" . }}-istio-gateway
+  name: {{ include "vigil.fullname" . }}-istio-gateway
   namespace: {{ default .Release.Namespace .Values.istio.gateway.namespace }}
 spec:
   selector:

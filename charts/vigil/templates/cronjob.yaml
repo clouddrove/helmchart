@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name:  {{ include "helmchart.fullname" . }}-migration
+  name:  {{ include "vigil.fullname" . }}-migration
   labels:
-    {{- include "helmchart.labels" . | nindent 4 }}
+    {{- include "vigil.labels" . | nindent 4 }}
 spec:
   schedule: {{ .Values.cronJob.schedule | quote }}
   startingDeadlineSeconds: {{ .Values.cronJob.startingDeadlineSeconds }}
@@ -14,13 +14,13 @@ spec:
     spec:
       template:
         metadata:
-          name: {{ include "helmchart.fullname" . }}
+          name: {{ include "vigil.fullname" . }}
           labels:
-            {{- include "helmchart.labels" . | nindent 12 }}
+            {{- include "vigil.labels" . | nindent 12 }}
         spec:
           restartPolicy: Never
           containers:
-          - name: {{ include "helmchart.fullname" . }}
+          - name: {{ include "vigil.fullname" . }}
             image: "{{ .Values.cronJob.image.repository }}:{{ .Values.cronJob.image.tag }}"
             imagePullPolicy: {{ .Values.cronJob.image.pullPolicy }}
             resources:
@@ -31,11 +31,11 @@ spec:
             {{- end }}
             {{- if .Values.cronJob.configmap.enabled }}
               - configMapRef:
-                  name: {{ include "helmchart.fullname" . }}
+                  name: {{ include "vigil.fullname" . }}
             {{- end }}
             {{- if .Values.cronJob.secret.enabled }}
               - secretRef:
-                  name: {{ include "helmchart.fullname" . }}
+                  name: {{ include "vigil.fullname" . }}
             {{- end }}  
 {{- end }}
 

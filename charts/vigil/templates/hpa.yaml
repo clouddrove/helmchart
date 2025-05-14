@@ -1,15 +1,15 @@
 {{- if .Values.autoscaling.enabled }}
-apiVersion: {{ include "helmchart.hpa.apiVersion" . }}
+apiVersion: {{ include "vigil.hpa.apiVersion" . }}
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "helmchart.fullname" . }}
+  name: {{ include "vigil.fullname" . }}
   labels:
-    {{- include "helmchart.labels" . | nindent 4 }}
+    {{- include "vigil.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "helmchart.fullname" . }}
+    name: {{ include "vigil.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
@@ -17,7 +17,7 @@ spec:
     - type: Resource
       resource:
         name: memory
-        {{- if eq (include "helmchart.hpa.apiVersion" .) "autoscaling/v2beta1" }}
+        {{- if eq (include "vigil.hpa.apiVersion" .) "autoscaling/v2beta1" }}
         targetAverageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
         {{- else }}
         target:
@@ -29,7 +29,7 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        {{- if eq (include "helmchart.hpa.apiVersion" .) "autoscaling/v2beta1" }}
+        {{- if eq (include "vigil.hpa.apiVersion" .) "autoscaling/v2beta1" }}
         targetAverageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
         {{- else }}
         target:

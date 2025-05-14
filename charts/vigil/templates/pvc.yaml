@@ -3,10 +3,10 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "helmchart.fullname" . }}
+  name: {{ template "vigil.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "helmchart.name" . }}
-    helm.sh/chart: {{ include "helmchart.chart" . }}
+    app.kubernetes.io/name: {{ include "vigil.name" . }}
+    helm.sh/chart: {{ include "vigil.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
@@ -18,7 +18,7 @@ spec:
 {{- if not .Values.storageClass.create }}
   storageClassName: ""
 {{- else }}
-  storageClassName: "{{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}"
+  storageClassName: "{{ default (include "vigil.fullname" .) .Values.storageClass.storageClassName }}"
 {{- end }}
 {{- end -}}
 {{- end -}}

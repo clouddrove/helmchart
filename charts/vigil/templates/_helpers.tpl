@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "helmchart.fullname" -}}
+{{- define "vigil.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,26 +26,26 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "helmchart.chart" -}}
+{{- define "vigil.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "helmchart.labels" -}}
-helm.sh/chart: {{ include "helmchart.chart" . }}
-{{ include "helmchart.selectorLabels" . }}
+{{- define "vigil.labels" -}}
+helm.sh/chart: {{ include "vigil.chart" . }}
+{{ include "vigil.selectorLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/created-by: "hugin"
+app.kubernetes.io/created-by: "Clouddrove"
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
-{{- define "helmchart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "helmchart.name" . }}
+{{- define "vigil.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "vigil.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app: {{ .Release.Name }}
 {{- end }}
@@ -53,9 +53,9 @@ app: {{ .Release.Name }}
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "helmchart.serviceAccountName" -}}
+{{- define "vigil.serviceAccountName" -}}
 {{- if .Values.serviceAccount.enabled }}
-{{- default (include "helmchart.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "vigil.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -64,7 +64,7 @@ Create the name of the service account to use
 {{/*
 Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 */}}
-{{- define "helmchart.hpa.apiVersion" -}}
+{{- define "vigil.hpa.apiVersion" -}}
 {{- if $.Capabilities.APIVersions.Has "autoscaling/v2" }}
 {{- print "autoscaling/v2" }}
 {{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta2" }}
@@ -79,7 +79,7 @@ Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 {{/*
 Return the appropriate apiVersion for Storage Class.
 */}}
-{{- define "helmchart.storageClass.apiVersion" -}}
+{{- define "vigil.storageClass.apiVersion" -}}
 {{- if $.Capabilities.APIVersions.Has "storage.k8s.io/v1" }}
 {{- print "storage.k8s.io/v1" }}
 {{- else }}
@@ -90,7 +90,7 @@ Return the appropriate apiVersion for Storage Class.
 {{/*
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts
 */}}
-{{- define "helmchart.namespace" -}}
+{{- define "vigil.namespace" -}}
 {{- if .Values.namespaceOverride }}
 {{- .Values.namespaceOverride }}
 {{- else }}
@@ -100,7 +100,7 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
 {{/*
 Pod labels
 */}}
-{{- define "helmchart.podLabels" -}}
+{{- define "vigil.podLabels" -}}
 {{- range $key, $value := .Values.podLabels -}}
 {{ $key }}: {{ $value | quote }}
 {{- end -}}

@@ -2,13 +2,13 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  namespace: {{ include "helmchart.namespace" . }}
-  name: {{ include "helmchart.fullname" . }}
+  namespace: {{ include "vigil.namespace" . }}
+  name: {{ include "vigil.fullname" . }}
   labels:
-    {{- include "helmchart.labels" . | nindent 4 }}
+    {{- include "vigil.labels" . | nindent 4 }}
 spec:
   minAvailable: {{ .Values.poddisruptionbudget.minAvailable | quote }}
   selector:
     matchLabels:
-      {{- include "helmchart.selectorLabels" . | nindent 6 }}
+      {{- include "vigil.selectorLabels" . | nindent 6 }}
 {{- end}}    

@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "helmchart.fullname" . }}-config
-  namespace: {{ include "helmchart.namespace" . }}
+  name: {{ include "vigil.fullname" . }}-config
+  namespace: {{ include "vigil.namespace" . }}
   labels:
-    {{- include "helmchart.labels" $ | nindent 4 }}
+    {{- include "vigil.labels" $ | nindent 4 }}
   annotations:
     "helm.sh/hook-weight": "4"    
 data:
