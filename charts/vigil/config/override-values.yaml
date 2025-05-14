@@ -1,174 +1,265 @@
-replicaCount: 1
+secretConfig: |-
+  # Vigil
+  # Microservices Status Page
+  # Configuration file
+  # Example: https://github.com/valeriansaliou/vigil/blob/master/config.cfg
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  tag: "stable-alpine3.17"
-  digest: "sha256:5e1ccef1e821253829e415ac1e3eafe46920aab0bf67e0fe8a104c57dbfffdf7"
-
-secret:
-  enabled: true
-  secrets:
-    SECRET_KEY: "secret"
-
-configmap:
-  enabled: true
-  configs:
-    CONFIG_KEY: "configmap"
-
-imagePullSecrets: [] 
-
-commands:
-  - /bin/sh
-  - -c
-  - echo "Hello, from hugin!"
-
-nameOverride: "" 
-
-fullnameOverride: "" 
-
-pdbMinAvailable: 30% 
-
-serviceAccount:
-  enabled: true  
-  annotations: {}       
-  name: ""
-  automountServiceAccountToken: false 
-
-podAnnotations: {} 
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-  fsGroup: 0
-  seccompProfile:
-    type: RuntimeDefault
-
-securityContext:
-  capabilities:
-    add: ["NET_ADMIN", "SYS_TIME"]
-  readOnlyRootFilesystem: false
-  allowPrivilegeEscalation: false
-  runAsGroup: 3000
-  fsGroup: 2000
-
-service: 
-  enabled: true
-  type: NodePort 
-  port: 80  
-  containerPort: 80
-  targetPort: http
-
-istio:
-  enabled: false
-  virtualService:
-    enabled: true
-    hosts: 
-      - test.example.com
-      - test-2.example.com
-  gateway:
-    names: 
-      - "istio-system/istio-gateway"
-
-ingress:    
-  enabled: true 
-  className: ""
-  annotations: {}
-  hosts:                        
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-
-resource:
-  enabled: true
-resources: 
-  limits:
-    cpu: 200m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
-
-autoscaling:      
-  enabled: true 
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-
-poddisruptionbudget:
-  enabled: true
-  minAvailable: 30%
-
-nodeSelector:
-  kubernetes.io/os: linux
-
-tolerations:
-  - key: "hugin"
-    operator: "Equal"
-    value: "true"
-    effect: "NoSchedule"
-
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: "kubernetes.io/os"
-          operator: In
-          values:
-          - "linux" 
-
-cronJob: 
-  enabled: false
-  schedule: ""
-  startingDeadlineSeconds: 3600
-  concurrencyPolicy: Forbid
-  failedJobsHistoryLimit: 3
-  resources: {}
-  image:
-    repository: nginx
-    pullPolicy: IfNotPresent
-    tag: "1.16.0" 
-  secret:
-    enabled: false
-  configmap:
-    enabled: false
-
-metrics:
-  enabled: false   
-  portName: "prometheus" 
-  port: 3001     
-  targetPort: 3001 
-
-
-volume:
-  enabled: false
-  mountPath: "/usr/share/nginx/html"
-  hostPath: "/var/www/html"
-
-storageClass:
-  create: false
-  existingClaim: ""
-  # storageClassName: "mystorageclass"
   
-  aws: false
-  fileSystemId: fs-abcd1234xyz
-  
-  azure: false
-  
-  gcp: false
+  [server]
 
-  provisioner: "k8s.io/minikube-hostpath"
-  allowVolumeExpansion: false
-  volumeBindingMode: Immediate
+  log_level = "debug"
+  inet = "0.0.0.0:8080"
+  workers = 4
 
-  persistence:
-    enabled: false
-    accessMode: ReadWriteOnce
-    size: 512Mi
-    persistentVolumeReclaimPolicy: ""
+  manager_token = "REPLACE_THIS_WITH_A_VERY_SECRET_KEY"
+  reporter_token = "REPLACE_THIS_WITH_A_SECRET_KEY"
 
-statefulSets:
-  enabled: false
+  [assets]
+
+  path = "./res/assets/"
+
+  [branding]
+
+  page_title = "Crisp Status"
+  page_url = "https://status.crisp.chat/"
+  company_name = "Crisp IM SAS"
+  icon_color = "#1972F5"
+  icon_url = "https://valeriansaliou.github.io/vigil/images/crisp-icon.png"
+  logo_color = "#1972F5"
+  logo_url = "https://valeriansaliou.github.io/vigil/images/crisp-logo.svg"
+  website_url = "https://crisp.chat/"
+  support_url = "mailto:support@crisp.chat"
+  custom_html = ""
+
+  [metrics]
+
+  poll_interval = 120
+  poll_retry = 2
+
+  poll_http_status_healthy_above = 200
+  poll_http_status_healthy_below = 400
+
+  poll_delay_dead = 10
+  poll_delay_sick = 5
+
+  poll_parallelism = 4
+
+  push_delay_dead = 20
+
+  push_system_cpu_sick_above = 0.90
+  push_system_ram_sick_above = 0.90
+
+  script_interval = 300
+
+  script_parallelism = 2
+
+  local_delay_dead = 40
+
+  [plugins]
+
+  [plugins.rabbitmq]
+
+  api_url = "http://127.0.0.1:15672"
+  auth_username = "rabbitmq-administrator"
+  auth_password = "RABBITMQ_ADMIN_PASSWORD"
+  virtualhost = "crisp"
+
+  queue_ready_healthy_below = 500
+  queue_nack_healthy_below = 100
+  queue_ready_dead_above = 20000
+  queue_nack_dead_above = 5000
+  queue_loaded_retry_delay = 500
+
+  [notify]
+
+  startup_notification = true
+  reminder_interval = 300
+  reminder_backoff_function = "linear"
+  reminder_backoff_limit = 3
+
+  [notify.email]
+
+  from = "status@crisp.chat"
+  to = "status@crisp.chat"
+
+  smtp_host = "localhost"
+  smtp_port = 587
+  smtp_username = "user-access"
+  smtp_password = "user-password"
+  smtp_encrypt = false
+
+  [notify.twilio]
+
+  to = [
+    "+336xxxxxxx",
+    "+337xxxxxxx"
+  ]
+
+  service_sid = "service-sid"
+  account_sid = "account-sid"
+  auth_token = "auth-token"
+
+  reminders_only = true
+
+  [notify.slack]
+
+  hook_url = "https://hooks.slack.com/services/xxxx"
+  mention_channel = true
+
+  [notify.zulip]
+
+  bot_email = "bot-name@domain.zulipchat.com"
+  bot_api_key = "xxxx"
+  channel = "vigil"
+  api_url = "https://domain.zulipchat.com/api/v1/"
+
+  [notify.telegram]
+
+  bot_token = "xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  chat_id = "xxxxxxxxx"
+
+  [notify.pushover]
+
+  app_token = "xxxx"
+  user_keys = ["xxxx"]
+
+  [notify.gotify]
+
+  app_url = "https://push.gotify.net"
+  app_token = "xxxx"
+
+  [notify.xmpp]
+
+  from = "vigil@valeriansaliou.name"
+  to = "valerian@valeriansaliou.name"
+
+  xmpp_password = "xmpp-password"
+
+  [notify.matrix]
+
+  homeserver_url = "https://matrix.org"
+  access_token = "xxxx"
+  room_id = "!abc123:matrix.org"
+
+  [notify.webex]
+
+  endpoint_url = "https://webexapis.com/v1/messages"
+  token = "xxxxx"
+  room_id = "yyyyy"
+
+  [notify.webhook]
+
+  hook_url = "https://domain.com/webhooks/xxxx"
+
+  [probe]
+
+  [[probe.service]]
+
+  id = "web"
+  label = "Web nodes"
+
+  [[probe.service.node]]
+
+  id = "router"
+  label = "Core main router"
+  mode = "poll"
+
+  replicas = [
+    "icmp://edge-1.pool.net.crisp.chat",
+    "icmp://edge-2.pool.net.crisp.chat"
+  ]
+
+  [[probe.service.node]]
+
+  id = "load-balancer"
+  label = "Core main load balancer"
+  mode = "poll"
+
+  replicas = [
+    "tcp://edge-1.pool.net.crisp.chat:80",
+    "tcp://edge-2.pool.net.crisp.chat:80",
+    "tcp://edge-3.pool.net.crisp.chat:80"
+  ]
+
+  [[probe.service.node]]
+
+  id = "help"
+  label = "Core help load balancer"
+  mode = "poll"
+  replicas = ["tcp://help-1.pool.net.crisp.chat:80"]
+
+  [[probe.service.node]]
+
+  id = "api"
+  label = "Access to API service"
+  mode = "poll"
+  replicas = ["https://api.crisp.chat/v1/_system/health"]
+
+  [[probe.service.node]]
+
+  id = "status"
+  label = "Access to status page"
+  mode = "poll"
+  replicas = ["https://status.crisp.chat/robots.txt"]
+  http_body_healthy_match = "User-agent:.*"
+
+  [[probe.service]]
+
+  id = "relay"
+  label = "Relay nodes"
+
+  [[probe.service.node]]
+
+  id = "socket-client"
+  label = "Visitor realtime sockets"
+  mode = "push"
+  reveal_replica_name = true
+  rabbitmq_queue = "client"
+  rabbitmq_queue_nack_healthy_below = 100
+  rabbitmq_queue_nack_dead_above = 1000
+
+  [[probe.service]]
+
+  id = "internal"
+  label = "Internal nodes"
+
+  [[probe.service.node]]
+
+  id = "gateway"
+  label = "Private gateway"
+  mode = "local"
+
+  [[probe.service.node]]
+
+  id = "capacity"
+  label = "Network capacity"
+  mode = "local"
+
+  [[probe.service]]
+
+  id = "plugin"
+  label = "Plugin nodes"
+
+  [[probe.service.node]]
+
+  id = "plugin-health"
+  label = "Plugins health"
+  mode = "script"
+  link_url = "https://status.plugins.crisp.chat/"
+  link_label = "See status details"
+
+  scripts = [
+    '''
+    status=$(curl --silent --connect-timeout 3 https://status.plugins.crisp.chat/status/text)
+
+    if [ -z "$status" ]; then
+      exit 2
+    fi
+
+    if [ "$status" = "healthy" ]; then
+      exit 0
+    fi
+
+    exit 1
+    '''
+  ]

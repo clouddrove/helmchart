@@ -1,4 +1,4 @@
-# Default values for helmchart.
+# Default values for vigil.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -22,10 +22,10 @@ imagePullSecrets: []
 commands: []
   # - /bin/sh
   # - -c
-  # - echo "Hello, from hugin!"
+  # - echo "Hello, from Clouddrove!"
   
 secret:
-  enabled: false 
+  enabled: true # Always be true to add vigil config 
     # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
   secrets: {}
     # KEY: "value"
@@ -88,13 +88,13 @@ istio:
       # - test-2.example.com
   
   gateway:
-    # -- Set `enabled: true` to install Gateway for istio using this helmchart.
+    # -- Set `enabled: true` to install Gateway for istio using this vigil.
     enabled: false
     
     # -- Provide name of namespace where your istio is installed. Gateway and Istio has to be in same namespace.
     namespace: "istio-system"
     
-    # -- Provide name of istio gateways here, this option is only applicable when istio gateway is already present in kubernetes cluster and not being managed by this helmchart.
+    # -- Provide name of istio gateways here, this option is only applicable when istio gateway is already present in kubernetes cluster and not being managed by this vigil.
     names: 
       - "istio-system/istio-gateway"
     # -- Provide selector for istio gateway to select istio service.
@@ -194,14 +194,6 @@ metrics:
   port: 3001     
   targetPort: 3001 
 
-volume:
-  # -- Volume mounted to pods either as default or in the form of PVC
-  enabled: false
-  # -- Path inside container where pvc will be mounted. default is set to "/app"
-  mountPath: ""
-  # -- Path inside node which will be used as pvc. default is set to "/mnt/data"
-  hostPath: ""
-
 storageClass:
   # -- Whether to create a custom Storage Class, Default is gp2
   create: false
@@ -209,7 +201,7 @@ storageClass:
   # -- Use existing PVC by mentioning name of PVC
   existingClaim: ""
 
-  # Override name of storage-class, default is set to helmchart.fullname. 
+  # Override name of storage-class, default is set to vigil.fullname. 
   storageClassName: ""
 
   # -- PVC configurations for AWS Cloud Provider
@@ -245,7 +237,7 @@ healthCheckProbes:
   enabled: false
   probes: {}
 podLabels: 
-  ManagedBy: hugin
+  ManagedBy: Clouddrove
 
 secretConfig: |-
   # Vigil
@@ -253,7 +245,7 @@ secretConfig: |-
   # Configuration file
   # Example: https://github.com/valeriansaliou/vigil/blob/master/config.cfg
 
-
+  
   [server]
 
   log_level = "debug"
@@ -512,4 +504,3 @@ secretConfig: |-
     exit 1
     '''
   ]
-
