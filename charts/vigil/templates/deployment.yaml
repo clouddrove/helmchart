@@ -56,10 +56,6 @@ spec:
             - configMapRef:
                 name: {{ include "vigil.fullname" . }}-config
           {{- end }}
-          # {{- if .Values.secret.enabled }}
-          #   - secretRef:
-          #       name: {{ include "vigil.fullname" . }}-secret
-          # {{- end }}
           {{- if .Values.healthCheckProbes.enabled }}
           {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
           {{- end }}
