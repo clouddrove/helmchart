@@ -9,6 +9,12 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  {{- if .Values.deploymentStrategy }}
+  strategy:
+  {{- with .Values.deploymentStrategy }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "helmchart.selectorLabels" . | nindent 6 }}
