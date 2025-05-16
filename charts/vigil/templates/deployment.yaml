@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vigil.fullname" . }}
+  namespace: {{ include "vigil.namespace" . }}
+  labels:
+    {{- include "vigil.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "vigil.selectorLabels" . | nindent 6 }}
+      {{- include "vigil.podLabels" . | nindent 6  }}
+  template:
+    metadata:
+      annotations:
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      labels:
+        {{- include "vigil.selectorLabels" . | nindent 8 }}
+        {{- include "vigil.podLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "vigil.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- if .Values.image.digest }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@{{ .Values.image.digest }}"
+          {{- else }}  
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          {{- end }}  
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
+              protocol: TCP
+          {{- if .Values.commands }}
+          command:
+            {{- toYaml .Values.commands | nindent 12 }}
+          {{- end }}              
+          envFrom:
+          {{- if .Values.configmap.enabled }}
+            - configMapRef:
+                name: {{ include "vigil.fullname" . }}-config
+          {{- end }}
+          {{- if .Values.healthCheckProbes.enabled }}
+          {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
+          {{- end }}
+          {{- if .Values.resource.enabled }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.volume.enabled }}
+          volumeMounts:
+            - mountPath: {{ .Values.volume.mountPath | default "/etc/vigil.cfg" }}
+              name: {{ template "vigil.fullname" . }}-config
+              subPath: vigil.cfg
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.volume.enabled }}
+      volumes:
+        - name: {{ template "vigil.fullname" . }}
+          persistentVolumeClaim:
+            claimName: {{ template "vigil.fullname" . }}
+      {{- end }}
+      {{- if .Values.secretConfig }}
+      volumes:
+        - name: {{ template "vigil.fullname" . }}-config
+          secret:
+            secretName: {{ include "vigil.fullname" . }}-secret
+      {{- end }}

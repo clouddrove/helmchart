@@ -1,0 +1,21 @@
+{{- if .Values.istio.enabled -}}
+{{- if .Values.istio.gateway.enabled -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "vigil.fullname" . }}-istio-gateway
+  namespace: {{ default .Release.Namespace .Values.istio.gateway.namespace }}
+spec:
+  selector:
+    istio: {{ .Values.istio.gateway.selector }}
+  servers:
+  - hosts:
+    {{- range .Values.istio.virtualService.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+    port:
+      number: {{ .Values.service.port }}
+      name: http
+      protocol: HTTP
+{{- end }}
+{{- end }}

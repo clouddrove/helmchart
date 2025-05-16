@@ -1,0 +1,27 @@
+{{- if .Values.istio.virtualService.enabled -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "vigil.fullname" . }}
+  labels:
+    {{- include "vigil.labels" . | nindent 4 }}
+spec:
+  hosts:
+    {{- range .Values.istio.virtualService.hosts }}
+    - {{ . | quote }}
+    {{- end }} 
+  gateways:
+    {{- if .Values.istio.gateway.enabled }}
+    - {{ default .Release.Namespace .Values.istio.gateway.namespace }}/{{ include "vigil.fullname" . }}-istio-gateway
+    {{- else }}  
+    {{- range .Values.istio.gateway.names }}
+    - {{ . }}
+    {{- end }}
+    {{- end }}     
+  http:
+  - route:
+    - destination:
+        host: {{ include "vigil.fullname" . }}
+        port:
+          number: {{ .Values.service.port }}
+{{- end }}

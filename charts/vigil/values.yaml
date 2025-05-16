@@ -1,0 +1,506 @@
+# Default values for vigil.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+  # -- Replica count used to configure the number of replica pods that should be deployed and maintained.
+
+image:
+    # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
+    # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.       
+  repository: valeriansaliou/vigil
+    # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
+  pullPolicy: IfNotPresent
+      # -- Overrides the image tag whose default is the chart version.
+  tag: "v1.27.0"
+      # -- Specify digest of image. Tags can be overriden but each tag will contain different digest than previous.
+  digest: ""
+
+imagePullSecrets: [] 
+  # -- imagePullSecrets lists the Secret resources that should be used for accessing private registries.
+
+commands: []
+  # - /bin/sh
+  # - -c
+  # - echo "Hello, from Clouddrove!"
+  
+secret:
+  enabled: true # Always be true to add vigil config 
+    # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
+  secrets: {}
+    # KEY: "value"
+
+configmap:
+  enabled: false
+  configs: {}
+    # KEY: "value"
+
+volume:
+  enabled: true
+  mountPath: /etc/vigil.cfg
+
+nameOverride: "" 
+
+fullnameOverride: "" 
+  # -- fullnameOverride is a string that allows overriding the default fullname that appears as the application name and is used as the application name by kubernetes.
+
+pdbMinAvailable: ""
+  # -- minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
+
+serviceAccount:
+  enabled: false  
+    # -- Specifies whether a service account should be created
+  annotations: {}       
+    # -- Annotations to add to the service account
+  name: "" 
+    # -- The name of the service account to use. If not set and enabled is true, a name is generated using the fullname template
+
+podAnnotations: {} 
+  # -- podAnnotations will add the provided map to the annotations for the Pod resource created by the Deployment.
+
+podSecurityContext: {} 
+  # -- podSecurityContext holds pod-level security access control settings.
+
+securityContext: {}
+      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. securityContext takes precedence over podSecurityContext    
+
+service: 
+    # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
+  enabled: true
+    # -- Specifies whether a service should be created.        
+  type: ClusterIP 
+    # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
+  port: 80   
+    # -- port: on which the kubernetes service is exposed
+  containerPort: 8080
+    # -- Port number on which the container is accepting traffic.
+  targetPort: 8080
+    # -- Port number on which the pod is accepting traffic.
+
+istio:
+  # -- We can either use Istio or Ingress for an application deployment. Set `enabled: true` if istio is already installed.
+  enabled: false
+  # -- virtualService is required when using istio.
+  virtualService:
+    enabled: false
+    hosts: []
+      # - test.example.com
+      # - test-2.example.com
+  
+  gateway:
+    # -- Set `enabled: true` to install Gateway for istio using this vigil.
+    enabled: false
+    
+    # -- Provide name of namespace where your istio is installed. Gateway and Istio has to be in same namespace.
+    namespace: "istio-system"
+    
+    # -- Provide name of istio gateways here, this option is only applicable when istio gateway is already present in kubernetes cluster and not being managed by this vigil.
+    names: 
+      - "istio-system/istio-gateway"
+    # -- Provide selector for istio gateway to select istio service.
+    selector: "ingress"
+
+ingress:    
+    # -- ingress is a map that can be used to configure an Ingress resource for this service.
+  enabled: false 
+    # -- Specifies whether a ingress should be created
+  className: ""
+  annotations: {}
+        # -- Annotations that should be added to the Service resource. This is injected directly in to the resource yaml.
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:                        
+        # Sets up the host routes for the ingress resource.
+    - host: test.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+  tls: []
+      # -- Sets up TLS termination on the ingress rule. Each item is a separate TLS rule that maps to one or more hosts specified in this ingress rule. This is injected directly in to the resource yaml.                       
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resource: 
+  enabled: false
+resources: {}
+  # -- Requests and Limits to be specified for each pod.
+  # limits: 
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests: 
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:      
+  enabled: false 
+    # -- Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created
+  minReplicas: 1
+    # -- The minimum amount of replicas allowed
+  maxReplicas: 100
+    # -- The maximum amount of replicas allowed
+  targetCPUUtilizationPercentage: 80
+      # -- The target average CPU utilization to be used with the metrics
+  # targetMemoryUtilizationPercentage: 80 
+      # -- The target average Memory utilization to be used with the metrics
+
+poddisruptionbudget:
+  enabled: false
+  minAvailable: 1
+
+nodeSelector: {}
+    # -- nodeSelector specify restrictions on what node this pod should be scheduled on.
+
+tolerations: []
+    # -- tolerations can be used to allow the pod to be scheduled on nodes with a specific taint.
+
+affinity: {} 
+  # -- affinity specify restrictions on what node this pod should be scheduled on.
+
+cronJob: 
+  # -- Determines if the `cronJob` resource should be deployed as part of the helm release.
+  enabled: false
+  # -- Cron job schedule.
+  schedule: ""
+  # -- Cron Job startingDeadlineSeconds
+  startingDeadlineSeconds: 3600
+  # -- CronJob's concurrencyPolicy
+  concurrencyPolicy: Forbid
+  # -- ConnJob's failed history limit
+  failedJobsHistoryLimit: 3
+  # -- CPU/Memory resource requests/limits for CronJob
+  resources: {}
+  image:
+    # -- Cron Job's image repository
+    repository: nginx
+    # -- Cron Job's image pullPolicy
+    pullPolicy: IfNotPresent
+    # -- Cron Job's image tag
+    # Overrides the image tag whose default is the chart version.
+    tag: "1.16.0" 
+  secret:
+    # -- Turn on and off secrets for CronJob resource.
+    enabled: false
+  configmap:
+    # -- Turn on and off configmap for CronJob resource.
+    enabled: false
+
+metrics:
+  # -- Whether or not metrics should be created, if false the metrics will not be created
+  enabled: false   
+  # -- portName specify the name of the port for the metrics resource.  
+  portName: "prometheus" 
+  port: 3001     
+  targetPort: 3001 
+
+storageClass:
+  # -- Whether to create a custom Storage Class, Default is gp2
+  create: false
+
+  # -- Use existing PVC by mentioning name of PVC
+  existingClaim: ""
+
+  # Override name of storage-class, default is set to vigil.fullname. 
+  storageClassName: ""
+
+  # -- PVC configurations for AWS Cloud Provider
+  aws: false
+  fileSystemId: ""
+  
+  # -- PVC configurations for Azure Cloud Provider
+  azure: false
+  
+  # -- PVC configurations for GCP Cloud Provider
+  gcp: false
+
+  # -- Provisioner as per the Cloud Provider [aws: `efs.csi.aws.com` `ebs.csi.aws.com`] [azure: `file.csi.azure.com`] [minikube: `k8s.io/minikube-hostpath`]
+  provisioner: ""
+
+  # -- Allow volume expansion
+  allowVolumeExpansion: false
+
+  # -- Volume binding modes, other are `WaitForFirstConsumer`
+  volumeBindingMode: Immediate
+
+  # -- Enable persistent volume
+  persistence:
+    enabled: false
+    # -- Mode of access this persistent volume, other modes are `ReadWriteMany`, `ReadOnlyMany`
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    # -- Reclaim Policy for Persistent Volume. Default is set to `Retain`. Other valid values are `Delete`, `Recycle`
+    persistentVolumeReclaimPolicy: ""
+
+healthCheckProbes:
+  # -- liveness and readiness probes in deployment
+  enabled: false
+  probes: {}
+podLabels: 
+  ManagedBy: Clouddrove
+
+secretConfig: |-
+  # Vigil
+  # Microservices Status Page
+  # Configuration file
+  # Example: https://github.com/valeriansaliou/vigil/blob/master/config.cfg
+
+  
+  [server]
+
+  log_level = "debug"
+  inet = "0.0.0.0:8080"
+  workers = 4
+
+  manager_token = "REPLACE_THIS_WITH_A_VERY_SECRET_KEY"
+  reporter_token = "REPLACE_THIS_WITH_A_SECRET_KEY"
+
+  [assets]
+
+  path = "./res/assets/"
+
+  [branding]
+
+  page_title = "Crisp Status"
+  page_url = "https://status.crisp.chat/"
+  company_name = "Crisp IM SAS"
+  icon_color = "#1972F5"
+  icon_url = "https://valeriansaliou.github.io/vigil/images/crisp-icon.png"
+  logo_color = "#1972F5"
+  logo_url = "https://valeriansaliou.github.io/vigil/images/crisp-logo.svg"
+  website_url = "https://crisp.chat/"
+  support_url = "mailto:support@crisp.chat"
+  custom_html = ""
+
+  [metrics]
+
+  poll_interval = 120
+  poll_retry = 2
+
+  poll_http_status_healthy_above = 200
+  poll_http_status_healthy_below = 400
+
+  poll_delay_dead = 10
+  poll_delay_sick = 5
+
+  poll_parallelism = 4
+
+  push_delay_dead = 20
+
+  push_system_cpu_sick_above = 0.90
+  push_system_ram_sick_above = 0.90
+
+  script_interval = 300
+
+  script_parallelism = 2
+
+  local_delay_dead = 40
+
+  [plugins]
+
+  [plugins.rabbitmq]
+
+  api_url = "http://127.0.0.1:15672"
+  auth_username = "rabbitmq-administrator"
+  auth_password = "RABBITMQ_ADMIN_PASSWORD"
+  virtualhost = "crisp"
+
+  queue_ready_healthy_below = 500
+  queue_nack_healthy_below = 100
+  queue_ready_dead_above = 20000
+  queue_nack_dead_above = 5000
+  queue_loaded_retry_delay = 500
+
+  [notify]
+
+  startup_notification = true
+  reminder_interval = 300
+  reminder_backoff_function = "linear"
+  reminder_backoff_limit = 3
+
+  [notify.email]
+
+  from = "status@crisp.chat"
+  to = "status@crisp.chat"
+
+  smtp_host = "localhost"
+  smtp_port = 587
+  smtp_username = "user-access"
+  smtp_password = "user-password"
+  smtp_encrypt = false
+
+  [notify.twilio]
+
+  to = [
+    "+336xxxxxxx",
+    "+337xxxxxxx"
+  ]
+
+  service_sid = "service-sid"
+  account_sid = "account-sid"
+  auth_token = "auth-token"
+
+  reminders_only = true
+
+  [notify.slack]
+
+  hook_url = "https://hooks.slack.com/services/xxxx"
+  mention_channel = true
+
+  [notify.zulip]
+
+  bot_email = "bot-name@domain.zulipchat.com"
+  bot_api_key = "xxxx"
+  channel = "vigil"
+  api_url = "https://domain.zulipchat.com/api/v1/"
+
+  [notify.telegram]
+
+  bot_token = "xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  chat_id = "xxxxxxxxx"
+
+  [notify.pushover]
+
+  app_token = "xxxx"
+  user_keys = ["xxxx"]
+
+  [notify.gotify]
+
+  app_url = "https://push.gotify.net"
+  app_token = "xxxx"
+
+  [notify.xmpp]
+
+  from = "vigil@valeriansaliou.name"
+  to = "valerian@valeriansaliou.name"
+
+  xmpp_password = "xmpp-password"
+
+  [notify.matrix]
+
+  homeserver_url = "https://matrix.org"
+  access_token = "xxxx"
+  room_id = "!abc123:matrix.org"
+
+  [notify.webex]
+
+  endpoint_url = "https://webexapis.com/v1/messages"
+  token = "xxxxx"
+  room_id = "yyyyy"
+
+  [notify.webhook]
+
+  hook_url = "https://domain.com/webhooks/xxxx"
+
+  [probe]
+
+  [[probe.service]]
+
+  id = "web"
+  label = "Web nodes"
+
+  [[probe.service.node]]
+
+  id = "router"
+  label = "Core main router"
+  mode = "poll"
+
+  replicas = [
+    "icmp://edge-1.pool.net.crisp.chat",
+    "icmp://edge-2.pool.net.crisp.chat"
+  ]
+
+  [[probe.service.node]]
+
+  id = "load-balancer"
+  label = "Core main load balancer"
+  mode = "poll"
+
+  replicas = [
+    "tcp://edge-1.pool.net.crisp.chat:80",
+    "tcp://edge-2.pool.net.crisp.chat:80",
+    "tcp://edge-3.pool.net.crisp.chat:80"
+  ]
+
+  [[probe.service.node]]
+
+  id = "help"
+  label = "Core help load balancer"
+  mode = "poll"
+  replicas = ["tcp://help-1.pool.net.crisp.chat:80"]
+
+  [[probe.service.node]]
+
+  id = "api"
+  label = "Access to API service"
+  mode = "poll"
+  replicas = ["https://api.crisp.chat/v1/_system/health"]
+
+  [[probe.service.node]]
+
+  id = "status"
+  label = "Access to status page"
+  mode = "poll"
+  replicas = ["https://status.crisp.chat/robots.txt"]
+  http_body_healthy_match = "User-agent:.*"
+
+  [[probe.service]]
+
+  id = "relay"
+  label = "Relay nodes"
+
+  [[probe.service.node]]
+
+  id = "socket-client"
+  label = "Visitor realtime sockets"
+  mode = "push"
+  reveal_replica_name = true
+  rabbitmq_queue = "client"
+  rabbitmq_queue_nack_healthy_below = 100
+  rabbitmq_queue_nack_dead_above = 1000
+
+  [[probe.service]]
+
+  id = "internal"
+  label = "Internal nodes"
+
+  [[probe.service.node]]
+
+  id = "gateway"
+  label = "Private gateway"
+  mode = "local"
+
+  [[probe.service.node]]
+
+  id = "capacity"
+  label = "Network capacity"
+  mode = "local"
+
+  [[probe.service]]
+
+  id = "plugin"
+  label = "Plugin nodes"
+
+  [[probe.service.node]]
+
+  id = "plugin-health"
+  label = "Plugins health"
+  mode = "script"
+  link_url = "https://status.plugins.crisp.chat/"
+  link_label = "See status details"
+
+  scripts = [
+    '''
+    status=$(curl --silent --connect-timeout 3 https://status.plugins.crisp.chat/status/text)
+
+    if [ -z "$status" ]; then
+      exit 2
+    fi
+
+    if [ "$status" = "healthy" ]; then
+      exit 0
+    fi
+
+    exit 1
+    '''
+  ]

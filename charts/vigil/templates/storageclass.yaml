@@ -1,0 +1,24 @@
+{{- if .Values.storageClass.create }}
+apiVersion: {{ include "vigil.storageClass.apiVersion" . }}
+kind: StorageClass
+metadata:
+  name: {{ default (include "vigil.fullname" .) .Values.storageClass.storageClassName }}
+provisioner: {{ .Values.storageClass.provisioner }}
+{{- if .Values.storageClass.aws }}
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: {{ .Values.storageClass.fileSystemId }}
+  directoryPerms: "700"
+{{- else if .Values.storageClass.azure }}
+parameters:
+  skuName: Premium_LRS
+{{- else }}
+parameters:
+  type: standard
+{{- end }}
+reclaimPolicy: {{ default "Retain" .Values.storageClass.persistence.persistentVolumeReclaimPolicy }}
+allowVolumeExpansion: {{ .Values.storageClass.allowVolumeExpansion }}
+mountOptions:
+  - debug
+volumeBindingMode: {{ .Values.storageClass.volumeBindingMode }}
+{{- end }}
