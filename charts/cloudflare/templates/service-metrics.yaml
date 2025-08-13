@@ -1,0 +1,17 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudflared-metrics
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: cloudflared
+spec:
+  type: ClusterIP
+  selector:
+    app: cloudflared
+  ports:
+    - name: metrics
+      port: {{ .Values.metrics.port }}
+      targetPort: metrics
+{{- end }}

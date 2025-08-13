@@ -1,0 +1,6 @@
+apiVersion: v2
+name: cloudflared-token
+description: Run Cloudflare Tunnel with token (no autoupdate)
+type: application
+version: 0.1.0
+appVersion: "2024.3.0"
