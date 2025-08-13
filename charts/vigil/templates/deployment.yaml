@@ -1,24 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helmchart.fullname" . }}
-  namespace: {{ include "helmchart.namespace" . }}
+  name: {{ include "vigil.fullname" . }}
+  namespace: {{ include "vigil.namespace" . }}
   labels:
-    {{- include "helmchart.labels" . | nindent 4 }}
+    {{- include "vigil.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
-  {{- if .Values.deploymentStrategy }}
-  strategy:
-  {{- with .Values.deploymentStrategy }}
-  {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "helmchart.selectorLabels" . | nindent 6 }}
-      {{- include "helmchart.podLabels" . | nindent 6  }}
+      {{- include "vigil.selectorLabels" . | nindent 6 }}
+      {{- include "vigil.podLabels" . | nindent 6  }}
   template:
     metadata:
       annotations:
@@ -28,14 +22,14 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
-        {{- include "helmchart.selectorLabels" . | nindent 8 }}
-        {{- include "helmchart.podLabels" . | nindent 8 }}
+        {{- include "vigil.selectorLabels" . | nindent 8 }}
+        {{- include "vigil.podLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "helmchart.serviceAccountName" . }}
+      serviceAccountName: {{ include "vigil.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -60,11 +54,7 @@ spec:
           envFrom:
           {{- if .Values.configmap.enabled }}
             - configMapRef:
-                name: {{ include "helmchart.fullname" . }}-config
-          {{- end }}
-          {{- if .Values.secret.enabled }}
-            - secretRef:
-                name: {{ include "helmchart.fullname" . }}-secret
+                name: {{ include "vigil.fullname" . }}-config
           {{- end }}
           {{- if .Values.healthCheckProbes.enabled }}
           {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
@@ -75,8 +65,9 @@ spec:
           {{- end }}
           {{- if .Values.volume.enabled }}
           volumeMounts:
-            - mountPath: {{ default ("/app") .Values.volume.mountPath }}
-              name: {{ template "helmchart.fullname" . }}
+            - mountPath: {{ .Values.volume.mountPath | default "/etc/vigil.cfg" }}
+              name: {{ template "vigil.fullname" . }}-config
+              subPath: vigil.cfg
           {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -92,7 +83,13 @@ spec:
       {{- end }}
       {{- if .Values.volume.enabled }}
       volumes:
-        - name: {{ template "helmchart.fullname" . }}
+        - name: {{ template "vigil.fullname" . }}
           persistentVolumeClaim:
-            claimName: {{ template "helmchart.fullname" . }}
+            claimName: {{ template "vigil.fullname" . }}
+      {{- end }}
+      {{- if .Values.secretConfig }}
+      volumes:
+        - name: {{ template "vigil.fullname" . }}-config
+          secret:
+            secretName: {{ include "vigil.fullname" . }}-secret
       {{- end }}

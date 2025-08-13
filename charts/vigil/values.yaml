@@ -1,4 +1,4 @@
-# Default values for helmchart.
+# Default values for vigil.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -8,11 +8,11 @@ replicaCount: 1
 image:
     # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
     # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.       
-  repository: nginx
+  repository: valeriansaliou/vigil
     # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   pullPolicy: IfNotPresent
       # -- Overrides the image tag whose default is the chart version.
-  tag: "latest"
+  tag: "v1.27.0"
       # -- Specify digest of image. Tags can be overriden but each tag will contain different digest than previous.
   digest: ""
 
@@ -22,10 +22,10 @@ imagePullSecrets: []
 commands: []
   # - /bin/sh
   # - -c
-  # - echo "Hello, from CloudDrove!"
+  # - echo "Hello, from Clouddrove!"
   
 secret:
-  enabled: false 
+  enabled: true # Always be true to add vigil config 
     # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
   secrets: {}
     # KEY: "value"
@@ -34,6 +34,10 @@ configmap:
   enabled: false
   configs: {}
     # KEY: "value"
+
+volume:
+  enabled: true
+  mountPath: /etc/vigil.cfg
 
 nameOverride: "" 
 
@@ -68,9 +72,9 @@ service:
     # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
   port: 80   
     # -- port: on which the kubernetes service is exposed
-  containerPort: ""
+  containerPort: 8080
     # -- Port number on which the container is accepting traffic.
-  targetPort: ""
+  targetPort: 8080
     # -- Port number on which the pod is accepting traffic.
 
 istio:
@@ -84,13 +88,13 @@ istio:
       # - test-2.example.com
   
   gateway:
-    # -- Set `enabled: true` to install Gateway for istio using this helmchart.
+    # -- Set `enabled: true` to install Gateway for istio using this vigil.
     enabled: false
     
     # -- Provide name of namespace where your istio is installed. Gateway and Istio has to be in same namespace.
     namespace: "istio-system"
     
-    # -- Provide name of istio gateways here, this option is only applicable when istio gateway is already present in kubernetes cluster and not being managed by this helmchart.
+    # -- Provide name of istio gateways here, this option is only applicable when istio gateway is already present in kubernetes cluster and not being managed by this vigil.
     names: 
       - "istio-system/istio-gateway"
     # -- Provide selector for istio gateway to select istio service.
@@ -102,6 +106,7 @@ ingress:
     # -- Specifies whether a ingress should be created
   className: ""
   annotations: {}
+        # -- Annotations that should be added to the Service resource. This is injected directly in to the resource yaml.
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:                        
@@ -189,14 +194,6 @@ metrics:
   port: 3001     
   targetPort: 3001 
 
-volume:
-  # -- Volume mounted to pods either as default or in the form of PVC
-  enabled: false
-  # -- Path inside container where pvc will be mounted. default is set to "/app"
-  mountPath: ""
-  # -- Path inside node which will be used as pvc. default is set to "/mnt/data"
-  hostPath: ""
-
 storageClass:
   # -- Whether to create a custom Storage Class, Default is gp2
   create: false
@@ -204,7 +201,7 @@ storageClass:
   # -- Use existing PVC by mentioning name of PVC
   existingClaim: ""
 
-  # Override name of storage-class, default is set to helmchart.fullname. 
+  # Override name of storage-class, default is set to vigil.fullname. 
   storageClassName: ""
 
   # -- PVC configurations for AWS Cloud Provider
@@ -239,35 +236,271 @@ healthCheckProbes:
   # -- liveness and readiness probes in deployment
   enabled: false
   probes: {}
-    # livenessProbe:
-    #   enabled: true
-    #   httpGet:
-    #     path: /healthz
-    #     port: http
-    #   initialDelaySeconds: 10
-    #   periodSeconds: 10
-    #   timeoutSeconds: 2
-    #   failureThreshold: 3
-    #   successThreshold: 1
-    #
-    # readinessProbe:
-    #   enabled: true
-    #   httpGet:
-    #     path: /readyz
-    #     port: http
-    #   initialDelaySeconds: 5
-    #   periodSeconds: 5
-    #   timeoutSeconds: 2
-    #   failureThreshold: 3
-    #   successThreshold: 1
+podLabels: 
+  ManagedBy: Clouddrove
 
-podLabels: {}
-  # -- podLabels allows you to add custom labels to the pods.
-  # ManagedBy: Clouddrove
+secretConfig: |-
+  # Vigil
+  # Microservices Status Page
+  # Configuration file
+  # Example: https://github.com/valeriansaliou/vigil/blob/master/config.cfg
 
-deploymentStrategy: {}
-  # -- Defines how updates to the Deployment are rolled out.
-  # type: RollingUpdate
-  # rollingUpdate:
-  #   maxSurge: 25%
-  #   maxUnavailable: 25%
+  
+  [server]
+
+  log_level = "debug"
+  inet = "0.0.0.0:8080"
+  workers = 4
+
+  manager_token = "REPLACE_THIS_WITH_A_VERY_SECRET_KEY"
+  reporter_token = "REPLACE_THIS_WITH_A_SECRET_KEY"
+
+  [assets]
+
+  path = "./res/assets/"
+
+  [branding]
+
+  page_title = "Crisp Status"
+  page_url = "https://status.crisp.chat/"
+  company_name = "Crisp IM SAS"
+  icon_color = "#1972F5"
+  icon_url = "https://valeriansaliou.github.io/vigil/images/crisp-icon.png"
+  logo_color = "#1972F5"
+  logo_url = "https://valeriansaliou.github.io/vigil/images/crisp-logo.svg"
+  website_url = "https://crisp.chat/"
+  support_url = "mailto:support@crisp.chat"
+  custom_html = ""
+
+  [metrics]
+
+  poll_interval = 120
+  poll_retry = 2
+
+  poll_http_status_healthy_above = 200
+  poll_http_status_healthy_below = 400
+
+  poll_delay_dead = 10
+  poll_delay_sick = 5
+
+  poll_parallelism = 4
+
+  push_delay_dead = 20
+
+  push_system_cpu_sick_above = 0.90
+  push_system_ram_sick_above = 0.90
+
+  script_interval = 300
+
+  script_parallelism = 2
+
+  local_delay_dead = 40
+
+  [plugins]
+
+  [plugins.rabbitmq]
+
+  api_url = "http://127.0.0.1:15672"
+  auth_username = "rabbitmq-administrator"
+  auth_password = "RABBITMQ_ADMIN_PASSWORD"
+  virtualhost = "crisp"
+
+  queue_ready_healthy_below = 500
+  queue_nack_healthy_below = 100
+  queue_ready_dead_above = 20000
+  queue_nack_dead_above = 5000
+  queue_loaded_retry_delay = 500
+
+  [notify]
+
+  startup_notification = true
+  reminder_interval = 300
+  reminder_backoff_function = "linear"
+  reminder_backoff_limit = 3
+
+  [notify.email]
+
+  from = "status@crisp.chat"
+  to = "status@crisp.chat"
+
+  smtp_host = "localhost"
+  smtp_port = 587
+  smtp_username = "user-access"
+  smtp_password = "user-password"
+  smtp_encrypt = false
+
+  [notify.twilio]
+
+  to = [
+    "+336xxxxxxx",
+    "+337xxxxxxx"
+  ]
+
+  service_sid = "service-sid"
+  account_sid = "account-sid"
+  auth_token = "auth-token"
+
+  reminders_only = true
+
+  [notify.slack]
+
+  hook_url = "https://hooks.slack.com/services/xxxx"
+  mention_channel = true
+
+  [notify.zulip]
+
+  bot_email = "bot-name@domain.zulipchat.com"
+  bot_api_key = "xxxx"
+  channel = "vigil"
+  api_url = "https://domain.zulipchat.com/api/v1/"
+
+  [notify.telegram]
+
+  bot_token = "xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  chat_id = "xxxxxxxxx"
+
+  [notify.pushover]
+
+  app_token = "xxxx"
+  user_keys = ["xxxx"]
+
+  [notify.gotify]
+
+  app_url = "https://push.gotify.net"
+  app_token = "xxxx"
+
+  [notify.xmpp]
+
+  from = "vigil@valeriansaliou.name"
+  to = "valerian@valeriansaliou.name"
+
+  xmpp_password = "xmpp-password"
+
+  [notify.matrix]
+
+  homeserver_url = "https://matrix.org"
+  access_token = "xxxx"
+  room_id = "!abc123:matrix.org"
+
+  [notify.webex]
+
+  endpoint_url = "https://webexapis.com/v1/messages"
+  token = "xxxxx"
+  room_id = "yyyyy"
+
+  [notify.webhook]
+
+  hook_url = "https://domain.com/webhooks/xxxx"
+
+  [probe]
+
+  [[probe.service]]
+
+  id = "web"
+  label = "Web nodes"
+
+  [[probe.service.node]]
+
+  id = "router"
+  label = "Core main router"
+  mode = "poll"
+
+  replicas = [
+    "icmp://edge-1.pool.net.crisp.chat",
+    "icmp://edge-2.pool.net.crisp.chat"
+  ]
+
+  [[probe.service.node]]
+
+  id = "load-balancer"
+  label = "Core main load balancer"
+  mode = "poll"
+
+  replicas = [
+    "tcp://edge-1.pool.net.crisp.chat:80",
+    "tcp://edge-2.pool.net.crisp.chat:80",
+    "tcp://edge-3.pool.net.crisp.chat:80"
+  ]
+
+  [[probe.service.node]]
+
+  id = "help"
+  label = "Core help load balancer"
+  mode = "poll"
+  replicas = ["tcp://help-1.pool.net.crisp.chat:80"]
+
+  [[probe.service.node]]
+
+  id = "api"
+  label = "Access to API service"
+  mode = "poll"
+  replicas = ["https://api.crisp.chat/v1/_system/health"]
+
+  [[probe.service.node]]
+
+  id = "status"
+  label = "Access to status page"
+  mode = "poll"
+  replicas = ["https://status.crisp.chat/robots.txt"]
+  http_body_healthy_match = "User-agent:.*"
+
+  [[probe.service]]
+
+  id = "relay"
+  label = "Relay nodes"
+
+  [[probe.service.node]]
+
+  id = "socket-client"
+  label = "Visitor realtime sockets"
+  mode = "push"
+  reveal_replica_name = true
+  rabbitmq_queue = "client"
+  rabbitmq_queue_nack_healthy_below = 100
+  rabbitmq_queue_nack_dead_above = 1000
+
+  [[probe.service]]
+
+  id = "internal"
+  label = "Internal nodes"
+
+  [[probe.service.node]]
+
+  id = "gateway"
+  label = "Private gateway"
+  mode = "local"
+
+  [[probe.service.node]]
+
+  id = "capacity"
+  label = "Network capacity"
+  mode = "local"
+
+  [[probe.service]]
+
+  id = "plugin"
+  label = "Plugin nodes"
+
+  [[probe.service.node]]
+
+  id = "plugin-health"
+  label = "Plugins health"
+  mode = "script"
+  link_url = "https://status.plugins.crisp.chat/"
+  link_label = "See status details"
+
+  scripts = [
+    '''
+    status=$(curl --silent --connect-timeout 3 https://status.plugins.crisp.chat/status/text)
+
+    if [ -z "$status" ]; then
+      exit 2
+    fi
+
+    if [ "$status" = "healthy" ]; then
+      exit 0
+    fi
+
+    exit 1
+    '''
+  ]

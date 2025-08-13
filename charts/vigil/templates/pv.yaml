@@ -1,0 +1,26 @@
+{{- if .Values.storageClass.persistence.enabled -}}
+{{- if not .Values.storageClass.existingClaim -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ template "vigil.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "vigil.name" . }}
+    helm.sh/chart: {{ include "vigil.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+{{- if not .Values.storageClass.create }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ default (include "vigil.fullname" .) .Values.storageClass.storageClassName }}"
+{{- end }}
+  capacity:
+    storage: {{ .Values.storageClass.persistence.size | quote }}
+  persistentVolumeReclaimPolicy: {{ default "Retain" .Values.storageClass.persistence.persistentVolumeReclaimPolicy }}
+  accessModes:
+    - {{ .Values.storageClass.persistence.accessMode | quote }}
+  hostPath:
+    path: {{ default ("/mnt/data") .Values.volume.hostPath }}
+{{- end -}}
+{{- end -}}

@@ -3,8 +3,8 @@ replicaCount: 1
 image:
   repository: nginx
   pullPolicy: IfNotPresent
-  tag: "stable-alpine3.17"
-  digest: "sha256:5e1ccef1e821253829e415ac1e3eafe46920aab0bf67e0fe8a104c57dbfffdf7"
+  tag: "latest"
+  digest: "sha256:09369da6b10306312cd908661320086bf87fbae1b6b0c49a1f50ba531fef2eab"
 
 secret:
   enabled: true
@@ -21,7 +21,7 @@ imagePullSecrets: []
 commands:
   - /bin/sh
   - -c
-  - echo "Hello, from CloudDrove!"
+  - echo "Hello, from CloudDrove!"; nginx -g 'daemon off;'
 
 nameOverride: "" 
 
@@ -62,7 +62,7 @@ service:
 istio:
   enabled: false
   virtualService:
-    enabled: true
+    enabled: false
     hosts: 
       - test.example.com
       - test-2.example.com
@@ -72,12 +72,16 @@ istio:
 
 ingress:    
   enabled: true 
-  className: ""
-  annotations: {}
+  className: "alb"
+  annotations:
+    alb.ingress.kubernetes.io/group.name: ingress
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
   hosts:                        
     - host: chart-example.local
       paths:
-        - path: /
+        - path: /*
           pathType: ImplementationSpecific
   tls: []
 
@@ -172,3 +176,6 @@ storageClass:
 
 statefulSets:
   enabled: false
+
+deploymentStrategy:
+  type: Recreate
