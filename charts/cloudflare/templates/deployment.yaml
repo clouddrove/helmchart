@@ -1,49 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflared
-  namespace: {{ .Values.namespace }}
+  name: {{ include "helmchart.fullname" . }}
+  namespace: {{ include "helmchart.namespace" . }}
   labels:
-    app: cloudflared
+    {{- include "helmchart.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.deployment.annotations | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: cloudflared
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: cloudflared
+        {{- include "helmchart.labels" . | nindent 8 }}
+      annotations:
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
     spec:
       containers:
-        - name: cloudflared
+        - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: {{ toYaml .Values.command | nindent 12 }}
           args: {{ toYaml .Values.args | nindent 12 }}
-          env:
-            - name: TUNNEL_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret.name }}
-                  key: token
+          envFrom:
+          {{- if .Values.configmap.enabled }}
+            - configMapRef:
+                name: {{ include "helmchart.fullname" . }}-config
+          {{- end }}
+          {{- if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ include "helmchart.fullname" . }}-secret
+          {{- end }}
           {{- if .Values.metrics.enabled }}
           ports:
-            - name: metrics
+            - name: {{ .Values.metrics.portName | default "metrics" }}
               containerPort: {{ .Values.metrics.port }}
+          {{- with .Values.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /ready
-              port: {{ .Values.metrics.port }}
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            failureThreshold: 1
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /ready
-              port: {{ .Values.metrics.port }}
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
