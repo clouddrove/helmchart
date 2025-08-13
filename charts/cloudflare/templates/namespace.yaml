@@ -2,9 +2,8 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ include "helmchart.namespace" . }}
+  name: {{ .Release.Namespace }}
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
-  annotations:
-    {{- toYaml .Values.namespace.annotations | nindent 4 }}
+  annotations: {}
 {{- end }}

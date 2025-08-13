@@ -7,6 +7,7 @@ Expand the name of the chart.
 
 {{/*
 Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "helmchart.fullname" -}}
@@ -53,9 +54,5 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the namespace to use
 */}}
 {{- define "helmchart.namespace" -}}
-{{- if .Values.namespace.name }}
-{{- .Values.namespace.name }}
-{{- else }}
 {{- .Release.Namespace }}
-{{- end }}
 {{- end }}
