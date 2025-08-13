@@ -6,7 +6,7 @@
 
 A Helm chart for deploying Cloudflare Tunnel (cloudflared) in Kubernetes with token authentication.
 
-**Homepage:** <https://github.com/clouddrove/cloudflare>
+**Homepage:** <https://github.com/clouddrove/helmchart>
 
 ## 🚀 Features
 
@@ -53,9 +53,4 @@ helm repo add clouddrove https://charts.clouddrove.com/
 helm repo update
 
 helm install cloudflared-tunnel clouddrove/cloudflared-tunnel \
-  --namespace cloudflare-tunnel \
-  --create-namespace \
-  --set secret.token="$(echo -n 'your-token-here' | base64)"
-
-
-
+  --namespace cloudflare-tunnel
