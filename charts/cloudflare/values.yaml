@@ -1,7 +1,6 @@
 nameOverride: ""
 fullnameOverride: ""
 
-createNamespace: false
 
 image:
   repository: cloudflare/cloudflared
