@@ -8,6 +8,8 @@ on:
     paths:
       - 'charts/helmchart/**'
       - 'charts/cronjob/**'
+      - 'charts/cloudflare/**'
+      - 'charts/vigil/**'
 
 jobs:
   release:
