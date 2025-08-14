@@ -1,0 +1,19 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helmchart.fullname" . }}-metrics
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.service.annotations | nindent 4 }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  selector:
+    {{- include "helmchart.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: {{ .Values.metrics.portName | default "metrics" }}
+      port: {{ .Values.metrics.port }}
+      targetPort: {{ .Values.metrics.portName | default "metrics" }}
+{{- end }}

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helmchart.fullname" . }}
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.deployment.annotations | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "helmchart.labels" . | nindent 8 }}
+      annotations:
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: {{ toYaml .Values.command | nindent 12 }}
+          args: {{ toYaml .Values.args | nindent 12 }}
+          envFrom:
+          {{- if .Values.configmap.enabled }}
+            - configMapRef:
+                name: {{ include "helmchart.fullname" . }}-config
+          {{- end }}
+          {{- if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ include "helmchart.fullname" . }}-secret
+          {{- end }}
+          {{- if .Values.metrics.enabled }}
+          ports:
+            - name: {{ .Values.metrics.portName | default "metrics" }}
+              containerPort: {{ .Values.metrics.port }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
