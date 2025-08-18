@@ -1,4 +1,6 @@
-{{- range $i, $u := .Values.members }}
+{{- with .Values.members }}
+{{- include "rbac.validateNamespaces" . }}
+{{- range $i, $u := . }}
 {{- if $u.createNamespace | default true }}
 apiVersion: v1
 kind: Namespace
@@ -7,5 +9,6 @@ metadata:
   labels:
     {{- include "rbac.labels" $ | nindent 4 }}
 ---
+{{- end }}
 {{- end }}
 {{- end }}
