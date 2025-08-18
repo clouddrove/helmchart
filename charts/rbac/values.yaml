@@ -1,0 +1,8 @@
+# Add one entry per teammate.
+# `name` must be DNS-compatible (lowercase alphanumerics + '-' allowed).
+members:
+
+  - name: clouddrove
+    namespace: clouddrove
+    role: admin            # one of: view, edit, admin
+    createNamespace: true

@@ -1,0 +1,11 @@
+This chart creates, per member:
+- Namespace (optional)
+- ServiceAccount: sa-<name>
+- Secret (token): sa-<name>-token
+- RoleBinding to ClusterRole (<role>) within the namespace
+
+List created SAs:
+  kubectl get sa -A -l rbac-homelab=member -o wide
+
+List token secrets:
+  kubectl get secret -A -l rbac-homelab=member
