@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [rbac-0.1.0] - 2025-08-18
+### :sparkles: New Features
+- [`7970fc4`](https://github.com/clouddrove/helmchart/commit/7970fc4ca3994203913471269d2dc41fa44c6b63) - adding rbac helm chart *(PR [#69](https://github.com/clouddrove/helmchart/pull/69) by [@anmolnagpal](https://github.com/anmolnagpal))*
+
+### :memo: Documentation Changes
+- [`c725b2c`](https://github.com/clouddrove/helmchart/commit/c725b2cf7ac7b25198596a6b35e2d38f42219bcc) - update CHANGELOG.md for cloudflared-tunnel-0.1.0 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [cloudflared-tunnel-0.1.0] - 2025-08-18
 ### :bug: Bug Fixes
 - [`6f76c8f`](https://github.com/clouddrove/helmchart/commit/6f76c8f8007e691a03f0261390b489140d7af0cf) - chart naming and token secret name *(PR [#68](https://github.com/clouddrove/helmchart/pull/68) by [@d4kverma](https://github.com/d4kverma))*
@@ -67,3 +75,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [helmchart-0.0.8]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.5...helmchart-0.0.8
 [helmchart-0.0.9]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.8...helmchart-0.0.9
 [cloudflared-tunnel-0.1.0]: https://github.com/clouddrove/helmchart/compare/helmchart-1.0.2...cloudflared-tunnel-0.1.0
+[rbac-0.1.0]: https://github.com/clouddrove/helmchart/compare/cloudflared-tunnel-0.1.0...rbac-0.1.0
