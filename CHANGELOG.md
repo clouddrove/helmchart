@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [cloudflared-tunnel-0.1.0] - 2025-08-18
+### :bug: Bug Fixes
+- [`6f76c8f`](https://github.com/clouddrove/helmchart/commit/6f76c8f8007e691a03f0261390b489140d7af0cf) - chart naming and token secret name *(PR [#68](https://github.com/clouddrove/helmchart/pull/68) by [@d4kverma](https://github.com/d4kverma))*
+
+### :construction_worker: Build System
+- [`a05b5c1`](https://github.com/clouddrove/helmchart/commit/a05b5c1aead0d10aa2995329628f4ae0339d8ef4) - **deps**: bump actions/checkout from 4 to 5 *(PR [#65](https://github.com/clouddrove/helmchart/pull/65) by [@dependabot[bot]](https://github.com/apps/dependabot))*
+
+
 ## [helmchart-0.0.9] - 2023-06-08
 ### :memo: Documentation Changes
 - [`80622a9`](https://github.com/clouddrove/helmchart/commit/80622a941d1a1fa8748e861a185c83733bec303f) - update CHANGELOG.md for helmchart-0.0.8 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
@@ -58,3 +66,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [helmchart-0.0.5]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.4...helmchart-0.0.5
 [helmchart-0.0.8]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.5...helmchart-0.0.8
 [helmchart-0.0.9]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.8...helmchart-0.0.9
+[cloudflared-tunnel-0.1.0]: https://github.com/clouddrove/helmchart/compare/helmchart-1.0.2...cloudflared-tunnel-0.1.0
