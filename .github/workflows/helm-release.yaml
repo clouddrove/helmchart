@@ -10,6 +10,7 @@ on:
       - 'charts/cronjob/**'
       - 'charts/cloudflare/**'
       - 'charts/vigil/**'
+      - 'charts/rbac/**'
 
 jobs:
   release:

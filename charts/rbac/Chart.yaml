@@ -1,0 +1,14 @@
+apiVersion: v2
+name: rbac
+description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no SSO).
+type: application
+version: 0.1.0
+appVersion: "1.0"
+keywords:
+- helm
+- chart
+- k8s
+- rbac
+maintainers:
+- email: hello@clouddrove.com
+  name: Clouddrove Inc.
