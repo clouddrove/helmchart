@@ -1,0 +1,68 @@
+nameOverride: ""
+fullnameOverride: ""
+
+
+image:
+  repository: cloudflare/cloudflared
+  tag: "2025.8.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+secret:
+  enabled: true
+  name: cloudflared-token
+  token: ""
+  annotations: {}
+
+configmap:
+  enabled: false
+  data: {}
+  annotations: {}
+
+command:
+  - cloudflared
+
+args:
+  - tunnel
+  - --no-autoupdate
+  - --metrics
+  - "0.0.0.0:2000"
+  - run
+
+extraArgs: []
+
+metrics:
+  enabled: true
+  port: 2000
+  portName: "metrics"
+
+service:
+  type: ClusterIP
+  annotations: {}
+
+livenessProbe:
+  httpGet:
+    path: /ready
+    port: 2000
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 1
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 2000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+podAnnotations: {}
+
+deployment:
+  annotations: {}

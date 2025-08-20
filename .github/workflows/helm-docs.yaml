@@ -7,6 +7,10 @@ on:
     paths:
       - 'charts/helmchart/**'
       - 'charts/cronjob/**'
+      - 'charts/cloudflare/**'
+      - 'charts/vigil/**'
+      - 'charts/rbac/**'
+      
     
 jobs:
   install-helm-docs:

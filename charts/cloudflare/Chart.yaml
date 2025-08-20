@@ -1,0 +1,14 @@
+apiVersion: v2
+name: cloudflared-tunnel
+description: Run Cloudflare Tunnel with token (no autoupdate)
+type: application
+version: 0.1.0
+appVersion: "2024.3.0"
+keywords:
+- helm
+- chart
+- k8s
+- helm-chart
+maintainers:
+- email: hello@clouddrove.com
+  name: Clouddrove Inc

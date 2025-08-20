@@ -1,0 +1,34 @@
+---------------------------------------------------------
+Thank you for installing {{ .Chart.Name }}!
+
+---------------------------------------------------------
+List created ServiceAccounts:
+  kubectl get serviceAccount -A -l rbac-homelab=member -o wide
+
+List token secrets:
+  kubectl get secret -A -l rbac-homelab=member
+
+---------------------------------------------------------
+HelmChart Details:
+  helm repo add clouddrove https://charts.clouddrove.com/
+  helm repo update clouddrove
+  helm template my-release clouddrove/rbac
+
+---------------------------------------------------------
+{{- if .Values.members }}
+This release created the following resources:
+
+{{- range $u := .Values.members }}
+{{- if $u.createNamespace | default true }}
+- Namespace:      {{ $u.namespace | default (printf "ns-%s" $u.name) }}
+- ServiceAccount: {{ printf "sa-%s" $u.name }}
+- SecretToken:    {{ printf "sa-%s-token" $u.name }}
+- RoleBinding:    {{ printf "rb-%s" $u.name }}
+- Role:           {{ $u.role | default "view" }}{{ "\n" }}
+{{- end }}
+{{- end }}
+{{- else }}
+No members were defined, so no resources were created.
+{{- end }}
+
+---------------------------------------------------------
