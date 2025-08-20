@@ -10,10 +10,11 @@ Validate uniqueness of namespaces
 {{- if . }}
   {{- $seen := dict -}}
   {{- range $u := . }}
-    {{- if hasKey $seen $u.namespace | default (printf "ns-%s" $u.name) }}
-      {{- fail (printf "ERROR: >>>>>>> Duplicate namespace found: %s" $u.namespace) }}
+    {{- $ns := $u.namespace | default (printf "ns-%s" $u.name) }}
+    {{- if hasKey $seen $ns }}
+      {{- fail (printf "ERROR: >>>>>>> Duplicate namespace found: %s" $ns) }}
     {{- else }}
-      {{- $_ := set $seen $u.namespace true }}
+      {{- $_ := set $seen $ns true }}
     {{- end }}
   {{- end }}
 {{- end }}
