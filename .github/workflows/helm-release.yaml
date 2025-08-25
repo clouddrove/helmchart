@@ -11,6 +11,7 @@ on:
       - 'charts/cloudflare/**'
       - 'charts/vigil/**'
       - 'charts/rbac/**'
+      - 'charts/cloudflare-ddns/**'
 
 jobs:
   release:
