@@ -22,26 +22,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ default (include "cloudflare-ddns.fullname" .) .Values.serviceAccount.name }}
-      {{- else if .Values.serviceAccount.name }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      {{- end }}
-      hostNetwork: {{ .Values.hostNetwork }}
-      dnsPolicy: {{ if .Values.hostNetwork }}ClusterFirstWithHostNet{{ else }}{{ .Values.dnsPolicy }}{{ end }}
+      hostNetwork: {{ .Values.hostNetwork | default false }}
+      dnsPolicy: {{ if .Values.hostNetwork }}ClusterFirstWithHostNet{{ else }}{{ .Values.dnsPolicy | default "ClusterFirst" | quote }}{{ end }}
       securityContext:
         fsGroup: 1000
       containers:
         - name: cloudflare-ddns
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
-            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
-            capabilities:
-              drop: ["ALL"]
+            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: DOMAINS
               value: {{ required "Set .Values.env.domains (comma-separated domains)" .Values.env.domains | quote }}

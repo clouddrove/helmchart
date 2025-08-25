@@ -1,46 +1,51 @@
+replicaCount: 1
+
 image:
   repository: favonia/cloudflare-ddns
   tag: "1"
   pullPolicy: IfNotPresent
 
-replicaCount: 1
-hostNetwork: false
-dnsPolicy: ClusterFirst
+imagePullSecrets: []
+
+podAnnotations: {}
+podLabels: {}
+
+serviceAccount:
+  name: ""                # Provide existing ServiceAccount name to use (leave empty to create one)
+
+secret:
+  name: ""                # Provide existing Secret name to use (leave empty to create one)
+  key: api-token          # (Required) Will become the key of new Secret. If using an existing Secret, this key must already exist.
+  value: ""               # Will become the Value for the above key (required if creating a Secret, i.e. when name is empty)
 
 env:
-  domains: ""             # REQUIRED: comma-separated list
+  domains: "clouddrove.com,example.com"  # REQUIRED: comma-separated list
   proxied: true
   ttl: ""                 # optional; "" => Cloudflare auto
   recordComment: ""       # optional
   ip4Provider: ""
   ip6Provider: ""
 
-secret:
-  create: true            # << default: chart creates the Secret
-  name: ""                # if set, chart will use this existing Secret instead
-  key: api-token          # key inside the Secret
-  value: ""               # REQUIRED when create=true; prefer --set-file or ExternalSecret
+hostNetwork: false
+dnsPolicy: ClusterFirst   # Optional; ignored when hostNetwork=true (ClusterFirstWithHostNet is used instead)
 
-podAnnotations: {}
-podLabels: {}
+resources: {}
+  # requests:
+  #   cpu: 10m
+  #   memory: 32Mi
+  # limits:
+  #   memory: 128Mi
 
-resources:
-  requests:
-    cpu: 10m
-    memory: 32Mi
-  limits:
-    memory: 128Mi
+securityContext: {}
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # readOnlyRootFilesystem: true
+  # allowPrivilegeEscalation: false
+  # capabilities:
+  #   drop: ["ALL"]
 
-securityContext:
-  runAsNonRoot: true
-  readOnlyRootFilesystem: true
-  allowPrivilegeEscalation: false
-
-nodeSelector: {}
-tolerations: []
 affinity: {}
 
-imagePullSecrets: []
-serviceAccount:
-  create: false
-  name: ""
+nodeSelector: {}
+
+tolerations: []
