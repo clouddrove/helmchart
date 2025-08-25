@@ -1,0 +1,46 @@
+image:
+  repository: favonia/cloudflare-ddns
+  tag: "1"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+hostNetwork: false
+dnsPolicy: ClusterFirst
+
+env:
+  domains: ""             # REQUIRED: comma-separated list
+  proxied: true
+  ttl: ""                 # optional; "" => Cloudflare auto
+  recordComment: ""       # optional
+  ip4Provider: ""
+  ip6Provider: ""
+
+secret:
+  create: true            # << default: chart creates the Secret
+  name: ""                # if set, chart will use this existing Secret instead
+  key: api-token          # key inside the Secret
+  value: ""               # REQUIRED when create=true; prefer --set-file or ExternalSecret
+
+podAnnotations: {}
+podLabels: {}
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 128Mi
+
+securityContext:
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+imagePullSecrets: []
+serviceAccount:
+  create: false
+  name: ""
