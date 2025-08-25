@@ -1,0 +1,11 @@
+Cloudflare DDNS is deploying.
+
+This chart creates a Secret by default unless you set .Values.secret.name to use an existing Secret.
+
+Install example:
+  helm upgrade --install cf-ddns ./charts/cloudflare-ddns -n tools --create-namespace \
+    --set env.domains="home.example.com" \
+    --set-file secret.value=./token.txt
+
+Check logs:
+  kubectl -n {{ .Release.Namespace }} logs deploy/{{ include "cloudflare-ddns.fullname" . }} -f

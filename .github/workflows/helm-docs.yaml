@@ -10,8 +10,8 @@ on:
       - 'charts/cloudflare/**'
       - 'charts/vigil/**'
       - 'charts/rbac/**'
-      
-    
+      - 'charts/cloudflare-ddns/**'
+
 jobs:
   install-helm-docs:
     runs-on: ubuntu-latest
