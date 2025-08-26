@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [cloudflare-ddns-0.1.0] - 2025-08-26
+### :sparkles: New Features
+- [`3a71639`](https://github.com/clouddrove/helmchart/commit/3a716398bf2eccea8c09b4265c2fe30d1dd578ed) - Add Checkov workflow *(PR [#71](https://github.com/clouddrove/helmchart/pull/71) by [@Arzianghanchi](https://github.com/Arzianghanchi))*
+- [`27a882e`](https://github.com/clouddrove/helmchart/commit/27a882e17f361ff57f6a743168bbb97fa77a7b82) - adding helm chart for cloudflare ddns *(PR [#72](https://github.com/clouddrove/helmchart/pull/72) by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+### :bug: Bug Fixes
+- [`d9ab17f`](https://github.com/clouddrove/helmchart/commit/d9ab17fbb5a45ea7267241c4d60c7eba9ae1191a) - (rbac) correct namespace uniqueness validation in _helpers.tpl *(PR [#70](https://github.com/clouddrove/helmchart/pull/70) by [@h1manshu98](https://github.com/h1manshu98))*
+
+### :memo: Documentation Changes
+- [`bd18853`](https://github.com/clouddrove/helmchart/commit/bd188530ec0cfdff7d17802d7bb9aaa217cf059e) - update CHANGELOG.md for rbac-0.1.0 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [rbac-0.1.0] - 2025-08-18
 ### :sparkles: New Features
 - [`7970fc4`](https://github.com/clouddrove/helmchart/commit/7970fc4ca3994203913471269d2dc41fa44c6b63) - adding rbac helm chart *(PR [#69](https://github.com/clouddrove/helmchart/pull/69) by [@anmolnagpal](https://github.com/anmolnagpal))*
@@ -76,3 +88,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [helmchart-0.0.9]: https://github.com/clouddrove/helmchart/compare/helmchart-0.0.8...helmchart-0.0.9
 [cloudflared-tunnel-0.1.0]: https://github.com/clouddrove/helmchart/compare/helmchart-1.0.2...cloudflared-tunnel-0.1.0
 [rbac-0.1.0]: https://github.com/clouddrove/helmchart/compare/cloudflared-tunnel-0.1.0...rbac-0.1.0
+[cloudflare-ddns-0.1.0]: https://github.com/clouddrove/helmchart/compare/rbac-0.1.0...cloudflare-ddns-0.1.0
