@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cloudflare-ddns.fullname" . }}
+  labels:
+    {{- include "cloudflare-ddns.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "cloudflare-ddns.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "cloudflare-ddns.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ default (include "cloudflare-ddns.fullname" .) .Values.serviceAccount.name }}
+      hostNetwork: {{ .Values.hostNetwork | default false }}
+      dnsPolicy: {{ if .Values.hostNetwork }}ClusterFirstWithHostNet{{ else }}{{ .Values.dnsPolicy | default "ClusterFirst" | quote }}{{ end }}
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: cloudflare-ddns
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: DOMAINS
+              value: {{ required "Set .Values.env.domains (comma-separated domains)" .Values.env.domains | quote }}
+            - name: PROXIED
+              value: {{ .Values.env.proxied | toString | quote }}
+            {{- if .Values.env.ttl }}
+            - name: TTL
+              value: {{ .Values.env.ttl | quote }}
+            {{- end }}
+            {{- if .Values.env.recordComment }}
+            - name: RECORD_COMMENT
+              value: {{ .Values.env.recordComment | quote }}
+            {{- end }}
+            {{- if .Values.env.ip4Provider }}
+            - name: IP4_PROVIDER
+              value: {{ .Values.env.ip4Provider | quote }}
+            {{- end }}
+            {{- if .Values.env.ip6Provider }}
+            - name: IP6_PROVIDER
+              value: {{ .Values.env.ip6Provider | quote }}
+            {{- end }}
+            - name: CLOUDFLARE_API_TOKEN_FILE
+              value: /var/run/secrets/cloudflare/{{ .Values.secret.key }}
+          volumeMounts:
+            - name: cf-token
+              mountPath: /var/run/secrets/cloudflare
+              readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: cf-token
+          secret:
+            secretName: {{ default (include "cloudflare-ddns.fullname" .) .Values.secret.name }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
