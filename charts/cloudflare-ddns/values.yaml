@@ -19,7 +19,7 @@ secret:
   value: ""               # Will become the Value for the above key (required if creating a Secret, i.e. when name is empty)
 
 env:
-  domains: "clouddrove.com,example.com"  # REQUIRED: comma-separated list
+  domains: "example.com"  # REQUIRED: comma-separated list
   proxied: true
   ttl: ""                 # optional; "" => Cloudflare auto
   recordComment: ""       # optional
