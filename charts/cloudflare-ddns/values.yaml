@@ -29,20 +29,20 @@ env:
 hostNetwork: false
 dnsPolicy: ClusterFirst   # Optional; ignored when hostNetwork=true (ClusterFirstWithHostNet is used instead)
 
-resources: {}
-  # requests:
-  #   cpu: 10m
-  #   memory: 32Mi
-  # limits:
-  #   memory: 128Mi
+resources:
+   requests:
+     cpu: 10m
+     memory: 32Mi
+   limits:
+     memory: 128Mi
 
-securityContext: {}
-  # runAsUser: 1000
-  # runAsGroup: 1000
-  # readOnlyRootFilesystem: true
-  # allowPrivilegeEscalation: false
-  # capabilities:
-  #   drop: ["ALL"]
+securityContext:
+   runAsUser: 1000
+   runAsGroup: 1000
+   readOnlyRootFilesystem: true
+   allowPrivilegeEscalation: false
+   capabilities:
+     drop: ["ALL"]
 
 affinity: {}
 
