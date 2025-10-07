@@ -8,8 +8,8 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "cloudflare-ddns.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "cloudflare-ddns.name" . | quote }}
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
   template:
     metadata:
       labels:
@@ -33,54 +33,78 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-
           env:
-            # Load CF_API_TOKEN from Secret
+            - name: DOMAINS
+              value: {{ required "Set .Values.env.domains (comma-separated domains)" .Values.env.domains | quote }}
+            - name: PROXIED
+              value: {{ .Values.env.proxied | toString | quote }}
+            {{- if .Values.env.ttl }}
+            - name: TTL
+              value: {{ .Values.env.ttl | quote }}
+            {{- end }}
+            {{- if .Values.env.recordComment }}
+            - name: RECORD_COMMENT
+              value: {{ .Values.env.recordComment | quote }}
+            {{- end }}
+            {{- if .Values.env.ip4Provider }}
+            - name: IP4_PROVIDER
+              value: {{ .Values.env.ip4Provider | quote }}
+            {{- end }}
+            {{- if .Values.env.ip6Provider }}
+            - name: IP6_PROVIDER
+              value: {{ .Values.env.ip6Provider | quote }}
+            {{- end }}
+            - name: CLOUDFLARE_API_TOKEN_FILE
+              value: /var/run/secrets/cloudflare/{{ .Values.secret.key }}
+
+            {{- if and .Values.configmap.enabled .Values.configmap.name }}
+            - name: CF_ZONE_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: CF_ZONE_ID
+            - name: CF_RECORD_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: CF_RECORD_NAME
+            - name: INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configmap.name }}
+                  key: INTERVAL
+            {{- end }}
+
+            {{- if and .Values.secret.name .Values.secret.key }}
             - name: CF_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ default (include "cloudflare-ddns.fullname" .) .Values.secret.name }}
+                  name: {{ .Values.secret.name }}
                   key: {{ .Values.secret.key }}
-
-            # Load additional ENV vars from configmap.configs
-            {{- range $key, $val := .Values.configmap.configs }}
-            - name: {{ $key }}
-              value: {{ $val | quote }}
             {{- end }}
-
-          command:
-            {{- toYaml .Values.commands | nindent 12 }}
-          args:
-            {{- toYaml .Values.args | nindent 12 }}
 
           volumeMounts:
             - name: cf-token
               mountPath: /var/run/secrets/cloudflare
               readOnly: true
-
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
       volumes:
         - name: cf-token
           secret:
             secretName: {{ default (include "cloudflare-ddns.fullname" .) .Values.secret.name }}
-
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

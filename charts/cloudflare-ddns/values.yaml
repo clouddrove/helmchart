@@ -29,6 +29,12 @@ env:
 hostNetwork: false
 dnsPolicy: ClusterFirst   # Optional; ignored when hostNetwork=true (ClusterFirstWithHostNet is used instead)
 
+
+configmap:
+  enabled: false           # Set to true to create a ConfigMap with additional environment variables
+  name: ""                 # Optional: specify a custom ConfigMap name (defaults to release fullname)
+  configs: {}              # Optional: key-value pairs to be added to the ConfigMap
+
 resources:
    requests:
      cpu: 10m
