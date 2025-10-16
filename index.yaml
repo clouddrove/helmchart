@@ -74,9 +74,9 @@ entries:
     maintainers:
     - email: hello@clouddrove.com
       name: CloudDrove Inc
-    name: helmchart
+    name: helmchar
     type: application
     urls:
-    - https://charts.clouddrove.com/helmchart-0.0.4.tgz
+    - https://charts.clouddrove.com/charts/helmchart-0.0.4.tgz
     version: 0.0.4
 generated: "2023-06-08T08:30:33.04384546Z"
