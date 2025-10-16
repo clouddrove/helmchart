@@ -1,0 +1,8 @@
+repositoryID: "bb66fc94-93cd-4ae3-ae12-2f0bfacdc730"
+owners:
+  - name: CloudDrove
+    email: support@clouddrove.com
+displayName: "CloudDrove Helm Charts"
+description: "Official Helm charts maintained by CloudDrove for deploying and managing cloud-native applications."
+homeURL: "https://charts.clouddrove.com"
+logoURL: "https://clouddrove.com/images/logo.png"
