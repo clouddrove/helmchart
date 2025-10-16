@@ -1,26 +1,23 @@
 name: Helm CI
 on: [push, pull_request]
-
 jobs:
   helm-check:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-
+    - uses: actions/checkout@master
     - name: helm-check-helmchart
-      uses: igabaydulin/helm-check-action@0.2.0
+      uses: igabaydulin/helm-check-action@0.2.1
       env:
         CHART_LOCATION: ./charts/helmchart
         CHART_VALUES: ./tests/overrides-helmchart.yaml
-
     - name: helm-check-cronjob
-      uses: igabaydulin/helm-check-action@0.2.0
+      uses: igabaydulin/helm-check-action@0.2.1
       env:
         CHART_LOCATION: ./charts/cronjob
         CHART_VALUES: ./tests/overrides-cronjob.yaml
 
     - name: Run helm unittest
       run: |
-        helm plugin install https://github.com/quintush/helm-unittest
-        helm unittest ./charts/helmchart
+        helm plugin install https://github.com/helm-unittest/helm-unittest.git
+        helm unittest -f ./test/*.yaml ./charts/helmchart
