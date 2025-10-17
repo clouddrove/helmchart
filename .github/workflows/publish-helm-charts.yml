@@ -3,7 +3,7 @@ name: Publish Helm Charts to GitHub Pages
 on:
   push:
     branches:
-      - feat/github-action
+      - feat/github-action   # your new branch
 
 jobs:
   publish:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # important for pushing to other branches
+          fetch-depth: 0
 
       - name: Set up Helm
         uses: azure/setup-helm@v3
@@ -22,27 +22,41 @@ jobs:
         run: |
           mkdir -p packages
           helm package charts/* -d packages
-          helm repo index packages --url https://github.com/clouddrove/helmchart
+          helm repo index packages --url https://clouddrove.github.io/helmchart
 
-      - name: Copy Artifact Hub metadata file
-        run: cp .artifacthub-repo.yml packages/
+      - name: Create Artifact Hub metadata
+        run: |
+          cat <<EOF > packages/.artifacthub-repo.yml
+          repositoryID: bb66fc94-93cd-4ae3-ae12-2f0bfacdc730
+          name: helmchart-clouddrove
+          displayName: Clouddrove Helm Charts
+          description: A collection of Helm charts maintained by Clouddrove
+          homeURL: https://github.com/clouddrove/helmchart
+          repoURL: https://github.com/clouddrove/helmchart
+          type: helm
+          icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png
+          publisher:
+            name: Clouddrove
+            email: hello@clouddrove.com
+            url: https://github.com/clouddrove
+          owners:
+            - name: Clouddrove
+              email: hello@clouddrove.com
+          EOF
 
       - name: Deploy to gh-pages
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Clone the gh-pages branch into a temp folder
           git fetch origin gh-pages
           git worktree add gh-pages-temp gh-pages
 
-          # Copy the packaged charts and index.yaml
+          # Clear old content and copy new charts
           rm -rf gh-pages-temp/*
           cp -r packages/* gh-pages-temp/
 
-          # Commit and push
           cd gh-pages-temp
           git add .
           git commit -m "Publish Helm charts from feat/github-action [skip ci]" || echo "No changes to commit"
           git push origin gh-pages
-          
