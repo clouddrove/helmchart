@@ -3,7 +3,7 @@ entries:
   cloudflare-ddns:
   - apiVersion: v2
     appVersion: "1"
-    created: "2025-10-30T00:50:07.917429+05:30"
+    created: "2025-10-30T00:55:57.877428+05:30"
     description: Cloudflare DDNS updater
     digest: 4b99a0d7eceeaf629dc6a741f18b94c343a50ee9762f5cf2f29002c4af818892
     home: https://github.com/clouddrove/helmchart
@@ -26,7 +26,7 @@ entries:
   cloudflared-tunnel:
   - apiVersion: v2
     appVersion: 2024.3.0
-    created: "2025-10-30T00:50:07.91798+05:30"
+    created: "2025-10-30T00:55:57.878082+05:30"
     description: Run Cloudflare Tunnel with token (no autoupdate)
     digest: 6a13dd38c7b2b89795dbd92be28fc3105da01339090bc57c00a8098de4031fe2
     keywords:
@@ -45,7 +45,7 @@ entries:
   cronjob:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-10-30T00:50:07.918864+05:30"
+    created: "2025-10-30T00:55:57.879369+05:30"
     description: A chart for cron jobs
     digest: eef716d464e49dd4e93e922a1d7cafb7e935289ed21fd2f012912331afdf3542
     home: https://github.com/clouddrove/helmchart
@@ -63,7 +63,7 @@ entries:
   helmchart:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2025-10-30T00:50:07.920224+05:30"
+    created: "2025-10-30T00:55:57.88085+05:30"
     description: A Helm chart for a simple Node.js Hello World application
     digest: 33029c783fd5db7cba6f81ca6d97a02b6f380b3e8e3fc570bb979677c2ae8bca
     home: https://github.com/clouddrove/helmchart
@@ -84,7 +84,7 @@ entries:
   rbac:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-10-30T00:50:07.920538+05:30"
+    created: "2025-10-30T00:55:57.881176+05:30"
     description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no
       SSO).
     digest: ec7517e7cb28bd47c05c585ae9635dfcbab27cc147161bcfe20166af16185390
@@ -104,7 +104,7 @@ entries:
   vigil:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2025-10-30T00:50:07.921594+05:30"
+    created: "2025-10-30T00:55:57.882297+05:30"
     description: A Helm chart for Kubernetes
     digest: e98a3f25a251e777949da19e802597312d968758bd9852f883029112a97973cc
     home: https://github.com/clouddrove/vigil
@@ -122,4 +122,4 @@ entries:
     urls:
     - https://clouddrove.github.io/helmchart/packages/vigil-1.0.1.tgz
     version: 1.0.1
-generated: "2025-10-30T00:50:07.916141+05:30"
+generated: "2025-10-30T00:55:57.876279+05:30"
