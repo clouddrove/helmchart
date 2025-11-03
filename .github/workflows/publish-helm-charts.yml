@@ -28,12 +28,10 @@ jobs:
           # Create the Helm repo index using your custom domain URL
           helm repo index packages --url https://charts.clouddrove.com/
 
-      - name: Copy Artifact Hub metadata file
+      - name: Add Artifact Hub metadata file
         run: |
-          if [ -f .artifacthub-repo.yml ]; then
+          if [ -f ".artifacthub-repo.yml" ]; then
             cp .artifacthub-repo.yml packages/
-          else
-            echo ".artifacthub-repo.yml not found, skipping copy."
           fi
 
       - name: Add CNAME file for GitHub Pages custom domain
@@ -48,7 +46,7 @@ jobs:
           git fetch origin gh-pages || git checkout --orphan gh-pages
           git worktree add gh-pages-temp gh-pages
 
-          # Clean and copy new chart packages, index.yaml, CNAME, and Artifact Hub metadata
+          # Clean and copy new chart packages and index.yaml
           rm -rf gh-pages-temp/*
           cp -r packages/* gh-pages-temp/
 
