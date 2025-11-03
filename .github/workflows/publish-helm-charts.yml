@@ -3,7 +3,7 @@ name: Publish Helm Charts with Images
 on:
   push:
     branches:
-      - feat/github-action  # your branch
+      - feat/github-action
 
 jobs:
   publish:
@@ -35,27 +35,35 @@ jobs:
           if [ -f ".artifacthub-repo.yml" ]; then
             cp .artifacthub-repo.yml packages/
 
-      # Step 5: Copy all images
+      # Step 5: Copy images
       - name: Copy images
         run: |
           mkdir -p packages/images
           cp -r images/* packages/images/
 
-      # Step 6: Add CNAME for GitHub Pages
+      # Step 6: Update index.yaml to include images
+      - name: Update index.yaml with chart icons
+        run: |
+          for chart in packages/*.tgz; do
+            name=$(basename "$chart" | sed 's/-[0-9].*\.tgz//')
+            image_url="https://charts.clouddrove.com/images/${name}.png"
+            # Use yq to add icon field
+            yq eval ".entries.\"$name\"[].icon = \"$image_url\"" -i packages/index.yaml
+          done
+
+      # Step 7: Add CNAME for GitHub Pages
       - name: Add CNAME
         run: echo "charts.clouddrove.com" > packages/CNAME
 
-      # Step 7: Deploy to gh-pages
+      # Step 8: Deploy to gh-pages
       - name: Deploy to gh-pages
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Fetch or create gh-pages branch
           git fetch origin gh-pages || git checkout --orphan gh-pages
           git worktree add gh-pages-temp gh-pages
 
-          # Clean old files and copy new content
           rm -rf gh-pages-temp/*
           cp -r packages/. gh-pages-temp/
 
