@@ -1,0 +1,15 @@
+repositoryID: 09c0151e-5789-4eb1-83b1-0133b27cc159
+name: clouddrove
+displayName: CloudDrove
+description: A collection of Helm charts maintained by Clouddrove
+homeURL: https://charts.clouddrove.com/
+repoURL: https://github.com/clouddrove/helmchart
+type: helm
+publisher:
+  name: CloudDrove
+  email: hello@clouddrove.com
+  url: https://github.com/clouddrove/helmchart
+owners:
+  - name: CloudDrove
+    email: hello@clouddrove.com
+    github: clouddrove
