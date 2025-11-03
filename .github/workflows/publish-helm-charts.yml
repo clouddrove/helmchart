@@ -30,8 +30,11 @@ jobs:
 
       - name: Add Artifact Hub metadata file
         run: |
+          # Copy .artifacthub-repo.yml from the root of the branch into packages
           if [ -f ".artifacthub-repo.yml" ]; then
             cp .artifacthub-repo.yml packages/
+          else
+            echo "Warning: .artifacthub-repo.yml not found!"
           fi
 
       - name: Add CNAME file for GitHub Pages custom domain
@@ -46,7 +49,7 @@ jobs:
           git fetch origin gh-pages || git checkout --orphan gh-pages
           git worktree add gh-pages-temp gh-pages
 
-          # Clean and copy new chart packages and index.yaml
+          # Clean old files and copy new chart packages, index, and metadata
           rm -rf gh-pages-temp/*
           cp -r packages/* gh-pages-temp/
 
