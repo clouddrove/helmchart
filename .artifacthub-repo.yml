@@ -3,12 +3,12 @@ name: clouddrove
 displayName: CloudDrove
 description: A collection of Helm charts maintained by Clouddrove
 homeURL: https://charts.clouddrove.com/
-repoURL: https://charts.clouddrove.com/
+repoURL: https://github.com/clouddrove/helmchart   # <-- must point to GitHub repo
 type: helm
 publisher:
   name: clouddrove
   email: hello@clouddrove.com
-  url: https://charts.clouddrove.com/
+  url: https://github.com/clouddrove/helmchart      # <-- must point to GitHub repo
 owners:
   - name: clouddrove
     email: hello@clouddrove.com
