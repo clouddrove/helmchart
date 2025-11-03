@@ -32,7 +32,6 @@ jobs:
         run: |
           if [ -f ".artifacthub-repo.yml" ]; then
             cp .artifacthub-repo.yml packages/
-          fi
 
       - name: Add CNAME file for GitHub Pages custom domain
         run: echo "charts.clouddrove.com" > packages/CNAME
@@ -48,7 +47,7 @@ jobs:
 
           # Clean old files and copy new chart packages, index, CNAME, and Artifact Hub metadata
           rm -rf gh-pages-temp/*
-          cp -r packages/. gh-pages-temp/   # <-- copy all files including hidden files
+          cp -r packages/. gh-pages-temp/   # <-- copy all files including hidden ones
 
           cd gh-pages-temp
           git add .
