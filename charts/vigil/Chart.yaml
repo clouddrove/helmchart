@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: 1.0.1
 description: A Helm chart for Kubernetes
 home: https://github.com/clouddrove/vigil
-icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/vigil.jpeg
 keywords:
 - helm
 - chart

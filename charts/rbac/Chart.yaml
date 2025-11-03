@@ -12,3 +12,4 @@ keywords:
 maintainers:
 - email: hello@clouddrove.com
   name: Clouddrove Inc.
+icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/rbac.jpg

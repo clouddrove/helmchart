@@ -11,4 +11,4 @@ home: "https://github.com/clouddrove/helmchart"
 maintainers:
   - name: CloudDrove Inc.
     email: hello@clouddrove.com
-
+icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/cronjobs.png
