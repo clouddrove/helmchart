@@ -1,4 +1,4 @@
-name: Publish Helm Charts with Images
+name: Publish Helm Charts to GitHub Pages
 
 on:
   push:
@@ -12,62 +12,57 @@ jobs:
       contents: write
 
     steps:
-      # Step 1: Checkout code
-      - name: Checkout code
+      - name: Checkout the code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Important for pushing to gh-pages
 
-      # Step 2: Setup Helm
-      - name: Setup Helm
+      - name: Set up Helm
         uses: azure/setup-helm@v3
 
-      # Step 3: Package all Helm charts
       - name: Package Helm charts
         run: |
           mkdir -p packages
+          # Package all charts in the 'charts' directory into the packages folder
           helm package charts/* -d packages
+          # Create the Helm repo index using your custom domain URL
           helm repo index packages --url https://charts.clouddrove.com/
 
-      # Step 4: Copy Artifact Hub metadata
       - name: Add Artifact Hub metadata
         run: |
           if [ -f ".artifacthub-repo.yml" ]; then
             cp .artifacthub-repo.yml packages/
+          fi
 
-      # Step 5: Copy images
-      - name: Copy images
-        run: |
-          mkdir -p packages/images
-          cp -r images/* packages/images/
-
-      # Step 6: Update index.yaml to include images
-      - name: Update index.yaml with chart icons
-        run: |
-          for chart in packages/*.tgz; do
-            name=$(basename "$chart" | sed 's/-[0-9].*\.tgz//')
-            image_url="https://charts.clouddrove.com/images/${name}.png"
-            # Use yq to add icon field
-            yq eval ".entries.\"$name\"[].icon = \"$image_url\"" -i packages/index.yaml
-          done
-
-      # Step 7: Add CNAME for GitHub Pages
-      - name: Add CNAME
+      - name: Add CNAME file for GitHub Pages custom domain
         run: echo "charts.clouddrove.com" > packages/CNAME
 
-      # Step 8: Deploy to gh-pages
+      - name: Add icons/images to index.yaml
+        run: |
+          # Example: update index.yaml to include chart icons from images folder
+          for chart_tgz in packages/*.tgz; do
+            chart_name=$(basename "$chart_tgz" .tgz)
+            icon_file="../images/${chart_name}.png"
+            if [ -f "$icon_file" ]; then
+              # Update index.yaml entry with icon URL
+              yq -i ".entries.\"$chart_name\"[].icon = \"https://raw.githubusercontent.com/${{ github.repository }}/main/images/${chart_name}.png\"" packages/index.yaml
+            fi
+          done
+
       - name: Deploy to gh-pages
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Fetch the gh-pages branch
           git fetch origin gh-pages || git checkout --orphan gh-pages
           git worktree add gh-pages-temp gh-pages
 
+          # Clean old files and copy new chart packages, index, CNAME, and Artifact Hub metadata
           rm -rf gh-pages-temp/*
           cp -r packages/. gh-pages-temp/
 
           cd gh-pages-temp
           git add .
-          git commit -m "Publish Helm charts with images from feat/github-action [skip ci]" || echo "No changes to commit"
+          git commit -m "Publish Helm charts from feat/github-action [skip ci]" || echo "No changes to commit"
           git push origin gh-pages
