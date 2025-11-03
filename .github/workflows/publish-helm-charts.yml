@@ -1,9 +1,9 @@
-name: Publish Helm Charts to GitHub Pages
+name: Publish Helm Charts with Images
 
 on:
   push:
     branches:
-      - feat/github-action
+      - feat/github-action  # your branch
 
 jobs:
   publish:
@@ -12,53 +12,54 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout the code
+      # Step 1: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Important for pushing to gh-pages
+          fetch-depth: 0
 
-      - name: Set up Helm
+      # Step 2: Setup Helm
+      - name: Setup Helm
         uses: azure/setup-helm@v3
 
+      # Step 3: Package all Helm charts
       - name: Package Helm charts
         run: |
           mkdir -p packages
-          # Package all charts in the 'charts' directory into the packages folder
           helm package charts/* -d packages
-          # Create the Helm repo index using your custom domain URL
           helm repo index packages --url https://charts.clouddrove.com/
 
-      - name: Add Artifact Hub metadata file if changed
+      # Step 4: Copy Artifact Hub metadata
+      - name: Add Artifact Hub metadata
         run: |
           if [ -f ".artifacthub-repo.yml" ]; then
-            if [ ! -f "packages/.artifacthub-repo.yml" ] || ! cmp -s .artifacthub-repo.yml packages/.artifacthub-repo.yml; then
-              cp .artifacthub-repo.yml packages/
-            fi
-          fi
+            cp .artifacthub-repo.yml packages/
 
-      - name: Add CNAME file for GitHub Pages if changed
+      # Step 5: Copy all images
+      - name: Copy images
         run: |
-          echo "charts.clouddrove.com" > temp_cname
-          if [ ! -f "packages/CNAME" ] || ! cmp -s temp_cname packages/CNAME; then
-            mv temp_cname packages/CNAME
-          else
-            rm temp_cname
-          fi
+          mkdir -p packages/images
+          cp -r images/* packages/images/
 
+      # Step 6: Add CNAME for GitHub Pages
+      - name: Add CNAME
+        run: echo "charts.clouddrove.com" > packages/CNAME
+
+      # Step 7: Deploy to gh-pages
       - name: Deploy to gh-pages
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Fetch the gh-pages branch
+          # Fetch or create gh-pages branch
           git fetch origin gh-pages || git checkout --orphan gh-pages
           git worktree add gh-pages-temp gh-pages
 
-          # Clean old files and copy new chart packages, index, CNAME, and Artifact Hub metadata
+          # Clean old files and copy new content
           rm -rf gh-pages-temp/*
-          cp -r packages/. gh-pages-temp/   # Copy all files including hidden files
+          cp -r packages/. gh-pages-temp/
 
           cd gh-pages-temp
           git add .
-          git commit -m "Publish Helm charts from feat/github-action [skip ci]" || echo "No changes to commit"
+          git commit -m "Publish Helm charts with images from feat/github-action [skip ci]" || echo "No changes to commit"
           git push origin gh-pages
