@@ -51,8 +51,8 @@ jobs:
 
       - name: Deploy to gh-pages
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "akonverma97"
+          git config --global user.email "akonverma97@users.noreply.github.com"
 
           # Fetch the gh-pages branch
           git fetch origin gh-pages || git checkout --orphan gh-pages
