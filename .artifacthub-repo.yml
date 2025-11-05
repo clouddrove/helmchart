@@ -1,0 +1,49 @@
+# repositoryID: 09c0151e-5789-4eb1-83b1-0133b27cc159
+# name: clouddrove
+# displayName: CloudDrove
+# description: A collection of Helm charts maintained by Clouddrove
+# homeURL: https://charts.clouddrove.com/
+# repoURL: https://github.com/clouddrove/helmchart
+# type: helm
+# publisher:
+#   name: CloudDrove
+#   email: hello@clouddrove.com
+#   url: https://github.com/clouddrove/helmchart
+# owners:
+#   - name: CloudDrove
+#     email: hello@clouddrove.com
+#     github: clouddrove
+
+
+# Artifact Hub repository metadata file
+
+# Optional but recommended: if you already have a repositoryID from a previous submission, keep it.
+# Otherwise, remove this line for the first verification attempt.
+repositoryID: 09c0151e-5789-4eb1-83b1-0133b27cc159
+
+# Basic info about your repository
+name: clouddrove
+displayName: CloudDrove
+description: A collection of Helm charts maintained by CloudDrove
+homeURL: https://charts.clouddrove.com/
+repoURL: https://github.com/clouddrove/helmchart
+type: helm
+
+# 👇 REQUIRED for ownership verification
+owners:
+  - name: CloudDrove
+    email: hello@clouddrove.com
+  - name: Anmol Nagpal
+    email: anmol@clouddrove.com
+
+# (optional) You can exclude some test or demo charts if you don’t want them to appear in Artifact Hub
+# ignore:
+#   - name: test-chart
+#   - name: example
+
+# (optional) Add publisher info
+publisher:
+  name: CloudDrove
+  email: hello@clouddrove.com
+  url: https://github.com/clouddrove/helmchart
+
