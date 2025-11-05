@@ -33,8 +33,8 @@ type: helm
 owners:
   - name: CloudDrove
     email: hello@clouddrove.com
-  - name: Akon Verma
-    email: akonverma97@users.noreply.github.com
+  - name: Anmol Nagpal
+    email: anmol@clouddrove.com
 
 # (optional) You can exclude some test or demo charts if you don’t want them to appear in Artifact Hub
 # ignore:
@@ -46,5 +46,3 @@ publisher:
   name: CloudDrove
   email: hello@clouddrove.com
   url: https://github.com/clouddrove/helmchart
-
-
