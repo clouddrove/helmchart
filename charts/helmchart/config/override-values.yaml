@@ -4,7 +4,7 @@ image:
   repository: nginx
   pullPolicy: IfNotPresent
   tag: "latest"
-  #digest: "sha256:09369da6b10306312cd908661320086bf87fbae1b6b0c49a1f50ba531fef2eab"
+  digest: "sha256:09369da6b10306312cd908661320086bf87fbae1b6b0c49a1f50ba531fef2eab"
 
 secret:
   enabled: true
@@ -155,13 +155,13 @@ metrics:
 
 
 storageClass:
-  create: true
+  create: false
   existingClaim: ""
   # storageClassName: "mystorageclass"
   
   aws: false
-  fileSystemId: "fs-0dd65bf468b83ae22"
-  #accessPointId: "fsap-0a9328be48a8b94e4"
+  fileSystemId: "fs-abcd1234xyz"
+  #accessPointId: "fsap-abcd1234xyz"
   azure: false
   
   gcp: false
