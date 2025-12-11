@@ -72,6 +72,8 @@ service:
     # -- Port number on which the container is accepting traffic.
   targetPort: ""
     # -- Port number on which the pod is accepting traffic.
+  name: http2222222
+    # -- Name of the service
 
 istio:
   # -- We can either use Istio or Ingress for an application deployment. Set `enabled: true` if istio is already installed.
@@ -189,6 +191,7 @@ metrics:
   port: 3001     
   targetPort: 3001 
 
+# this is using inside deployment and also we can use inside daemonset templates after make same changes in daemonset.yaml
 volume:
   # -- Volume mounted to pods either as default or in the form of PVC
   enabled: false
@@ -197,6 +200,7 @@ volume:
   # -- Path inside node which will be used as pvc. default is set to "/mnt/data"
   hostPath: ""
 
+# PVC and PV settings and using inside pvc.yaml , pv.yaml and deployment.yaml,statefulset.yaml
 storageClass:
   # -- Whether to create a custom Storage Class, Default is gp2
   create: false
@@ -234,6 +238,7 @@ storageClass:
     size: 2Gi
     # -- Reclaim Policy for Persistent Volume. Default is set to `Retain`. Other valid values are `Delete`, `Recycle`
     persistentVolumeReclaimPolicy: ""
+    existingClaim: null # Name of an existing PVC to use
 
 healthCheckProbes:
   # -- liveness and readiness probes in deployment
@@ -271,3 +276,127 @@ deploymentStrategy: {}
   # rollingUpdate:
   #   maxSurge: 25%
   #   maxUnavailable: 25%
+
+statefulset:
+  enabled: false
+
+
+ClusterIP:
+  enabled: false  # 👈 Controls if the Service should be headless (clusterIP: None)
+
+
+# rBAC settings
+rbac:
+  create: false
+  # role:
+  #   enabled: false
+  #   name: myapp-role
+  #   rules:
+  #     - apiGroups: []
+  #       resources: []
+  #       verbs: []
+  # roleBinding:
+  #   enabled: false
+  #   name: myapp-rolebinding
+  #   users:
+  #     enabled: false
+  #     list: []
+  #   groups:
+  #     enabled: false
+  #     list: []
+  # clusterRole:
+  #   enabled: false
+  #   name: myapp-clusterrole
+  #   rules:
+  #     - apiGroups: []
+  #       resources: []
+  #       verbs: []
+  # clusterRoleBinding:
+  #   enabled: false
+  #   name: myapp-clusterrolebinding
+  #   users:
+  #     enabled: false
+  #     list: []
+  #   groups:
+  #     enabled: false
+  #     list: []
+
+
+## ingressClass settings
+ingressClass:
+  enabled: false
+  name: ""
+  # scenario options: nginx | alb | gce | custom
+  scenario: ""
+
+  # Custom controller name (only used when scenario = custom)
+  customController: ""
+    # controller: k8s.io/ingress-nginx
+    # controller: ingress.k8s.aws/alb
+    # controller: k8s.io/ingress-gce
+    # example.com/custom-ingress-controller
+  # Example of default annotations (can override per scenario)
+  annotations: {}
+    # ingressclass.kubernetes.io/is-default-class: "true"
+    # ingressclass.kubernetes.io/controller: "k8s.io/ingress-nginx"
+    # ingressclass.kubernetes.io/controller: ingress.k8s.aws/alb
+    # ingressclass.kubernetes.io/controller: k8s.io/ingress-gce
+    # ingressclass.kubernetes.io/controller: example.com/custom-ingress-controller
+
+
+
+## NetworkPolicy settings
+networkPolicy: # better understand to check override-values.yaml
+  enabled: false
+  # -- policyTypes options: Ingress | Egress
+  policyTypes: []
+  ingress: []
+  egress: []
+
+# ## DaemonSet settings
+daemonset:
+  enabled: false
+  # Options: logging | networking | monitoring | security
+  scenario: ""
+  imagePullSecrets: []
+  # -- scenario specific configurations
+  logging:
+  # -- Fluentd DaemonSet configuration
+    image: fluent/fluentd:v1.16
+    resources: {}
+    volumeMounts: []
+    volumes: []
+  networking:
+  # -- Cilium DaemonSet configuration
+    image: cilium/cilium:v1.16
+    args: []
+  monitoring:
+  # -- Prometheus Node Exporter DaemonSet configuration
+    image: prom/node-exporter:v1.8.1
+  security:
+  # -- Falco DaemonSet configuration
+    image: falcosecurity/falco:latest
+
+
+## verticalPodAutoscaler settings
+vpa:
+  enabled: false
+  targetKind: Deployment
+  # targetKind options: Deployment | StatefulSet | DaemonSet
+  containerName: "*"
+  # containerName: Name of the container to which VPA applies
+  updateMode: "Auto"
+  # updateMode options: "Off" | "Initial" | "Auto"
+  controlledResources: ["cpu", "memory"]
+  # controlledResources: List of resources to be controlled by VPA
+  minAllowed:
+  # minAllowed: Minimum resource requests allowed
+    cpu: 100m
+    memory: 128Mi
+  maxAllowed:
+  # maxAllowed: Maximum resource requests allowed
+    cpu: 2
+    memory: 2Gi
+  controlledValues: ""
+  # controlledValues options: "RequestsOnly" | "RequestsAndLimits"
+

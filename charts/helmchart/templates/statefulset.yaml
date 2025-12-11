@@ -1,24 +1,20 @@
+{{- if .Values.statefulset.enabled }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "helmchart.fullname" . }}
   namespace: {{ include "helmchart.namespace" . }}
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "helmchart.fullname" . }}
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
-  {{- if .Values.deploymentStrategy }}
-  strategy:
-  {{- with .Values.deploymentStrategy }}
-  {{- toYaml . | nindent 4 }}
-  {{- end }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "helmchart.selectorLabels" . | nindent 6 }}
-      {{- include "helmchart.podLabels" . | nindent 6  }}
+      {{- include "helmchart.podLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -45,9 +41,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           {{- if .Values.image.digest }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@{{ .Values.image.digest }}"
-          {{- else }}  
+          {{- else }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          {{- end }}  
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -57,7 +53,6 @@ spec:
           command:
             {{- toYaml .Values.commands | nindent 12 }}
           {{- end }}
-          {{- if or .Values.configmap.enabled .Values.secret.enabled }}              
           envFrom:
           {{- if .Values.configmap.enabled }}
             - configMapRef:
@@ -67,7 +62,6 @@ spec:
             - secretRef:
                 name: {{ include "helmchart.fullname" . }}-secret
           {{- end }}
-          {{- end }}
           {{- if .Values.healthCheckProbes.enabled }}
           {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
           {{- end }}
@@ -75,11 +69,9 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
-          {{- if .Values.volume.enabled }}
           volumeMounts:
-            - mountPath: {{ default ("/app") .Values.volume.mountPath }}
-              name: {{ template "helmchart.fullname" . }}
-          {{- end }}
+            - name: {{ template "helmchart.fullname" . }}
+              mountPath: {{ default "/app" .Values.volume.mountPath }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -92,9 +84,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.volume.enabled }}
-      volumes:
-        - name: {{ template "helmchart.fullname" . }}
-          persistentVolumeClaim:
-            claimName: {{ template "helmchart.fullname" . }}
-      {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ template "helmchart.fullname" . }}
+      spec:
+        accessModes:
+          - {{ .Values.storageClass.persistence.accessMode | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.storageClass.persistence.size | quote }}
+        {{- if .Values.storageClass.create }}
+        storageClassName: "{{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}"
+        {{- else }}
+        storageClassName: ""
+        {{- end }}
+{{- end }}

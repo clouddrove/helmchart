@@ -1,0 +1,85 @@
+{{- if .Values.daemonset.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "helmchart.fullname" . }}-ds
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "helmchart.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "helmchart.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- with .Values.daemonset.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      serviceAccountName: {{ include "helmchart.serviceAccountName" . }}
+
+      {{- if eq .Values.daemonset.scenario "logging" }}
+      # 🪵 Logging Agent Scenario
+      containers:
+        - name: fluentd
+          image: {{ .Values.daemonset.logging.image }}
+          resources:
+            {{- toYaml .Values.daemonset.logging.resources | nindent 12 }}
+          volumeMounts: {{- toYaml .Values.daemonset.logging.volumeMounts | nindent 12 }}
+      volumes: {{- toYaml .Values.daemonset.logging.volumes | nindent 8 }}
+      {{- else if eq .Values.daemonset.scenario "networking" }}
+      # 🌐 Networking Plugin Scenario
+      containers:
+        - name: cni-plugin
+          image: {{ .Values.daemonset.networking.image }}
+          securityContext:
+            privileged: true
+          args: {{- toYaml .Values.daemonset.networking.args | nindent 12 }}
+      hostNetwork: true
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+
+      {{- else if eq .Values.daemonset.scenario "monitoring" }}
+      # 📈 Node Monitoring Agent Scenario
+      containers:
+        - name: node-exporter
+          image: {{ .Values.daemonset.monitoring.image }}
+          ports:
+            - name: metrics
+              containerPort: 9100
+      hostNetwork: true
+      hostPID: true
+      tolerations:
+        - operator: "Exists"
+
+      {{- else if eq .Values.daemonset.scenario "security" }}
+      # 🔒 Security Agent Scenario
+      containers:
+        - name: security-agent
+          image: {{ .Values.daemonset.security.image }}
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: dev
+              mountPath: /host/dev
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+      volumes:
+        - name: dev
+          hostPath:
+            path: /dev
+        - name: proc
+          hostPath:
+            path: /proc
+
+      {{- end }}
+{{- end }}
