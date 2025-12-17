@@ -7,10 +7,10 @@ metadata:
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:
-  {{- if .Values.service.ClusterIP.enabled }}
+  {{- if and .Values.service.ClusterIP .Values.service.ClusterIP.enabled }}
   clusterIP: None
   {{- else }}
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.type | default "ClusterIP" }}
   {{- end }}
   ports:
     - port: {{ .Values.service.port }}
@@ -20,4 +20,4 @@ spec:
   selector:
     {{- include "helmchart.selectorLabels" . | nindent 4 }}
     {{- include "helmchart.podLabels" . | nindent 4 }}
-{{- end }}    
+{{- end }}
