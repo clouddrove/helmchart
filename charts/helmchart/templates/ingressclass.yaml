@@ -2,29 +2,15 @@
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: {{ .Values.ingressClass.name }}
+  name: {{ include "helmchart.fullname" . }}
   namespace: {{ include "helmchart.namespace" . }}
   labels:
-    app.kubernetes.io/name: {{ include "helmchart.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "helmchart.labels" . | nindent 4 }}
   annotations:
-    {{- if eq .Values.ingressClass.scenario "nginx" }}
-    ingressclass.kubernetes.io/is-default-class: "true"
-    {{- else if eq .Values.ingressClass.scenario "alb" }}
-    ingressclass.kubernetes.io/controller: "ingress.k8s.aws/alb"
-    {{- else if eq .Values.ingressClass.scenario "gce" }}
-    ingressclass.kubernetes.io/controller: "k8s.io/ingress-gce"
-    {{- else if eq .Values.ingressClass.scenario "custom" }}
-    ingressclass.kubernetes.io/controller: {{ .Values.ingressClass.customController }}
+    {{- with .Values.ingressClass.annotations }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
-spec:
-  {{- if eq .Values.ingressClass.scenario "nginx" }}
-  controller: k8s.io/ingress-nginx
-  {{- else if eq .Values.ingressClass.scenario "alb" }}
-  controller: ingress.k8s.aws/alb
-  {{- else if eq .Values.ingressClass.scenario "gce" }}
-  controller: k8s.io/ingress-gce
-  {{- else if eq .Values.ingressClass.scenario "custom" }}
-  controller: {{ .Values.ingressClass.customController }}
-  {{- end }}
+  spec:
+    controller: {{ .Values.ingressClass.controller }}
 {{- end }}
+

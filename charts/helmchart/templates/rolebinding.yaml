@@ -1,4 +1,4 @@
-{{- if and .Values.rbac.create .Values.rbac.roleBinding.enabled }}
+{{- if and .Values.rbac.enabled .Values.rbac.roleBinding.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:

@@ -93,9 +93,7 @@ spec:
         resources:
           requests:
             storage: {{ .Values.storageClass.persistence.size | quote }}
-        {{- if .Values.storageClass.create }}
+        {{- if .Values.storageClass.enabled }}
         storageClassName: "{{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}"
-        {{- else }}
-        storageClassName: ""
         {{- end }}
 {{- end }}

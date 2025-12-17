@@ -1,9 +1,8 @@
-{{- if .Values.storageClass.create }}
+{{- if .Values.storageClass.enabled }}
 apiVersion: {{ include "helmchart.storageClass.apiVersion" . }}
 kind: StorageClass
 metadata:
   name: {{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}
-  namespace: {{ include "helmchart.namespace" . }}
 provisioner: {{ .Values.storageClass.provisioner }}
 {{- if .Values.storageClass.aws }}
 parameters:

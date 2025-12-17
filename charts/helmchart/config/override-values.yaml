@@ -52,19 +52,14 @@ securityContext:
   runAsGroup: 3000
   fsGroup: 2000
 
-# volume for deployment 
-volume:
-  enabled: false 
-  mountPath: ""
-  hostPath: ""
-
 service: 
   enabled: true
-  name: http2
   type: NodePort 
   port: 80  
   containerPort: 80
   targetPort: http
+  ClusterIP:
+    enabled: false
 
 istio:
   enabled: false
@@ -78,14 +73,14 @@ istio:
       - "istio-system/istio-gateway"
 
 ingress:    
-  enabled: false 
+  enabled: true 
   className: "alb"
   annotations:
     alb.ingress.kubernetes.io/group.name: ingress
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-  hosts:                        
+  hosts:                     
     - host: chart-example.local
       paths:
         - path: /*
@@ -109,7 +104,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 poddisruptionbudget:
-  enabled: false
+  enabled: true
   minAvailable: 30%
 
 nodeSelector:
@@ -153,6 +148,10 @@ metrics:
   port: 3001     
   targetPort: 3001 
 
+volume:
+  enabled: true
+  mountPath: "/usr/share/nginx/html"
+  hostPath: "/var/www/html"
 
 storageClass:
   create: false
@@ -160,16 +159,13 @@ storageClass:
   # storageClassName: "mystorageclass"
   
   aws: false
-  fileSystemId: "fs-abcd1234xyz"
-  #accessPointId: "fsap-abcd1234xyz"
+  fileSystemId: fs-abcd1234xyz
+  
   azure: false
   
   gcp: false
 
   provisioner: "k8s.io/minikube-hostpath"
-  #provisioner: "kubernetes.io/aws-ebs"
-  #provisioner: efs.csi.aws.com
-
   allowVolumeExpansion: false
   volumeBindingMode: Immediate
 
@@ -178,61 +174,38 @@ storageClass:
     accessMode: ReadWriteOnce
     size: 512Mi
     persistentVolumeReclaimPolicy: ""
-    existingClaim: null # Name of an existing PVC to use
-
-ClusterIP:
-  enabled: false   # 👈 Controls if the Service should be headless (clusterIP: None)
 
 deploymentStrategy:
   type: Recreate
 
-statefulset:
+statefulSets:
   enabled: true
 
-
-
-# rBAC settings
 rbac:
-  create: true
-
+  enabled: true
   role:
     enabled: true
-    name: myapp-role
     rules:
-    # Manage workloads (Deployments, StatefulSets, DaemonSets)
     - apiGroups: ["apps"]
       resources: ["deployments", "statefulsets", "daemonsets"]
       verbs: ["get", "list", "watch", "create", "update", "patch"]
-
-    # Manage Services and ConfigMaps
     - apiGroups: [""]
       resources: ["services", "configmaps"]
       verbs: ["get", "list", "watch", "create", "update", "patch"]
-
-    # Read-only access to Secrets (no create/update/delete)
     - apiGroups: [""]
       resources: ["secrets"]
       verbs: ["get", "list"]
-
-    # Read and stream pod logs (subresource access)
     - apiGroups: [""]
       resources: ["pods", "pods/log"]
       verbs: ["get", "list", "watch"]
-
-    # Patch Events (so controllers can annotate or update them)
     - apiGroups: [""]
       resources: ["events"]
       verbs: ["get", "list", "patch", "watch"]
-
-    # Manage RoleBindings (optional: allows automation tools to bind users dynamically)
     - apiGroups: ["rbac.authorization.k8s.io"]
       resources: ["rolebindings"]
       verbs: ["get", "list", "create", "update"]
-
-
   roleBinding:
     enabled: true
-    name: myapp-rolebinding
     users:
       enabled: true 
       list:
@@ -242,7 +215,6 @@ rbac:
       enabled: true 
       list:
         - devops-team
-
   clusterRole:
     enabled: true 
     name: myapp-clusterrole
@@ -250,7 +222,6 @@ rbac:
       - apiGroups: ["apps"]
         resources: ["deployments"]
         verbs: ["get", "list"]
-
   clusterRoleBinding:
     enabled: true 
     name: myapp-clusterrolebinding
@@ -264,155 +235,111 @@ rbac:
       list: 
         - admin-team 
 
-
-
-## demonset settings 
 daemonset:
   enabled: true
+  image:
+    repository: fluent/fluentd
+    pullPolicy: IfNotPresent
+    tag: "v1.16"
+    digest: ""
+  ports:
+    - name: fluent-in
+      containerPort: 24224
+      protocol: TCP
+    - name: metrics
+      containerPort: 24231
+      protocol: TCP
+  resources:
+    enabled: true
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  volumes:
+    enabled: true 
+    mountPath: /var/log/containers
+    hostPath: /var/log/containers
+    readOnly: true 
+    type: Directory
+  configmap:
+    enabled: true
+    mountPath: /fluentd/etc
+    configs:
+      fluentd.conf: |
+        <source>
+          @type tail
+          path /var/log/containers/*.log
+          pos_file /var/log/fluentd-containers.log.pos
+          tag kubernetes.*
+          read_from_head true
+          <parse>
+            @type json
+          </parse>
+        </source>
+        <match **>
+          @type stdout
+        </match>
 
-  # Options: logging | networking | monitoring | security
-  scenario: logging
-
-  imagePullSecrets: []
-
-  logging:
-    image: fluent/fluentd:v1.16
-    resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-    volumeMounts:
-      - name: varlog
-        mountPath: /var/log
-    volumes: 
-      - name: varlog
-        hostPath:
-          path: /var/log
-
-  # networking:
-  #   image: cilium/cilium:v1.16
-  #   args:
-  #     - "--enable-ipv4=true"
-  #     - "--enable-ipv6=false" 
-
-  # monitoring:
-  #   image: prom/node-exporter:v1.8.1
-
-  # security:
-  #   image: falcosecurity/falco:latest
-
-
-
-## ingressClass settings
 ingressClass:
-  enabled: false
-  name: my-ingress-class
-  # scenario options: nginx | alb | gce | custom
-  scenario: nginx
+  enabled: true
+  controller: "k8s.io/ingress-nginx"
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
 
-  # Custom controller name (only used when scenario = custom)
-  customController: "example.com/custom-ingress-controller"
-    # controller: k8s.io/ingress-nginx
-    # controller: ingress.k8s.aws/alb
-    # controller: k8s.io/ingress-gce
-  # Example of default annotations (can override per scenario)
-  annotations: {}
-    # ingressclass.kubernetes.io/is-default-class: "true"
-    # ingressclass.kubernetes.io/controller: "k8s.io/ingress-nginx"
-    # ingressclass.kubernetes.io/controller: ingress.k8s.aws/alb
-    # ingressclass.kubernetes.io/controller: k8s.io/ingress-gce
-    # ingressclass.kubernetes.io/controller: example.com/custom-ingress-controller
-
-
-## verticalPodAutoscaler settings
 vpa:
-  enabled: true 
-  targetKind: Deployment
+  enabled: true
+  targetKind: "Deployment"
   containerName: "*"
-
-  # Scenario 1️⃣ — Automatic updates (default)
   updateMode: "Auto"
-  controlledResources: ["cpu", "memory"]
+  controlledResources:
+    - cpu
+    - memory
   minAllowed:
     cpu: 100m
     memory: 128Mi
   maxAllowed:
-    cpu: 2
+    cpu: 2000m
     memory: 2Gi
   controlledValues: "RequestsAndLimits"
 
-  # Scenario 2️⃣ — Recommendation only (no live updates)
-  # updateMode: "Off"
-  # controlledValues: "RequestsOnly"
-
-  # Scenario 3️⃣ — Update on Pod restart only
-  # updateMode: "Initial"
-  # controlledValues: "RequestsAndLimits"
-
-  # Scenario 4️⃣ — Strict capped resources (for staging)
-  # updateMode: "Auto"
-  # minAllowed:
-  #   cpu: 250m
-  #   memory: 256Mi
-  # maxAllowed:
-  #   cpu: 500m
-  #   memory: 512Mi
-  # controlledValues: "RequestsAndLimits"
-
-  # Scenario 5️⃣ — Recommendations only for monitoring tools
-  # updateMode: "Off"
-  # controlledResources: ["cpu", "memory"]
-  # controlledValues: "RequestsOnly"
-
-
-
-## NetworkPolicy settings
 networkPolicy:
-  enabled: true 
-
-  # Optional: explicitly define policy types
+  enabled: true
   policyTypes:
     - Ingress
     - Egress
-
-  # ✅ Scenario 1: Allow ingress only from same app within namespace
   ingress:
     - fromPods:
-        app: myapp
+        app: frontend
+        env: production
       ports:
         - protocol: TCP
           port: 80
-
-  # ✅ Scenario 2: Allow ingress from another namespace (e.g., monitoring)
-    # - fromNamespaces:
-    #     name: monitoring
-    #   ports:
-    #     - protocol: TCP
-    #       port: 8080
-
-  # ✅ Scenario 3: Allow ingress from external CIDR range
-    # - fromCIDRs:
-    #     cidr: 10.0.0.0/8
-    #     except:
-    #       - 10.10.0.0/16
-    #   ports:
-    #     - protocol: TCP
-    #       port: 443
-
-  # ✅ Scenario 4: Allow egress to all (for updates)
-  # egress:
-  #   - toCIDRs:
-  #       cidr: 0.0.0.0/0
-  #     ports:
-  #       - protocol: TCP
-  #         port: 443
-
-  # ✅ Scenario 5: Allow egress to internal DB service
-    # - toPods:
-    #     app: postgres
-    #   ports:
-    #     - protocol: TCP
-    #       port: 5432
+        - protocol: TCP
+          port: 443
+    - fromNamespaces:
+        kubernetes.io/metadata.name: monitoring-namespace
+      ports:
+        - protocol: TCP
+          port: 9090
+    - fromCIDRs:
+        cidr: 10.0.0.0/16
+        except:
+          - 10.0.1.0/24
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - toPods:
+        app: mongodb
+      ports:
+        - protocol: TCP
+          port: 27017
+    - toCIDRs:
+        cidr: 0.0.0.0/0
+        except:
+          - 192.168.1.0/24
+      ports:
+        - protocol: TCP
+          port: 443

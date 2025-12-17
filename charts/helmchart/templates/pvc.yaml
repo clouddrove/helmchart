@@ -15,7 +15,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.storageClass.persistence.size | quote }}
-{{- if not .Values.storageClass.create }}
+{{- if not .Values.storageClass.enabled }}
   storageClassName: ""
 {{- else }}
   storageClassName: "{{ default (include "helmchart.fullname" .) .Values.storageClass.storageClassName }}"

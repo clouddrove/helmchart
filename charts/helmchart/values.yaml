@@ -7,7 +7,7 @@ replicaCount: 1
 
 image:
     # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
-    # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.       
+    # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.        
   repository: nginx
     # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   pullPolicy: IfNotPresent
@@ -72,8 +72,6 @@ service:
     # -- Port number on which the container is accepting traffic.
   targetPort: ""
     # -- Port number on which the pod is accepting traffic.
-  name: http2222222
-    # -- Name of the service
 
 istio:
   # -- We can either use Istio or Ingress for an application deployment. Set `enabled: true` if istio is already installed.
@@ -106,7 +104,7 @@ ingress:
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:                        
+  hosts:
         # Sets up the host routes for the ingress resource.
     - host: test.example.com
       paths:
@@ -130,7 +128,7 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-autoscaling:      
+autoscaling:
   enabled: false 
     # -- Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created
   minReplicas: 1
@@ -191,7 +189,6 @@ metrics:
   port: 3001     
   targetPort: 3001 
 
-# this is using inside deployment and also we can use inside daemonset templates after make same changes in daemonset.yaml
 volume:
   # -- Volume mounted to pods either as default or in the form of PVC
   enabled: false
@@ -200,7 +197,6 @@ volume:
   # -- Path inside node which will be used as pvc. default is set to "/mnt/data"
   hostPath: ""
 
-# PVC and PV settings and using inside pvc.yaml , pv.yaml and deployment.yaml,statefulset.yaml
 storageClass:
   # -- Whether to create a custom Storage Class, Default is gp2
   create: false
@@ -238,7 +234,6 @@ storageClass:
     size: 2Gi
     # -- Reclaim Policy for Persistent Volume. Default is set to `Retain`. Other valid values are `Delete`, `Recycle`
     persistentVolumeReclaimPolicy: ""
-    existingClaim: null # Name of an existing PVC to use
 
 healthCheckProbes:
   # -- liveness and readiness probes in deployment
@@ -278,125 +273,105 @@ deploymentStrategy: {}
   #   maxUnavailable: 25%
 
 statefulset:
+  # -- Set to true to deploy a StatefulSet instead of a Deployment.
   enabled: false
 
-
-ClusterIP:
-  enabled: false  # 👈 Controls if the Service should be headless (clusterIP: None)
-
-
-# rBAC settings
 rbac:
-  create: false
-  # role:
-  #   enabled: false
-  #   name: myapp-role
-  #   rules:
-  #     - apiGroups: []
-  #       resources: []
-  #       verbs: []
-  # roleBinding:
-  #   enabled: false
-  #   name: myapp-rolebinding
-  #   users:
-  #     enabled: false
-  #     list: []
-  #   groups:
-  #     enabled: false
-  #     list: []
-  # clusterRole:
-  #   enabled: false
-  #   name: myapp-clusterrole
-  #   rules:
-  #     - apiGroups: []
-  #       resources: []
-  #       verbs: []
-  # clusterRoleBinding:
-  #   enabled: false
-  #   name: myapp-clusterrolebinding
-  #   users:
-  #     enabled: false
-  #     list: []
-  #   groups:
-  #     enabled: false
-  #     list: []
-
-
-## ingressClass settings
-ingressClass:
+  # -- Determines if RBAC resources (Roles, RoleBindings) should be created.
   enabled: false
-  name: ""
-  # scenario options: nginx | alb | gce | custom
-  scenario: ""
 
-  # Custom controller name (only used when scenario = custom)
-  customController: ""
-    # controller: k8s.io/ingress-nginx
-    # controller: ingress.k8s.aws/alb
-    # controller: k8s.io/ingress-gce
-    # example.com/custom-ingress-controller
-  # Example of default annotations (can override per scenario)
+ingressClass:
+  # -- Create an IngressClass resource to manage Ingress controllers.
+  enabled: false
+  # -- Controller identifier (e.g., k8s.io/ingress-nginx).
+  controller: ""
+  # -- Annotations for IngressClass (e.g., marking as default).
   annotations: {}
-    # ingressclass.kubernetes.io/is-default-class: "true"
-    # ingressclass.kubernetes.io/controller: "k8s.io/ingress-nginx"
-    # ingressclass.kubernetes.io/controller: ingress.k8s.aws/alb
-    # ingressclass.kubernetes.io/controller: k8s.io/ingress-gce
-    # ingressclass.kubernetes.io/controller: example.com/custom-ingress-controller
 
-
-
-## NetworkPolicy settings
-networkPolicy: # better understand to check override-values.yaml
+networkPolicy:
+  # -- NetworkPolicy settings to control traffic flow between pods.
   enabled: false
   # -- policyTypes options: Ingress | Egress
   policyTypes: []
+  # -- List of Ingress rules
   ingress: []
+  # -- List of Egress rules
   egress: []
 
-# ## DaemonSet settings
 daemonset:
+  # -- Set to true to deploy a DaemonSet.
   enabled: false
-  # Options: logging | networking | monitoring | security
-  scenario: ""
-  imagePullSecrets: []
-  # -- scenario specific configurations
-  logging:
-  # -- Fluentd DaemonSet configuration
-    image: fluent/fluentd:v1.16
-    resources: {}
-    volumeMounts: []
-    volumes: []
-  networking:
-  # -- Cilium DaemonSet configuration
-    image: cilium/cilium:v1.16
-    args: []
-  monitoring:
-  # -- Prometheus Node Exporter DaemonSet configuration
-    image: prom/node-exporter:v1.8.1
-  security:
-  # -- Falco DaemonSet configuration
-    image: falcosecurity/falco:latest
+  image:
+    # -- DaemonSet image repository.
+    repository: fluent/fluentd
+    # -- DaemonSet image pullPolicy.
+    pullPolicy: IfNotPresent
+    # -- DaemonSet image tag.
+    tag: "v1.16"
+    # -- DaemonSet image digest.
+    digest: ""
 
+  # -- Container ports for the DaemonSet. If empty, defaults to .Values.service.port.
+  ports: []
+  # - name: fluent-in
+  #   containerPort: 24224
+  #   protocol: TCP
 
-## verticalPodAutoscaler settings
+  # -- Health check probes specifically for the DaemonSet.
+  healthCheckProbes:
+    enabled: false
+    probes: {}
+
+  resources:
+    # -- Resource requests and limits for DaemonSet pods.
+    enabled: false
+    ##-- uncomment code and use with changes. 
+    # limits:
+    #   cpu: 200m
+    #   memory: 256Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  volumes:
+    # -- Volumes for the DaemonSet (e.g., hostPath for logging).
+    enabled: false
+    ##-- uncomment code and use with changes. 
+    # mountPath: /var/log/containers
+    # hostPath: /var/log/containers
+    # readOnly: true
+    # type: Directory
+
+  configmap:
+    # -- ConfigMap specifically for the DaemonSet container.
+    enabled: false
+    ##-- uncomment code and use with changes. 
+    # mountPath: /fluentd/etc
+    # configs:
+    #   fluentd.conf: |
+    #     <source>
+    #       @type tail
+    #       path /var/log/containers/*.log
+    #     </source>
+
 vpa:
+  # -- Vertical Pod Autoscaler automatically sets container resource requests/limits.
   enabled: false
+  # -- targetKind options: Deployment | StatefulSet | DaemonSet
   targetKind: Deployment
-  # targetKind options: Deployment | StatefulSet | DaemonSet
+  # -- Name of the container to which VPA applies. Use "*" for all containers.
   containerName: "*"
-  # containerName: Name of the container to which VPA applies
+  # -- updateMode options: "Off" | "Initial" | "Auto"
   updateMode: "Auto"
-  # updateMode options: "Off" | "Initial" | "Auto"
+  # -- List of resources to be controlled by VPA (e.g., ["cpu", "memory"]).
   controlledResources: ["cpu", "memory"]
-  # controlledResources: List of resources to be controlled by VPA
+  # -- Minimum resource requests allowed.
   minAllowed:
-  # minAllowed: Minimum resource requests allowed
     cpu: 100m
     memory: 128Mi
+  # -- Maximum resource requests allowed.
   maxAllowed:
-  # maxAllowed: Maximum resource requests allowed
     cpu: 2
     memory: 2Gi
+  # -- controlledValues options: "RequestsOnly" | "RequestsAndLimits"
   controlledValues: ""
-  # controlledValues options: "RequestsOnly" | "RequestsAndLimits"
-

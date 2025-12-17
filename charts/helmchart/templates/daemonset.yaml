@@ -9,77 +9,105 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "helmchart.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
-        app.kubernetes.io/name: {{ include "helmchart.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "helmchart.selectorLabels" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+        {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
     spec:
-      {{- with .Values.daemonset.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
       serviceAccountName: {{ include "helmchart.serviceAccountName" . }}
-
-      {{- if eq .Values.daemonset.scenario "logging" }}
-      # 🪵 Logging Agent Scenario
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: fluentd
-          image: {{ .Values.daemonset.logging.image }}
-          resources:
-            {{- toYaml .Values.daemonset.logging.resources | nindent 12 }}
-          volumeMounts: {{- toYaml .Values.daemonset.logging.volumeMounts | nindent 12 }}
-      volumes: {{- toYaml .Values.daemonset.logging.volumes | nindent 8 }}
-      {{- else if eq .Values.daemonset.scenario "networking" }}
-      # 🌐 Networking Plugin Scenario
-      containers:
-        - name: cni-plugin
-          image: {{ .Values.daemonset.networking.image }}
+        - name: {{ .Chart.Name }}
           securityContext:
-            privileged: true
-          args: {{- toYaml .Values.daemonset.networking.args | nindent 12 }}
-      hostNetwork: true
-      tolerations:
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
-          effect: "NoSchedule"
-
-      {{- else if eq .Values.daemonset.scenario "monitoring" }}
-      # 📈 Node Monitoring Agent Scenario
-      containers:
-        - name: node-exporter
-          image: {{ .Values.daemonset.monitoring.image }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- if .Values.daemonset.image.digest }}
+          image: "{{ .Values.daemonset.image.repository }}:{{ .Values.daemonset.image.tag | default .Chart.AppVersion }}@{{ .Values.daemonset.image.digest }}"
+          {{- else }}
+          image: "{{ .Values.daemonset.image.repository }}:{{ .Values.daemonset.image.tag | default .Chart.AppVersion }}"
+          {{- end }}
+          imagePullPolicy: {{ .Values.daemonset.image.pullPolicy }}
+          {{- if or .Values.service.port .Values.service.containerPort }}
+          {{- if .Values.daemonset.ports }}
           ports:
-            - name: metrics
-              containerPort: 9100
-      hostNetwork: true
-      hostPID: true
-      tolerations:
-        - operator: "Exists"
-
-      {{- else if eq .Values.daemonset.scenario "security" }}
-      # 🔒 Security Agent Scenario
-      containers:
-        - name: security-agent
-          image: {{ .Values.daemonset.security.image }}
-          securityContext:
-            privileged: true
+            {{- range .Values.daemonset.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol | default "TCP" }}
+              {{- if .hostPort }}
+              hostPort: {{ .hostPort }}
+              {{- end }}
+            {{- end }}
+          {{- else if or .Values.service.port .Values.service.containerPort }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
+              protocol: TCP
+          {{- end }}
+          {{- end }}
+          envFrom:
+            {{- if .Values.daemonset.configmap.enabled }}
+            - configMapRef:
+                name: {{ include "helmchart.fullname" . }}-daemonset-config
+            {{- end }}
+            {{- if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ include "helmchart.fullname" . }}-secret
+            {{- end }}
+          {{- if .Values.daemonset.resources.enabled }}
+          resources:
+            limits:
+              {{- toYaml .Values.daemonset.resources.limits | nindent 14 }}
+            requests:
+              {{- toYaml .Values.daemonset.resources.requests | nindent 14 }}
+          {{- end }}
           volumeMounts:
-            - name: dev
-              mountPath: /host/dev
-            - name: proc
-              mountPath: /host/proc
-              readOnly: true
-      volumes:
-        - name: dev
-          hostPath:
-            path: /dev
-        - name: proc
-          hostPath:
-            path: /proc
-
+            {{- if .Values.daemonset.volumes.enabled }}
+            - name: {{ include "helmchart.fullname" . }}-logs
+              mountPath: {{ default "/var/log" .Values.daemonset.volumes.mountPath }}
+              readOnly: {{ .Values.daemonset.volumes.readOnly | default false }}
+            {{- end }}
+            {{- if .Values.daemonset.configmap.enabled }}
+            - name: {{ include "helmchart.fullname" . }}-daemonset-config
+              mountPath: {{ .Values.daemonset.configmap.mountPath | default "/fluentd/etc" }}
+            {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        {{- if .Values.daemonset.volumes.enabled }}
+        - name: {{ include "helmchart.fullname" . }}-logs
+          hostPath:
+            path: {{ .Values.daemonset.volumes.hostPath }}
+            type: {{ .Values.daemonset.volumes.type | default "DirectoryOrCreate" }}
+        {{- end }}
+        {{- if .Values.daemonset.configmap.enabled }}
+        - name: {{ include "helmchart.fullname" . }}-daemonset-config
+          configMap:
+            name: {{ include "helmchart.fullname" . }}-daemonset-config
+        {{- end }}
 {{- end }}
