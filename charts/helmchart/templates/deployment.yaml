@@ -50,13 +50,14 @@ spec:
           {{- end }}  
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: {{ .Values.service.targetPort | default "http" }}
               containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
-              protocol: TCP
+              protocol: {{ .Values.service.protocol | default "TCP" }}
           {{- if .Values.commands }}
           command:
             {{- toYaml .Values.commands | nindent 12 }}
-          {{- end }}              
+          {{- end }}
+          {{- if or .Values.configmap.enabled .Values.secret.enabled }}              
           envFrom:
           {{- if .Values.configmap.enabled }}
             - configMapRef:
@@ -65,6 +66,7 @@ spec:
           {{- if .Values.secret.enabled }}
             - secretRef:
                 name: {{ include "helmchart.fullname" . }}-secret
+          {{- end }}
           {{- end }}
           {{- if .Values.healthCheckProbes.enabled }}
           {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}

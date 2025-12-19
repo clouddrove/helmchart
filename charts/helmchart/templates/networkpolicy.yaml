@@ -1,0 +1,80 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "helmchart.fullname" . }}-networkpolicy
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  {{- if .Values.networkPolicy.policyTypes }}
+  {{- toYaml .Values.networkPolicy.policyTypes | nindent 4 }}
+  {{- else }}
+    - Ingress
+    - Egress
+  {{- end }}
+
+  {{- if .Values.networkPolicy.ingress }}
+  ingress:
+  {{- range .Values.networkPolicy.ingress }}
+    - from:
+      {{- if .fromPods }}
+        - podSelector:
+            matchLabels:
+              {{- toYaml .fromPods | nindent 14 }}
+      {{- end }}
+      {{- if .fromNamespaces }}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .fromNamespaces | nindent 14 }}
+      {{- end }}
+      {{- if .fromCIDRs }}
+        - ipBlock:
+            cidr: {{ .fromCIDRs.cidr }}
+            {{- if .fromCIDRs.except }}
+            except:
+              {{- toYaml .fromCIDRs.except | nindent 14 }}
+            {{- end }}
+      {{- end }}
+      ports:
+      {{- range .ports }}
+        - protocol: {{ .protocol | default "TCP" }}
+          port: {{ .port }}
+      {{- end }}
+  {{- end }}
+  {{- end }}
+
+  {{- if .Values.networkPolicy.egress }}
+  egress:
+  {{- range .Values.networkPolicy.egress }}
+    - to:
+      {{- if .toPods }}
+        - podSelector:
+            matchLabels:
+              {{- toYaml .toPods | nindent 14 }}
+      {{- end }}
+      {{- if .toNamespaces }}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .toNamespaces | nindent 14 }}
+      {{- end }}
+      {{- if .toCIDRs }}
+        - ipBlock:
+            cidr: {{ .toCIDRs.cidr }}
+            {{- if .toCIDRs.except }}
+            except:
+              {{- toYaml .toCIDRs.except | nindent 14 }}
+            {{- end }}
+      {{- end }}
+      ports:
+      {{- range .ports }}
+        - protocol: {{ .protocol | default "TCP" }}
+          port: {{ .port }}
+      {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}

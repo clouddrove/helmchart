@@ -7,13 +7,17 @@ metadata:
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  {{- if .Values.service.headless }}
+  clusterIP: None
+  {{- else }}
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  {{- end }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort | default "http" }}
-      protocol: TCP
-      name: http
+      protocol: {{ .Values.service.protocol | default "TCP" }}
+      name: {{ .Values.service.targetPort | default "http" }}
   selector:
     {{- include "helmchart.selectorLabels" . | nindent 4 }}
     {{- include "helmchart.podLabels" . | nindent 4 }}
-{{- end }}    
+{{- end }}

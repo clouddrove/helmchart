@@ -1,0 +1,14 @@
+{{- if and .Values.daemonset.enabled .Values.daemonset.configmap.enabled (not .Values.daemonset.configmap.name) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "helmchart.fullname" . }}-ds-config
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+    usedBy: {{ include "helmchart.fullname" . }}-ds
+data:
+{{- range $k, $v := .Values.daemonset.configmap.configs }}
+  {{ $k }}: {{ $v | quote }}
+{{- end }}
+{{- end }}

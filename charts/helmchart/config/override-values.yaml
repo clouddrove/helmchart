@@ -1,10 +1,16 @@
+##--------------------------
+## DEPLOYMENT
+##--------------------------
 replicaCount: 1
+
+deploymentStrategy:
+  type: Recreate
 
 image:
   repository: nginx
   pullPolicy: IfNotPresent
   tag: "latest"
-  digest: "sha256:09369da6b10306312cd908661320086bf87fbae1b6b0c49a1f50ba531fef2eab"
+  digest: "sha256:fb01117203ff38c2f9af91db1a7409459182a37c87cced5cb442d1d8fcc66d19"
 
 secret:
   enabled: true
@@ -29,12 +35,6 @@ fullnameOverride: ""
 
 pdbMinAvailable: 30% 
 
-serviceAccount:
-  enabled: true  
-  annotations: {}       
-  name: ""
-  automountServiceAccountToken: false 
-
 podAnnotations: {} 
 
 podSecurityContext:
@@ -50,40 +50,6 @@ securityContext:
   readOnlyRootFilesystem: false
   allowPrivilegeEscalation: false
   runAsGroup: 3000
-  fsGroup: 2000
-
-service: 
-  enabled: true
-  type: NodePort 
-  port: 80  
-  containerPort: 80
-  targetPort: http
-
-istio:
-  enabled: false
-  virtualService:
-    enabled: false
-    hosts: 
-      - test.example.com
-      - test-2.example.com
-  gateway:
-    names: 
-      - "istio-system/istio-gateway"
-
-ingress:    
-  enabled: true 
-  className: "alb"
-  annotations:
-    alb.ingress.kubernetes.io/group.name: ingress
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-  hosts:                        
-    - host: chart-example.local
-      paths:
-        - path: /*
-          pathType: ImplementationSpecific
-  tls: []
 
 resource:
   enabled: true
@@ -94,12 +60,6 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
-
-autoscaling:      
-  enabled: true 
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
 
 poddisruptionbudget:
   enabled: true
@@ -124,6 +84,196 @@ affinity:
           values:
           - "linux" 
 
+volume:
+  enabled: true
+  mountPath: "/usr/share/nginx/html"
+  hostPath: "/var/www/html"
+
+##--------------------------
+## DAEMONSET
+##--------------------------
+daemonset:
+  enabled: true
+
+  image: {}
+
+  secret:
+    enabled: true
+    existingSecretName: ""
+    secrets:
+      DS_KEY: "DS_VALUE"
+
+  configmap:
+    enabled: true
+    existingConfigMapName: ""
+    configs:
+      DS_CONFIG_KEY: "DS_CONFIG_VALUE"
+
+  volume:
+    enabled: true
+    name: daemonset-volume
+    type: DirectoryOrCreate
+    mountPath: /var/log/containers/ds
+    hostPath: /var/log/containers/ds
+    readOnly: true
+
+  ports:
+    - name: fluent-in
+      containerPort: 24224
+      protocol: TCP
+    - name: metrics
+      containerPort: 24231
+      protocol: TCP
+
+  securityContext: {}
+
+  resource:
+    enabled: true
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  nodeSelector: {}
+
+  extraLabels:
+    extra-label-ds: daemonset-controlled
+
+##--------------------------
+## STATEFUL SET
+##--------------------------
+statefulset:
+  enabled: true
+
+  image:
+    repository: "httpd"
+    tag: "latest"
+    pullPolicy: ""
+
+  secret:
+    enabled: true
+    existingSecretName: ""
+    secrets:
+      STS_KEY: "STS_VALUE"
+
+  configmap:
+    enabled: true
+    existingConfigMapName: ""
+    configs:
+      STS_CONFIG_KEY: "STS_CONFIG_VALUE"
+
+  volume:
+    enabled: true
+    name: "my-sts-volume"
+    mountPath: "/data"
+    hostPath: ""
+    type: "DirectoryOrCreate"
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+    readOnly: false
+
+  ports: []
+  nodeSelector: {}
+  securityContext: {}
+  resources:
+    enabled: false
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+
+  extraLabels:
+    extra-label-sts: statefulset-controlled
+
+##---------------------------
+## HPA
+##---------------------------
+
+autoscaling:      
+  enabled: true 
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+##--------------------------
+## STORAGECLASS
+##--------------------------
+storageClass:
+  enabled: true
+  existingClaim: ""
+  storageClassName: ""
+
+  aws: false
+  awsProvisioningMode: "efs-ap"
+  fileSystemId: fs-abcd1234xyz
+  directoryPerms: "700"
+
+  azure: false
+  azureSku: "Premium_LRS"
+
+  gcp: false
+  gcpType: "standard"
+
+  provisioner: "k8s.io/minikube-hostpath"
+  allowVolumeExpansion: false
+  volumeBindingMode: Immediate
+  mountOptions: ["debug"]
+
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 512Mi
+    persistentVolumeReclaimPolicy: ""
+
+##---------------------------
+## OTHER
+##---------------------------
+serviceAccount:
+  enabled: true  
+  annotations: {}       
+  name: ""
+  automountServiceAccountToken: false 
+
+service: 
+  enabled: true
+  headless: false
+  type: NodePort 
+  port: 80  
+  containerPort: 80
+  targetPort: http
+  protocol: TCP
+
+istio:
+  enabled: false
+  virtualService:
+    enabled: false
+    hosts: 
+      - test.example.com
+      - test-2.example.com
+  gateway:
+    names: 
+      - "istio-system/istio-gateway"
+
+ingress:    
+  enabled: true 
+  className: "alb"
+  annotations:
+    alb.ingress.kubernetes.io/group.name: ingress
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+  hosts:                     
+    - host: chart-example.local
+      paths:
+        - path: /*
+          pathType: ImplementationSpecific
+  tls: []
+
 cronJob: 
   enabled: false
   schedule: ""
@@ -146,36 +296,117 @@ metrics:
   port: 3001     
   targetPort: 3001 
 
+rbac:
+  enabled: true
+  role:
+    enabled: true
+    rules:
+    - apiGroups: ["apps"]
+      resources: ["deployments", "statefulsets", "daemonsets"]
+      verbs: ["get", "list", "watch", "create", "update", "patch"]
+    - apiGroups: [""]
+      resources: ["services", "configmaps"]
+      verbs: ["get", "list", "watch", "create", "update", "patch"]
+    - apiGroups: [""]
+      resources: ["secrets"]
+      verbs: ["get", "list"]
+    - apiGroups: [""]
+      resources: ["pods", "pods/log"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: [""]
+      resources: ["events"]
+      verbs: ["get", "list", "patch", "watch"]
+    - apiGroups: ["rbac.authorization.k8s.io"]
+      resources: ["rolebindings"]
+      verbs: ["get", "list", "create", "update"]
+  roleBinding:
+    enabled: true
+    users:
+      enabled: true 
+      list:
+        - dev-user1
+        - dev-user2
+    groups:
+      enabled: true 
+      list:
+        - devops-team
+  clusterRole:
+    enabled: true 
+    rules:
+      - apiGroups: ["apps"]
+        resources: ["deployments"]
+        verbs: ["get", "list"]
+  clusterRoleBinding:
+    enabled: true 
+    users:
+      enabled: true 
+      list:
+        - admin-user1
+        - admin-user2
+    groups:
+      enabled: true 
+      list: 
+        - admin-team 
 
-volume:
-  enabled: false
-  mountPath: "/usr/share/nginx/html"
-  hostPath: "/var/www/html"
+ingressClass:
+  enabled: true
+  controller: "k8s.io/ingress-nginx"
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
 
-storageClass:
-  create: false
-  existingClaim: ""
-  # storageClassName: "mystorageclass"
-  
-  aws: false
-  fileSystemId: fs-abcd1234xyz
-  
-  azure: false
-  
-  gcp: false
+# -- Requires CRDs are installed first
+# vpa:
+#   enabled: true
+#   targetKind: "Deployment"
+#   containerName: "*"
+#   updateMode: "Auto"
+#   controlledResources:
+#     - cpu
+#     - memory
+#   minAllowed:
+#     cpu: 100m
+#     memory: 128Mi
+#   maxAllowed:
+#     cpu: 2000m
+#     memory: 2Gi
+#   controlledValues: "RequestsAndLimits"
 
-  provisioner: "k8s.io/minikube-hostpath"
-  allowVolumeExpansion: false
-  volumeBindingMode: Immediate
-
-  persistence:
-    enabled: false
-    accessMode: ReadWriteOnce
-    size: 512Mi
-    persistentVolumeReclaimPolicy: ""
-
-statefulSets:
-  enabled: false
-
-deploymentStrategy:
-  type: Recreate
+networkPolicy:
+  enabled: true
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - fromPods:
+        app: frontend
+        env: production
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
+    - fromNamespaces:
+        kubernetes.io/metadata.name: monitoring-namespace
+      ports:
+        - protocol: TCP
+          port: 9090
+    - fromCIDRs:
+        cidr: 10.0.0.0/16
+        except:
+          - 10.0.1.0/24
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - toPods:
+        app: mongodb
+      ports:
+        - protocol: TCP
+          port: 27017
+    - toCIDRs:
+        cidr: 0.0.0.0/0
+        except:
+          - 192.168.1.0/24
+      ports:
+        - protocol: TCP
+          port: 443

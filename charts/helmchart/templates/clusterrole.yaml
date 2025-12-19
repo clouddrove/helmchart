@@ -1,0 +1,11 @@
+{{- if and .Values.rbac.enabled .Values.rbac.clusterRole.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "helmchart.fullname" . }}-clusterrole
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+rules:
+  {{- toYaml .Values.rbac.clusterRole.rules | nindent 2 }}
+{{- end }}

@@ -1,0 +1,91 @@
+{{- if .Values.daemonset.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "helmchart.fullname" . }}-ds
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+    {{- with .Values.daemonset.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
+      managedBy: {{ include "helmchart.fullname" . }}-ds
+  template:
+    metadata:
+      labels:
+        {{- include "helmchart.selectorLabels" . | nindent 8 }}
+        managedBy: {{ include "helmchart.fullname" . }}-ds
+        {{- with .Values.daemonset.extraLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "helmchart.serviceAccountName" . }}
+      {{- if .Values.daemonset.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.daemonset.nodeSelector | nindent 8 }}
+      {{- else if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.daemonset.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.daemonset.podSecurityContext | nindent 8 }}
+      {{- else if .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ default .Values.image.repository .Values.daemonset.image.repository }}:{{ default .Values.image.tag .Values.daemonset.image.tag }}"
+          imagePullPolicy: {{ .Values.daemonset.image.pullPolicy | default .Values.image.pullPolicy }}
+          {{- if .Values.daemonset.ports }}
+          ports:
+            {{- toYaml .Values.daemonset.ports | nindent 12 }}
+          {{- else if .Values.ports }}
+          ports:
+            {{- toYaml .Values.ports | nindent 12 }}
+          {{- end }}
+          envFrom:
+            {{- if .Values.daemonset.configmap.enabled }}
+            - configMapRef:
+                name: {{ default (printf "%s-ds-config" (include "helmchart.fullname" .)) .Values.daemonset.configmap.existingConfigMapName }}
+            {{- else if .Values.configmap.enabled }}
+            - configMapRef:
+                name: {{ default (printf "%s-config" (include "helmchart.fullname" .)) .Values.configmap.existingConfigMapName }}
+            {{- end }}
+            {{- if .Values.daemonset.secret.enabled }}
+            - secretRef:
+                name: {{ default (printf "%s-ds-secret" (include "helmchart.fullname" .)) .Values.daemonset.secret.existingSecretName }}
+            {{- else if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ default (printf "%s-secret" (include "helmchart.fullname" .)) .Values.secret.existingSecretName }}
+            {{- end }}
+          {{- if .Values.daemonset.containerSecurityContext }}
+          securityContext:
+            {{- toYaml .Values.daemonset.containerSecurityContext | nindent 12 }}
+          {{- else if .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          {{- end }}
+          {{- if .Values.daemonset.resource.enabled }}
+          resources:
+            {{- toYaml .Values.daemonset.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.daemonset.volume.enabled }}
+          volumeMounts:
+            - name: {{ .Values.daemonset.volume.name | default "daemonset-volume" }}
+              mountPath: {{ .Values.daemonset.volume.mountPath }}
+              readOnly: {{ .Values.daemonset.volume.readOnly | default false }}
+          {{- end }}
+      {{- if .Values.daemonset.volume.enabled }}
+      volumes:
+        - name: {{ .Values.daemonset.volume.name | default "daemonset-volume" }}
+          hostPath:
+            path: {{ .Values.daemonset.volume.hostPath }}
+            type: {{ .Values.daemonset.volume.type | default "DirectoryOrCreate" }}
+      {{- end }}
+{{- end }}

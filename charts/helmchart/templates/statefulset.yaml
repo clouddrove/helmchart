@@ -1,0 +1,111 @@
+{{- if .Values.statefulset.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "helmchart.fullname" . }}-sts
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+    {{- with .Values.statefulset.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  serviceName: {{ include "helmchart.fullname" . }}-sts
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
+      managedBy: {{ include "helmchart.fullname" . }}-sts
+  template:
+    metadata:
+      labels:
+        {{- include "helmchart.selectorLabels" . | nindent 8 }}
+        managedBy: {{ include "helmchart.fullname" . }}-sts
+        {{- with .Values.statefulset.extraLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "helmchart.serviceAccountName" . }}
+      {{- if .Values.statefulset.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.statefulset.nodeSelector | nindent 8 }}
+      {{- else if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ default .Values.image.repository .Values.statefulset.image.repository }}:{{ default .Values.image.tag .Values.statefulset.image.tag }}"
+          imagePullPolicy: {{ .Values.statefulset.image.pullPolicy | default .Values.image.pullPolicy }}
+          {{- if .Values.statefulset.ports }}
+          ports:
+            {{- toYaml .Values.statefulset.ports | nindent 12 }}
+          {{- else if .Values.ports }}
+          ports:
+            {{- toYaml .Values.ports | nindent 12 }}
+          {{- end }}
+          envFrom:
+            {{- if .Values.statefulset.configmap.enabled }}
+            - configMapRef:
+                name: {{ default (printf "%s-sts-config" (include "helmchart.fullname" .)) .Values.statefulset.configmap.existingConfigMapName }}
+            {{- else if .Values.configmap.enabled }}
+            - configMapRef:
+                name: {{ default (printf "%s-config" (include "helmchart.fullname" .)) .Values.configmap.existingConfigMapName }}
+            {{- end }}
+            {{- if .Values.statefulset.secret.enabled }}
+            - secretRef:
+                name: {{ default (printf "%s-sts-secret" (include "helmchart.fullname" .)) .Values.statefulset.secret.existingSecretName }}
+            {{- else if .Values.secret.enabled }}
+            - secretRef:
+                name: {{ default (printf "%s-secret" (include "helmchart.fullname" .)) .Values.secret.existingSecretName }}
+            {{- end }}
+          {{- if .Values.statefulset.securityContext }}
+          securityContext:
+            {{- toYaml .Values.statefulset.securityContext | nindent 12 }}
+          {{- else if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          {{- if .Values.statefulset.resources.enabled }}
+          resources:
+            {{- toYaml .Values.statefulset.resources | nindent 12 }}
+          {{- else if .Values.resource.enabled }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.statefulset.volume.enabled }}
+          volumeMounts:
+            - name: {{ default "statefulset-volume" .Values.statefulset.volume.name }}
+              mountPath: {{ .Values.statefulset.volume.mountPath }}
+              {{- if .Values.statefulset.volume.readOnly }}
+              readOnly: true
+              {{- end }}
+          {{- else if .Values.volume.enabled }}
+          volumeMounts:
+            - name: {{ default "shared-volume" .Values.volume.name }}
+              mountPath: {{ .Values.volume.mountPath }}
+          {{- end }}
+  {{- if .Values.statefulset.volume.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ default "statefulset-volume" .Values.statefulset.volume.name }}
+      spec:
+        accessModes:
+          - {{ .Values.statefulset.volume.accessMode | default "ReadWriteOnce" }}
+        resources:
+          requests:
+            storage: {{ .Values.statefulset.volume.size | default "1Gi" }}
+  {{- else if .Values.volume.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ default "shared-volume" .Values.volume.name }}
+      spec:
+        accessModes:
+          - {{ .Values.volume.accessMode | default "ReadWriteOnce" }}
+        resources:
+          requests:
+            storage: {{ .Values.volume.size | default "512Mi" }}
+  {{- end }}
+{{- end }}

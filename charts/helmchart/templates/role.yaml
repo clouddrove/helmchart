@@ -1,0 +1,11 @@
+{{- if and .Values.rbac.enabled .Values.rbac.role.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "helmchart.fullname" . }}-role
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+rules:
+  {{- toYaml .Values.rbac.role.rules | nindent 2 }}
+{{- end }}

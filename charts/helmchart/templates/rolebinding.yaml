@@ -1,0 +1,33 @@
+{{- if and .Values.rbac.enabled .Values.rbac.roleBinding.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "helmchart.fullname" . }}-rolebinding
+  namespace: {{ .Release.Namespace }}
+subjects:
+  # Add ServiceAccount by default
+  - kind: ServiceAccount
+    name: {{ include "helmchart.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+
+  {{- if and .Values.rbac.roleBinding.users.enabled (gt (len .Values.rbac.roleBinding.users.list) 0) }}
+  {{- range .Values.rbac.roleBinding.users.list }}
+  - kind: User
+    name: {{ . }}
+    apiGroup: rbac.authorization.k8s.io
+  {{- end }}
+  {{- end }}
+
+  {{- if and .Values.rbac.roleBinding.groups.enabled (gt (len .Values.rbac.roleBinding.groups.list) 0) }}
+  {{- range .Values.rbac.roleBinding.groups.list }}
+  - kind: Group
+    name: {{ . }}
+    apiGroup: rbac.authorization.k8s.io
+  {{- end }}
+  {{- end }}
+
+roleRef:
+  kind: Role
+  name: {{ include "helmchart.fullname" . }}-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
