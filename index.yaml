@@ -3,11 +3,10 @@ entries:
   cloudflare-ddns:
   - apiVersion: v2
     appVersion: "1"
-    created: "2025-11-06T00:39:58.209093475Z"
+    created: "2025-12-19T18:15:22.62662102Z"
     description: Cloudflare DDNS updater
-    digest: ee9c5b9b7e8a8a00a99c42ba667125a3ce454cfd49e67b5b23ab4eb417e92dd7
+    digest: 89f4f874fc854ab1513bdd2b0064137c198ec00ae032a254db9dca1b13ae6bda
     home: https://github.com/clouddrove/helmchart
-    icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/cloudflare-dns.png
     keywords:
     - helm
     - chart
@@ -22,15 +21,14 @@ entries:
     - https://github.com/favonia/cloudflare-ddns
     type: application
     urls:
-    - https://charts.clouddrove.com/cloudflare-ddns-0.1.1.tgz
+    - https://charts.clouddrove.com/charts/cloudflare-ddns-0.1.1.tgz
     version: 0.1.1
   cloudflared-tunnel:
   - apiVersion: v2
     appVersion: 2024.3.0
-    created: "2025-11-06T00:39:58.209484505Z"
+    created: "2025-12-19T18:15:22.627016814Z"
     description: Run Cloudflare Tunnel with token (no autoupdate)
-    digest: 63355eabeb3c7fcc13382a86acd386dbe23f75cb30d3828d33528d985c6c4037
-    icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/cloudflared-tunnel.png
+    digest: ede785b6cef5be729fe707cc7994e0cf4e1e06b91d00122e94d4a246453a4987
     keywords:
     - helm
     - chart
@@ -42,16 +40,15 @@ entries:
     name: cloudflared-tunnel
     type: application
     urls:
-    - https://charts.clouddrove.com/cloudflared-tunnel-0.1.0.tgz
+    - https://charts.clouddrove.com/charts/cloudflared-tunnel-0.1.0.tgz
     version: 0.1.0
   cronjob:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-11-06T00:39:58.209959363Z"
+    created: "2025-12-19T18:15:22.627556378Z"
     description: A chart for cron jobs
-    digest: 4f23350df50b43c863faf8d992f9c1952a32836b498e64070393cc3d2af9fc0d
+    digest: 2d3c65d0e0564390bbcbc017418bdf2929698a9743af20bba7638f0f97a18846
     home: https://github.com/clouddrove/helmchart
-    icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/cronjobs.png
     keywords:
     - cronjob
     - helm
@@ -61,16 +58,16 @@ entries:
       name: CloudDrove Inc.
     name: cronjob
     urls:
-    - https://charts.clouddrove.com/cronjob-1.0.0.tgz
+    - https://charts.clouddrove.com/charts/cronjob-1.0.0.tgz
     version: 1.0.0
   helmchart:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2025-11-06T00:39:58.21089502Z"
+    created: "2025-12-19T18:15:22.628829512Z"
     description: A Helm chart for Kubernetes
-    digest: 3803c0f69c3b284f0c441587fa4108ba3d32c02a9a591e048f35498fa46eb724
+    digest: be215e17291ce72b5e72337df6b0040480a955b2face2233b5f4dd5aacfb1500
     home: https://github.com/clouddrove/helmchart
-    icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/helm.png
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
     - helm
     - chart
@@ -82,16 +79,15 @@ entries:
     name: helmchart
     type: application
     urls:
-    - https://charts.clouddrove.com/helmchart-1.0.1.tgz
+    - https://charts.clouddrove.com/charts/helmchart-1.0.1.tgz
     version: 1.0.1
   rbac:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-06T00:39:58.211111945Z"
+    created: "2025-12-19T18:15:22.629031712Z"
     description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no
       SSO).
-    digest: c700353ced07ba3199b914e31e1366da364e53a829646270bc57a8d18a07d2ab
-    icon: https://raw.githubusercontent.com/clouddrove/helmchart/feat/github-action/images/rbac.jpg
+    digest: c22236a9fd08e18892bc5ae15e5f7a61f5c0a191f91d3602e0dc8c7ab59dc2b4
     keywords:
     - helm
     - chart
@@ -103,15 +99,16 @@ entries:
     name: rbac
     type: application
     urls:
-    - https://charts.clouddrove.com/rbac-0.1.0.tgz
+    - https://charts.clouddrove.com/charts/rbac-0.1.0.tgz
     version: 0.1.0
   vigil:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2025-11-06T00:39:58.21235134Z"
+    created: "2025-12-19T18:15:22.630259099Z"
     description: A Helm chart for Kubernetes
-    digest: 2a7cfe18a29137ee58631021d93599f4bc1f57e4e2cb3354754e4ffc4d6ef328
+    digest: 5e4074e88a75c5d3c9267bf135aeadc7fdaf143fc57775a6a3760fe115c6377d
     home: https://github.com/clouddrove/vigil
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
     - helm
     - chart
@@ -123,6 +120,6 @@ entries:
     name: vigil
     type: application
     urls:
-    - https://charts.clouddrove.com/vigil-1.0.1.tgz
+    - https://charts.clouddrove.com/charts/vigil-1.0.1.tgz
     version: 1.0.1
-generated: "2025-11-06T00:39:58.208535453Z"
+generated: "2025-12-19T18:15:22.62606275Z"
