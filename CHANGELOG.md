@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [helmchart-1.1.0] - 2025-12-19
+### :sparkles: New Features
+- [`c1d6fc8`](https://github.com/clouddrove/helmchart/commit/c1d6fc8b6bcc21f014cc2549005e496a5541c019) - helm-drift-cicd *(PR [#75](https://github.com/clouddrove/helmchart/pull/75) by [@Arzianghanchi](https://github.com/Arzianghanchi))*
+- [`a83c0ce`](https://github.com/clouddrove/helmchart/commit/a83c0ce3c8a1dd4f6acfcad467c55eaeb78a043c) - gh action helm template deploy with default override values *(PR [#80](https://github.com/clouddrove/helmchart/pull/80) by [@arzian-cd](https://github.com/arzian-cd))*
+- [`02784a9`](https://github.com/clouddrove/helmchart/commit/02784a9292e7e457890ad0c493885ba71c16b655) - Add templates for RBAC, DaemonSet, StatefulSet, IngressClass, NetworkPolicy & VPA *(PR [#79](https://github.com/clouddrove/helmchart/pull/79) by [@arzian-cd](https://github.com/arzian-cd))*
+
+### :construction_worker: Build System
+- [`cf0e2ac`](https://github.com/clouddrove/helmchart/commit/cf0e2acc113af4c8989e1dd471cfb53028c5b9af) - **deps**: bump actions/checkout from 4 to 5 *(PR [#77](https://github.com/clouddrove/helmchart/pull/77) by [@dependabot[bot]](https://github.com/apps/dependabot))*
+- [`35b9170`](https://github.com/clouddrove/helmchart/commit/35b91708f05f0f9a5e0388706791bb6dd0e819b8) - **deps**: bump actions/checkout from 5 to 6 *(PR [#78](https://github.com/clouddrove/helmchart/pull/78) by [@dependabot[bot]](https://github.com/apps/dependabot))*
+
+### :memo: Documentation Changes
+- [`4255baa`](https://github.com/clouddrove/helmchart/commit/4255baa7858ae4538776372bae23120fa818927d) - update CHANGELOG.md for cloudflare-ddns-0.1.1 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [cloudflare-ddns-0.1.1] - 2025-10-07
 ### :memo: Documentation Changes
 - [`4ebdddc`](https://github.com/clouddrove/helmchart/commit/4ebdddc26658797aed523131a16b97c984a3f211) - update CHANGELOG.md for cloudflare-ddns-0.1.0 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
@@ -95,3 +109,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [rbac-0.1.0]: https://github.com/clouddrove/helmchart/compare/cloudflared-tunnel-0.1.0...rbac-0.1.0
 [cloudflare-ddns-0.1.0]: https://github.com/clouddrove/helmchart/compare/rbac-0.1.0...cloudflare-ddns-0.1.0
 [cloudflare-ddns-0.1.1]: https://github.com/clouddrove/helmchart/compare/cloudflare-ddns-0.1.0...cloudflare-ddns-0.1.1
+[helmchart-1.1.0]: https://github.com/clouddrove/helmchart/compare/cloudflare-ddns-0.1.1...helmchart-1.1.0
