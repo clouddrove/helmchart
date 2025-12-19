@@ -1,0 +1,65 @@
+name: KIND Deploy (Override Values)
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  kind-deploy-override:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Set up KIND cluster
+        uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: test
+
+      - name: Deploy charts (override values)
+        run: |
+            set -e
+
+            GREEN='\033[0;32m'
+            BLUE='\033[0;34m'
+            YELLOW='\033[1;33m'
+            RED='\033[0;31m'
+            NC='\033[0m'
+
+            for chart in charts/*; do
+            chart_name=$(basename "$chart")
+            override="$chart/config/override-values.yaml"
+
+            if [ -f "$chart/Chart.yaml" ] && [ -f "$override" ]; then
+                echo "::group::Deploy override - $chart_name"
+                echo -e "${BLUE}==================================================${NC}"
+                echo -e "${GREEN}🚀 Deploying: ${chart_name}${NC}"
+                echo -e "${BLUE}==================================================${NC}"
+
+                echo -e "${YELLOW}▶ Helm deploy (--debug)${NC}"
+                helm upgrade --install "$chart_name" "$chart" \
+                -f "$override" \
+                --namespace "$chart_name" \
+                --create-namespace \
+                --debug 2>&1 | tee /tmp/helm-${chart_name}.log
+
+                echo -e "${YELLOW}▶ Kubernetes objects (rendered by Helm)${NC}"
+                helm upgrade --install "$chart_name" "$chart" \
+                -f "$override" \
+                --namespace "$chart_name" \
+                --create-namespace \
+                --dry-run --debug 2>&1 | grep "^kind:" | sed 's/kind:/Kind:/'
+
+                echo -e "${GREEN}✔ Deployed ${chart_name}${NC}"
+                echo "::endgroup::"
+            else
+                echo -e "${YELLOW}⏭ Skipping ${chart_name} (no override)${NC}"
+            fi
+            done
+
+
