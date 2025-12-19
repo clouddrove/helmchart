@@ -50,9 +50,9 @@ spec:
           {{- end }}  
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: {{ .Values.service.targetPort | default "http" }}
               containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
-              protocol: TCP
+              protocol: {{ .Values.service.protocol | default "TCP" }}
           {{- if .Values.commands }}
           command:
             {{- toYaml .Values.commands | nindent 12 }}

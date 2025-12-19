@@ -10,7 +10,7 @@ metadata:
     {{- with .Values.ingressClass.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  spec:
-    controller: {{ .Values.ingressClass.controller }}
+spec:
+  controller: {{ .Values.ingressClass.controller }}
 {{- end }}
 

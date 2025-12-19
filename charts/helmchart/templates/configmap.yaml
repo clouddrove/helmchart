@@ -13,18 +13,3 @@ data:
   {{- toYaml . | nindent 2 -}}
   {{- end}}
 {{- end}}
-
----
-{{- if .Values.daemonset.configmap.enabled }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "helmchart.fullname" . }}-daemonset-config
-  namespace: {{ include "helmchart.namespace" . }}
-  labels:
-    {{- include "helmchart.labels" . | nindent 4 }}
-data:
-  {{- with .Values.daemonset.configmap.configs }}
-  {{- toYaml . | nindent 2 }}
-  {{- end }}
-{{- end }}

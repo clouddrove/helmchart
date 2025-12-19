@@ -1,0 +1,14 @@
+{{- if and .Values.statefulset.enabled .Values.statefulset.configmap.enabled (not .Values.statefulset.configmap.existingConfigMapName) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "helmchart.fullname" . }}-sts-config
+  namespace: {{ include "helmchart.namespace" . }}
+  labels:
+    {{- include "helmchart.labels" . | nindent 4 }}
+    usedBy: {{ include "helmchart.fullname" . }}-sts
+data:
+{{- range $k, $v := .Values.statefulset.configmap.configs }}
+  {{ $k }}: {{ $v | quote }}
+{{- end }}
+{{- end }}

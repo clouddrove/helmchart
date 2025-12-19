@@ -1,10 +1,16 @@
+##--------------------------
+## DEPLOYMENT
+##--------------------------
 replicaCount: 1
+
+deploymentStrategy:
+  type: Recreate
 
 image:
   repository: nginx
   pullPolicy: IfNotPresent
   tag: "latest"
-  digest: "sha256:09369da6b10306312cd908661320086bf87fbae1b6b0c49a1f50ba531fef2eab"
+  digest: "sha256:fb01117203ff38c2f9af91db1a7409459182a37c87cced5cb442d1d8fcc66d19"
 
 secret:
   enabled: true
@@ -29,12 +35,6 @@ fullnameOverride: ""
 
 pdbMinAvailable: 30% 
 
-serviceAccount:
-  enabled: true  
-  annotations: {}       
-  name: ""
-  automountServiceAccountToken: false 
-
 podAnnotations: {} 
 
 podSecurityContext:
@@ -50,16 +50,203 @@ securityContext:
   readOnlyRootFilesystem: false
   allowPrivilegeEscalation: false
   runAsGroup: 3000
-  fsGroup: 2000
+
+resource:
+  enabled: true
+resources: 
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+poddisruptionbudget:
+  enabled: true
+  minAvailable: 30%
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+tolerations:
+  - key: "clouddrove"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "kubernetes.io/os"
+          operator: In
+          values:
+          - "linux" 
+
+volume:
+  enabled: true
+  mountPath: "/usr/share/nginx/html"
+  hostPath: "/var/www/html"
+
+##--------------------------
+## DAEMONSET
+##--------------------------
+daemonset:
+  enabled: true
+
+  image: {}
+
+  secret:
+    enabled: true
+    existingSecretName: ""
+    secrets:
+      DS_KEY: "DS_VALUE"
+
+  configmap:
+    enabled: true
+    existingConfigMapName: ""
+    configs:
+      DS_CONFIG_KEY: "DS_CONFIG_VALUE"
+
+  volume:
+    enabled: true
+    name: daemonset-volume
+    type: DirectoryOrCreate
+    mountPath: /var/log/containers/ds
+    hostPath: /var/log/containers/ds
+    readOnly: true
+
+  ports:
+    - name: fluent-in
+      containerPort: 24224
+      protocol: TCP
+    - name: metrics
+      containerPort: 24231
+      protocol: TCP
+
+  securityContext: {}
+
+  resource:
+    enabled: true
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  nodeSelector: {}
+
+  extraLabels:
+    extra-label-ds: daemonset-controlled
+
+##--------------------------
+## STATEFUL SET
+##--------------------------
+statefulset:
+  enabled: true
+
+  image:
+    repository: "httpd"
+    tag: "latest"
+    pullPolicy: ""
+
+  secret:
+    enabled: true
+    existingSecretName: ""
+    secrets:
+      STS_KEY: "STS_VALUE"
+
+  configmap:
+    enabled: true
+    existingConfigMapName: ""
+    configs:
+      STS_CONFIG_KEY: "STS_CONFIG_VALUE"
+
+  volume:
+    enabled: true
+    name: "my-sts-volume"
+    mountPath: "/data"
+    hostPath: ""
+    type: "DirectoryOrCreate"
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+    readOnly: false
+
+  ports: []
+  nodeSelector: {}
+  securityContext: {}
+  resources:
+    enabled: false
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+
+  extraLabels:
+    extra-label-sts: statefulset-controlled
+
+##---------------------------
+## HPA
+##---------------------------
+
+autoscaling:      
+  enabled: true 
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+##--------------------------
+## STORAGECLASS
+##--------------------------
+storageClass:
+  enabled: true
+  existingClaim: ""
+  storageClassName: ""
+
+  aws: false
+  awsProvisioningMode: "efs-ap"
+  fileSystemId: fs-abcd1234xyz
+  directoryPerms: "700"
+
+  azure: false
+  azureSku: "Premium_LRS"
+
+  gcp: false
+  gcpType: "standard"
+
+  provisioner: "k8s.io/minikube-hostpath"
+  allowVolumeExpansion: false
+  volumeBindingMode: Immediate
+  mountOptions: ["debug"]
+
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 512Mi
+    persistentVolumeReclaimPolicy: ""
+
+##---------------------------
+## OTHER
+##---------------------------
+serviceAccount:
+  enabled: true  
+  annotations: {}       
+  name: ""
+  automountServiceAccountToken: false 
 
 service: 
   enabled: true
+  headless: false
   type: NodePort 
   port: 80  
   containerPort: 80
   targetPort: http
-  ClusterIP:
-    enabled: false
+  protocol: TCP
 
 istio:
   enabled: false
@@ -87,45 +274,6 @@ ingress:
           pathType: ImplementationSpecific
   tls: []
 
-resource:
-  enabled: true
-resources: 
-  limits:
-    cpu: 200m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
-
-autoscaling:      
-  enabled: true 
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-
-poddisruptionbudget:
-  enabled: true
-  minAvailable: 30%
-
-nodeSelector:
-  kubernetes.io/os: linux
-
-tolerations:
-  - key: "clouddrove"
-    operator: "Equal"
-    value: "true"
-    effect: "NoSchedule"
-
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: "kubernetes.io/os"
-          operator: In
-          values:
-          - "linux" 
-
 cronJob: 
   enabled: false
   schedule: ""
@@ -147,39 +295,6 @@ metrics:
   portName: "prometheus" 
   port: 3001     
   targetPort: 3001 
-
-volume:
-  enabled: true
-  mountPath: "/usr/share/nginx/html"
-  hostPath: "/var/www/html"
-
-storageClass:
-  create: false
-  existingClaim: ""
-  # storageClassName: "mystorageclass"
-  
-  aws: false
-  fileSystemId: fs-abcd1234xyz
-  
-  azure: false
-  
-  gcp: false
-
-  provisioner: "k8s.io/minikube-hostpath"
-  allowVolumeExpansion: false
-  volumeBindingMode: Immediate
-
-  persistence:
-    enabled: false
-    accessMode: ReadWriteOnce
-    size: 512Mi
-    persistentVolumeReclaimPolicy: ""
-
-deploymentStrategy:
-  type: Recreate
-
-statefulSets:
-  enabled: true
 
 rbac:
   enabled: true
@@ -217,14 +332,12 @@ rbac:
         - devops-team
   clusterRole:
     enabled: true 
-    name: myapp-clusterrole
     rules:
       - apiGroups: ["apps"]
         resources: ["deployments"]
         verbs: ["get", "list"]
   clusterRoleBinding:
     enabled: true 
-    name: myapp-clusterrolebinding
     users:
       enabled: true 
       list:
@@ -235,74 +348,28 @@ rbac:
       list: 
         - admin-team 
 
-daemonset:
-  enabled: true
-  image:
-    repository: fluent/fluentd
-    pullPolicy: IfNotPresent
-    tag: "v1.16"
-    digest: ""
-  ports:
-    - name: fluent-in
-      containerPort: 24224
-      protocol: TCP
-    - name: metrics
-      containerPort: 24231
-      protocol: TCP
-  resources:
-    enabled: true
-    limits:
-      cpu: 200m
-      memory: 256Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  volumes:
-    enabled: true 
-    mountPath: /var/log/containers
-    hostPath: /var/log/containers
-    readOnly: true 
-    type: Directory
-  configmap:
-    enabled: true
-    mountPath: /fluentd/etc
-    configs:
-      fluentd.conf: |
-        <source>
-          @type tail
-          path /var/log/containers/*.log
-          pos_file /var/log/fluentd-containers.log.pos
-          tag kubernetes.*
-          read_from_head true
-          <parse>
-            @type json
-          </parse>
-        </source>
-        <match **>
-          @type stdout
-        </match>
-
 ingressClass:
   enabled: true
   controller: "k8s.io/ingress-nginx"
   annotations:
     ingressclass.kubernetes.io/is-default-class: "true"
 
-vpa:
-  enabled: true
-  targetKind: "Deployment"
-  containerName: "*"
-  updateMode: "Auto"
-  controlledResources:
-    - cpu
-    - memory
-  minAllowed:
-    cpu: 100m
-    memory: 128Mi
-  maxAllowed:
-    cpu: 2000m
-    memory: 2Gi
-  controlledValues: "RequestsAndLimits"
+# -- Requires CRDs are installed first
+# vpa:
+#   enabled: true
+#   targetKind: "Deployment"
+#   containerName: "*"
+#   updateMode: "Auto"
+#   controlledResources:
+#     - cpu
+#     - memory
+#   minAllowed:
+#     cpu: 100m
+#     memory: 128Mi
+#   maxAllowed:
+#     cpu: 2000m
+#     memory: 2Gi
+#   controlledValues: "RequestsAndLimits"
 
 networkPolicy:
   enabled: true
