@@ -6,12 +6,12 @@ on:
     branches:
       - master
     paths:
-      - 'charts/helmchart/**'
-      - 'charts/cronjob/**'
-      - 'charts/cloudflare/**'
-      - 'charts/vigil/**'
-      - 'charts/rbac/**'
-      - 'charts/cloudflare-ddns/**'
+      - 'charts/helmchart/Chart.yaml'
+      - 'charts/cronjob/Chart.yaml'
+      - 'charts/cloudflare/Chart.yaml'
+      - 'charts/vigil/Chart.yaml'
+      - 'charts/rbac/Chart.yaml'
+      - 'charts/cloudflare-ddns/Chart.yaml'
 
 jobs:
   release:
