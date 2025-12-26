@@ -26,7 +26,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.secret.enabled }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- else if .Values.secret.name }}
+        checksum/secret: {{ .Values.secret.name | sha256sum }}
+        {{- end }}
       labels:
         {{- include "helmchart.selectorLabels" . | nindent 8 }}
         {{- include "helmchart.podLabels" . | nindent 8 }}
@@ -57,7 +61,7 @@ spec:
           command:
             {{- toYaml .Values.commands | nindent 12 }}
           {{- end }}
-          {{- if or .Values.configmap.enabled .Values.secret.enabled }}              
+          {{- if or .Values.configmap.enabled (or .Values.secret.enabled .Values.secret.name) }}
           envFrom:
           {{- if .Values.configmap.enabled }}
             - configMapRef:
@@ -66,8 +70,12 @@ spec:
           {{- if .Values.secret.enabled }}
             - secretRef:
                 name: {{ include "helmchart.fullname" . }}-secret
+          {{- else if .Values.secret.name }}
+            - secretRef:
+                name: {{ .Values.secret.name }}
           {{- end }}
           {{- end }}
+
           {{- if .Values.healthCheckProbes.enabled }}
           {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
           {{- end }}

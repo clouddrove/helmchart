@@ -33,6 +33,9 @@ commands: []
 
 secret:
   enabled: false
+  # -- Name of an existing Kubernetes Secret
+  # -- This is used ONLY when secret.enabled = false
+  name: ""
   secrets: {}
     # KEY: "value"
 

@@ -14,6 +14,7 @@ image:
 
 secret:
   enabled: true
+  name: secretname
   secrets:
     SECRET_KEY: "secret"
 
