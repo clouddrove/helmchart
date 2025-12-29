@@ -1,0 +1,71 @@
+{{- if eq .Values.deployment.type "CronJob" }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "pass2gh.fullname" . }}
+  namespace: {{ .Values.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "pass2gh.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.deployment.cronJob.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.deployment.cronJob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.deployment.cronJob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "pass2gh.labels" . | nindent 12 }}
+        spec:
+          {{- with .Values.serviceAccount }}
+          {{- if .create }}
+          serviceAccountName: {{ .name | default (include "pass2gh.fullname" $) }}
+          {{- end }}
+          {{- end }}
+          containers:
+          - name: sync
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            env:
+            # Tokens from Secret (sensitive - only admins can update)
+            - name: ONEPASSWORD_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "pass2gh.fullname" . }}-secrets
+                  key: onepassword-token
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "pass2gh.fullname" . }}-secrets
+                  key: github-token
+            volumeMounts:
+            - name: config
+              mountPath: /app/config.json
+              subPath: config.json
+              readOnly: true
+            command: ["python", "sync_secrets.py"]
+            resources:
+              {{- toYaml .Values.resources | nindent 14 }}
+            {{- with .Values.securityContext }}
+            securityContext:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+          volumes:
+          - name: config
+            configMap:
+              name: {{ include "pass2gh.fullname" . }}-config
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: OnFailure
+{{- end }}
+

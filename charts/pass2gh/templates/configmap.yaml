@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "pass2gh.fullname" . }}-config
+  namespace: {{ .Values.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "pass2gh.labels" . | nindent 4 }}
+data:
+  # config.json contains non-sensitive configuration
+  # Tokens are provided via environment variables from Secret (see secret.yaml)
+  config.json: |
+    {
+      "github_org": {{ .Values.github.org | quote }},
+      "github_repos": {{ .Values.github.repos | toJson }},
+      "vault_id": {{ .Values.onepassword.vaultId | quote }},
+      "org_secrets": {{ .Values.orgSecrets | default dict | toJson }},
+      "repo_secrets": {{ .Values.repoSecrets | default dict | toJson }},
+      "deploy_keys": {{ .Values.deployKeys | default dict | toJson }}
+    }
+

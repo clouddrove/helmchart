@@ -1,0 +1,7 @@
+apiVersion: v2
+name: pass2gh
+description: A Helm chart for syncing 1Password secrets to GitHub organization and repository secrets
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
