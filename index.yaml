@@ -3,6 +3,28 @@ entries:
   cloudflare-ddns:
   - apiVersion: v2
     appVersion: "1"
+    created: "2025-12-29T10:42:05.878251891Z"
+    description: Cloudflare DDNS updater
+    digest: e422002b75d5c3f96fe1b26d2db3fc4d3961f074cb2fd85fed9dd6cc32b92649
+    home: https://github.com/clouddrove/helmchart
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - cloudflare
+    - cloudflare-ddns
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: cloudflare-ddns
+    sources:
+    - https://github.com/favonia/cloudflare-ddns
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/cloudflare-ddns-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: "1"
     created: "2025-12-19T18:15:22.62662102Z"
     description: Cloudflare DDNS updater
     digest: 89f4f874fc854ab1513bdd2b0064137c198ec00ae032a254db9dca1b13ae6bda
@@ -26,6 +48,24 @@ entries:
   cloudflared-tunnel:
   - apiVersion: v2
     appVersion: 2024.3.0
+    created: "2025-12-29T10:42:05.878656757Z"
+    description: Run Cloudflare Tunnel with token (no autoupdate)
+    digest: 096856e9429b958c825302e6553f483ea769fa8bfacb9ab76e6ec1656176033b
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: Clouddrove Inc
+    name: cloudflared-tunnel
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/cloudflared-tunnel-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 2024.3.0
     created: "2025-12-19T18:15:22.627016814Z"
     description: Run Cloudflare Tunnel with token (no autoupdate)
     digest: ede785b6cef5be729fe707cc7994e0cf4e1e06b91d00122e94d4a246453a4987
@@ -45,9 +85,9 @@ entries:
   cronjob:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-12-19T18:15:22.627556378Z"
+    created: "2025-12-29T10:42:05.879113301Z"
     description: A chart for cron jobs
-    digest: 2d3c65d0e0564390bbcbc017418bdf2929698a9743af20bba7638f0f97a18846
+    digest: 0c055216ced954a8ecc07159d8339c1d6240479430f720f7fc29c9d46427dde9
     home: https://github.com/clouddrove/helmchart
     keywords:
     - cronjob
@@ -61,6 +101,26 @@ entries:
     - https://charts.clouddrove.com/charts/cronjob-1.0.0.tgz
     version: 1.0.0
   helmchart:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2025-12-29T10:42:05.880304437Z"
+    description: A Helm chart for Kubernetes
+    digest: 710f4a45b8a54fe85451dc728b4a65ffe5c9614089fcf14e2e6da7f56a6a4cb7
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/helmchart-1.0.2.tgz
+    version: 1.0.2
   - apiVersion: v2
     appVersion: 1.0.1
     created: "2025-12-19T18:15:22.628829512Z"
@@ -84,10 +144,10 @@ entries:
   rbac:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-12-19T18:15:22.629031712Z"
+    created: "2025-12-29T10:42:05.880530109Z"
     description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no
       SSO).
-    digest: c22236a9fd08e18892bc5ae15e5f7a61f5c0a191f91d3602e0dc8c7ab59dc2b4
+    digest: 86aea5a434412f22fc320feabde674cee72056482ddfffdcd3250500e06848ee
     keywords:
     - helm
     - chart
@@ -104,9 +164,9 @@ entries:
   vigil:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2025-12-19T18:15:22.630259099Z"
+    created: "2025-12-29T10:42:05.881579571Z"
     description: A Helm chart for Kubernetes
-    digest: 5e4074e88a75c5d3c9267bf135aeadc7fdaf143fc57775a6a3760fe115c6377d
+    digest: 48e6b93dbf5125d94721c03c13d7e4d74371a0dade67c3baf5206671c0e3913f
     home: https://github.com/clouddrove/vigil
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -122,4 +182,4 @@ entries:
     urls:
     - https://charts.clouddrove.com/charts/vigil-1.0.1.tgz
     version: 1.0.1
-generated: "2025-12-19T18:15:22.62606275Z"
+generated: "2025-12-29T10:42:05.877671827Z"
