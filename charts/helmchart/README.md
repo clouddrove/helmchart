@@ -48,6 +48,7 @@ A Helm chart for Kubernetes
 | resources.requests.cpu | string | `"100m"` |  |
 | resources.requests.memory | string | `"128Mi"` |  |
 | secret.enabled | bool | `true` |  |
+| secret.existingSecretName | string | `""` | Use an existing Secret instead of creating `<fullname>-secret`. |
 | secret.secrets | object | `{"KEY":"value"}` | secrets is a map that specifies the Secret resources that should be exposed to the main application container.            |
 | securityContext | object | `{}` |  |
 | service.enabled | bool | `true` | service is a map that specifies the configuration for the Service resource that is created by the chart. |

@@ -1,3 +1,4 @@
+{{- $secretName := default (include "cloudflare-ddns.fullname" .) (or .Values.secret.existingSecret .Values.secret.name) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -75,11 +76,11 @@ spec:
                   key: INTERVAL
             {{- end }}
 
-            {{- if and .Values.secret.name .Values.secret.key }}
+            {{- if and (or .Values.secret.existingSecret .Values.secret.name) .Values.secret.key }}
             - name: CF_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name }}
+                  name: {{ $secretName }}
                   key: {{ .Values.secret.key }}
             {{- end }}
 
@@ -92,7 +93,7 @@ spec:
       volumes:
         - name: cf-token
           secret:
-            secretName: {{ default (include "cloudflare-ddns.fullname" .) .Values.secret.name }}
+            secretName: {{ $secretName }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

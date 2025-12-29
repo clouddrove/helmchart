@@ -33,6 +33,7 @@ commands: []
 
 secret:
   enabled: false
+  existingSecretName: ""
   secrets: {}
     # KEY: "value"
 

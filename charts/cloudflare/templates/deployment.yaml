@@ -31,8 +31,9 @@ spec:
                 name: {{ include "helmchart.fullname" . }}-config
           {{- end }}
           {{- if .Values.secret.enabled }}
+          {{- $secretName := default (printf "%s-secret" (include "helmchart.fullname" .)) .Values.secret.existingSecret }}
             - secretRef:
-                name: {{ include "helmchart.fullname" . }}-secret
+                name: {{ $secretName }}
           {{- end }}
           {{- if .Values.metrics.enabled }}
           ports:
