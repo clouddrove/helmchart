@@ -14,9 +14,10 @@ serviceAccount:
   name: ""                # Provide existing ServiceAccount name to use (leave empty to create one)
 
 secret:
-  name: ""                # Provide existing Secret name to use (leave empty to create one)
+  name: ""                # Optional: override name for created Secret (defaults to release fullname)
+  existingSecret: ""      # Provide existing Secret name to use (skips secret creation; takes precedence over name)
   key: api-token          # (Required) Will become the key of new Secret. If using an existing Secret, this key must already exist.
-  value: ""               # Will become the Value for the above key (required if creating a Secret, i.e. when name is empty)
+  value: ""               # Will become the Value for the above key (required when the chart creates a Secret)
 
 env:
   domains: "example.com"  # REQUIRED: comma-separated list

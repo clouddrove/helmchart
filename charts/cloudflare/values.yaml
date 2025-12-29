@@ -12,6 +12,7 @@ replicaCount: 1
 secret:
   enabled: true
   name: cloudflared-token
+  existingSecret: ""
   token: ""
   annotations: {}
 

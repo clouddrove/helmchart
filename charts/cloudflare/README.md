@@ -1,6 +1,6 @@
 # cloudflared-tunnel Helm Chart
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) 
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) 
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 ![AppVersion: 2025.8.0](https://img.shields.io/badge/AppVersion-2025.8.0-informational?style=flat-square)
 
@@ -41,6 +41,7 @@ A Helm chart for deploying Cloudflare Tunnel (cloudflared) in Kubernetes with to
 | `replicaCount` | int | `1` | Number of replicas |
 | `resources` | object | `{}` | Resource requests/limits |
 | `secret.name` | string | `"cloudflared-token"` | Secret name for token |
+| `secret.existingSecret` | string | `""` | Reference an existing secret instead of creating one |
 | `secret.token` | string | `""` | Base64 encoded tunnel token (required) |
 | `tolerations` | list | `[]` | Tolerations for pod assignment |
 
