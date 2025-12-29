@@ -1,0 +1,105 @@
+# Default values for pass2gh
+# This is a YAML-formatted file.
+
+# 1Password Configuration
+onepassword:
+  vaultId: "your-vault-id"
+  token: "CHANGE_ME"  # Set via --set or use existing secret
+
+# GitHub Configuration
+github:
+  org: "clouddrove"
+  repos:
+    - "clouddrove/repo1"
+    - "clouddrove/repo2"
+    - "clouddrove/repo3"
+  token: "CHANGE_ME"  # Set via --set or use existing secret
+
+# Organization Secrets Mapping
+# Format: GitHub Secret Name -> 1Password Item Title (string) or Object with item_type
+# Examples:
+#   Simple: DATABASE_URL: "DATABASE_URL"  (uses 'password' field)
+#   SSH Key: SSH_KEY: {"item_type": "ssh_key"}  (auto-detects private key field)
+#   Document: SSL_CERT: {"item_type": "document"}  (uses document content)
+#   File: CONFIG_FILE: {"item_type": "file"}  (uses file attachment)
+orgSecrets:
+  DATABASE_URL: "DATABASE_URL"
+  SHARED_API_KEY: "SHARED_API_KEY"
+  SLACK_WEBHOOK: "SLACK_WEBHOOK"
+  SSL_CERTIFICATE:
+    item_type: "document"
+
+# Repository Secrets Mapping
+# Format: Repository -> {GitHub Secret Name -> 1Password Item Title or Object}
+repoSecrets:
+  clouddrove/repo1:
+    DEPLOY_KEY: "DEPLOY_KEY"
+    WEBHOOK_SECRET: "WEBHOOK_SECRET"
+    SSH_PRIVATE_KEY:
+      item_type: "ssh_key"
+    SSL_CERTIFICATE:
+      item_type: "document"
+    CONFIG_FILE:
+      item_type: "file"
+  clouddrove/repo2:
+    API_KEY: "API_KEY"
+    DATABASE_PASSWORD: "DATABASE_PASSWORD"
+  clouddrove/repo3:
+    DATABASE_PASSWORD: "DATABASE_PASSWORD"
+
+# Deploy Keys Configuration (optional)
+# Format: Repository -> Key Title (string) or Object with key_title and read_only
+deployKeys:
+  clouddrove/repo1: "Production Deploy Key"
+  clouddrove/repo2: "Staging Deploy Key"
+  clouddrove/repo3:
+    key_title: "CI/CD Deploy Key"
+    read_only: false
+
+# Deployment Configuration
+deployment:
+  # Use CronJob (recommended) or Deployment
+  type: "CronJob"  # Options: "CronJob" or "Deployment"
+  
+  # CronJob specific settings
+  cronJob:
+    schedule: "0 * * * *"  # Run every hour
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 1
+  
+  # Deployment specific settings
+  deployment:
+    replicas: 1
+    syncInterval: 3600  # Sync every hour (in seconds)
+
+# Image Configuration
+image:
+  repository: ghcr.io/clouddrove/pass2gh  # GitHub Container Registry
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Resource Limits
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "200m"
+
+# Service Account (optional)
+serviceAccount:
+  create: true
+  name: ""
+
+# Security Context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+# Node Selector, Tolerations, Affinity (optional)
+nodeSelector: {}
+tolerations: []
+affinity: {}
+

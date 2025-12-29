@@ -11,6 +11,9 @@ on:
       - 'charts/vigil/**'
       - 'charts/rbac/**'
       - 'charts/cloudflare-ddns/**'
+      - 'charts/adrija/**'
+      - 'charts/safio/**'
+      - 'charts/pass2gh/**'
 
 jobs:
   install-helm-docs:

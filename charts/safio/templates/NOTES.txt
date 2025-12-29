@@ -1,0 +1,10 @@
+Safio Slack bot has been deployed.
+
+To verify the deployment:
+
+  kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Expose the health endpoint temporarily (if required):
+
+  kubectl port-forward deployment/{{ include "safio.fullname" . }} 3001:3001
+  curl http://localhost:3001/health
