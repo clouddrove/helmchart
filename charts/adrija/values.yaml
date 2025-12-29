@@ -1,0 +1,224 @@
+# Default values for adrija
+# This is a YAML-formatted file.
+
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+
+# Image configuration
+image:
+  registry: ""
+  repository: adrija
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Image pull secrets
+imagePullSecrets: []
+
+# Service account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Pod security context
+podSecurityContext:
+  fsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+# Container security context
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+
+# Replica configuration
+replicaCount: 2
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+  requests:
+    cpu: 500m
+    memory: 256Mi
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod labels
+podLabels: {}
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+  annotations: {}
+
+# Ingress configuration
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: adrija.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: adrija-tls
+      hosts:
+        - adrija.example.com
+
+# Health checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 40
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 3
+  successThreshold: 1
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
+startupProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+  successThreshold: 1
+
+# External Secrets Configuration (1Password)
+externalSecrets:
+  enabled: true
+  secretStore: "1password"  # Name of the SecretStore resource
+  createSecretStore: false  # Set to true if you want the chart to create the SecretStore
+  refreshInterval: "1h"     # How often to sync secrets
+  # 1Password vault and item configuration
+  vault: "Engineering"      # 1Password vault name
+  item: "adrija-secrets"    # 1Password item name
+  # 1Password Connect configuration (only used if createSecretStore=true)
+  onepassword:
+    connectUrl: "http://onepassword-connect-api:8080"  # 1Password Connect API URL
+  
+# Environment variables - Slack Configuration (Required)
+slack:
+  botToken: ""  # Set via external secret or values (ignored if externalSecrets.enabled=true)
+  appToken: ""  # Set via external secret or values (ignored if externalSecrets.enabled=true)
+
+# Environment variables - AI Provider Configuration
+aiProviders:
+  enableGemini: true
+  enableClaude: true
+  enableOpenAI: false
+  defaultProvider: "gemini"
+  
+  # API Keys (should be set via external secrets or values)
+  # These are ignored if externalSecrets.enabled=true
+  geminiApiKey: ""
+  anthropicApiKey: ""
+  openaiApiKey: ""
+  
+  # Model configuration
+  geminiModel: "gemini-1.5-flash"
+  openaiModel: "gpt-3.5-turbo"
+
+# Feature Configuration
+features:
+  autoRespondChannel: ""
+  conversationMaxHistory: 10
+  conversationTtlHours: 24
+  rateLimitMaxRequests: 10
+  rateLimitWindowSeconds: 60
+  metricsMaxHistory: 1000
+
+# Application port
+port: 3000
+
+# Environment variables (additional)
+env: []
+
+# Extra environment variables from secrets/configmaps
+envFrom: []
+
+# Volume mounts
+volumeMounts: []
+
+# Volumes
+volumes: []
+
+# Init containers
+initContainers: []
+
+# Lifecycle hooks
+lifecycle: {}
+
+# Termination grace period
+terminationGracePeriodSeconds: 30
+
+# DNS configuration
+dnsPolicy: ClusterFirst
+
+# Logging
+logging:
+  level: INFO
+
+# Monitoring
+monitoring:
+  enabled: false
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+
+# Network policies
+networkPolicy:
+  enabled: false
+  ingress: []
+  egress: []
+
