@@ -3,26 +3,6 @@ entries:
   adrija:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-12-29T15:39:16.911728108Z"
-    description: A Helm chart for Adrija - AI Assistant for Slack
-    digest: d15e5ac4c1e6aa373049be9746229e8656aec7b4538a66985fb9cbb0322f36bd
-    home: https://github.com/cloudwizz/adrija
-    keywords:
-    - slack
-    - ai
-    - chatbot
-    - assistant
-    maintainers:
-    - name: CloudWizz
-    name: adrija
-    sources:
-    - https://github.com/cloudwizz/adrija
-    type: application
-    urls:
-    - https://charts.clouddrove.com/charts/adrija-1.0.0.tgz
-    version: 1.0.0
-  - apiVersion: v2
-    appVersion: 1.0.0
     created: "2025-12-30T09:15:03.803182311Z"
     description: A Helm chart for Adrija - AI Assistant for Slack
     digest: d150ba727fa5b80743cf75d06d7b345fd4b453884af4814828f2e8e77515908f
