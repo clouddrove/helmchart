@@ -35,87 +35,22 @@ helm install adrija ./helm/adrija \
   --set aiProviders.geminiApiKey="your-gemini-key"
 ```
 
-### Using 1Password (Recommended for Production)
+### Providing Secrets
 
-The chart supports 1Password via External Secrets Operator. This is the recommended approach for production.
-
-1. **Prerequisites**: Install External Secrets Operator and 1Password Connect in your cluster
-
-2. **Create SecretStore** (if not already created):
-
-```yaml
-apiVersion: external-secrets.io/v1beta1
-kind: SecretStore
-metadata:
-  name: 1password
-  namespace: adrija
-spec:
-  provider:
-    onepassword:
-      connect:
-        url: http://onepassword-connect-api.onepassword-connect.svc.cluster.local:8080
-```
-
-3. **Create secrets in 1Password**:
-   - Vault: `Engineering` (or your vault name)
-   - Item: `adrija-secrets`
-   - Fields: `slack_bot_token`, `slack_app_token`, `gemini_api_key`, etc.
-
-4. **Configure values**:
-
-```yaml
-externalSecrets:
-  enabled: true
-  secretStore: "1password"
-  vault: "Engineering"
-  item: "adrija-secrets"
-```
-
-5. **Install**:
+The chart creates a Kubernetes secret named `<release>-secret` using the values you provide. To reuse an existing secret, set `existingSecret` to its name and the chart will not create a new one. Supply sensitive values via your preferred secrets management in CI/CD and pass them as values:
 
 ```bash
 helm install adrija ./helm/adrija \
   --namespace adrija \
   --create-namespace \
-  -f values.yaml
+  --set slack.botToken="xoxb-your-token" \
+  --set slack.appToken="xapp-your-token" \
+  --set aiProviders.geminiApiKey="your-gemini-key" \
+  --set aiProviders.anthropicApiKey="your-claude-key" \
+  --set aiProviders.openaiApiKey="your-openai-key"
 ```
 
-See [1Password Setup Guide](./examples/1password-setup.md) for detailed instructions.
-
-### Using Kubernetes Secrets (Alternative)
-
-1. Create a Kubernetes secret with your credentials:
-
-```bash
-kubectl create secret generic adrija-secrets \
-  --from-literal=slack-bot-token="xoxb-your-token" \
-  --from-literal=slack-app-token="xapp-your-token" \
-  --from-literal=gemini-api-key="your-gemini-key" \
-  --namespace adrija
-```
-
-2. Update `values.yaml` to disable external secrets:
-
-```yaml
-externalSecrets:
-  enabled: false
-
-slack:
-  botToken: ""  # Will be set from secret
-  appToken: ""  # Will be set from secret
-
-aiProviders:
-  geminiApiKey: ""  # Will be set from secret
-```
-
-3. Install with your custom values:
-
-```bash
-helm install adrija ./helm/adrija \
-  --namespace adrija \
-  --create-namespace \
-  -f my-values.yaml
-```
+Disable any AI providers you do not use to avoid creating empty secret keys.
 
 ## Configuration
 
@@ -150,11 +85,7 @@ helm install adrija ./helm/adrija \
 | `features.conversationMaxHistory` | Max conversation history | `10` |
 | `features.rateLimitMaxRequests` | Rate limit max requests | `10` |
 | `features.rateLimitWindowSeconds` | Rate limit window | `60` |
-| `externalSecrets.enabled` | Enable External Secrets (1Password) | `true` |
-| `externalSecrets.secretStore` | SecretStore name | `"1password"` |
-| `externalSecrets.vault` | 1Password vault name | `"Engineering"` |
-| `externalSecrets.item` | 1Password item name | `"adrija-secrets"` |
-| `externalSecrets.refreshInterval` | Secret refresh interval | `"1h"` |
+| `existingSecret` | Use an existing secret name instead of creating one | `""` |
 
 ### Complete Configuration Example
 
@@ -260,14 +191,6 @@ helm uninstall adrija --namespace adrija
 
 ## Monitoring
 
-### Health Checks
-
-The chart includes health check endpoints:
-
-- **Liveness Probe**: `/health` - checks if the pod is alive
-- **Readiness Probe**: `/health` - checks if the pod is ready
-- **Startup Probe**: `/health` - checks if the pod has started
-
 ### Metrics
 
 Access metrics endpoint:
@@ -328,15 +251,7 @@ networkPolicy:
 
 ### Secrets Management
 
-For production, use external secret management:
-
-1. **1Password (Recommended)**: Use 1Password via External Secrets Operator - See [1Password Setup Guide](./examples/1password-setup.md)
-2. **External Secrets**: Use External Secrets Operator with other providers
-3. **Sealed Secrets**: Use Bitnami Sealed Secrets
-4. **Vault**: Use HashiCorp Vault
-5. **Cloud Secrets**: Use cloud provider secret managers (AWS Secrets Manager, GCP Secret Manager, Azure Key Vault)
-
-**Note**: The chart is configured to use 1Password by default. Set `externalSecrets.enabled: false` to use Kubernetes secrets instead.
+The chart creates a Kubernetes secret named `<release>-secret` from the values you supply. For production, inject those values from a secure source in your CI/CD system (Vault, cloud secret managers, Sealed Secrets, etc.) rather than committing them to git. Disable unused AI providers to avoid generating empty secret keys.
 
 ## Troubleshooting
 
@@ -401,4 +316,3 @@ kubectl describe pdb -n adrija
 For issues and questions:
 - GitHub Issues: https://github.com/cloudwizz/adrija/issues
 - Documentation: See main README.md
-
