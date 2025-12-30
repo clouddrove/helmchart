@@ -2,8 +2,8 @@ apiVersion: v2
 name: adrija
 description: A Helm chart for Adrija - AI Assistant for Slack
 type: application
-version: 0.1.0
-appVersion: "1.0.0"
+version: 0.2.1
+appVersion: "1.0.1"
 keywords:
   - slack
   - ai
@@ -14,4 +14,3 @@ maintainers:
 home: https://github.com/cloudwizz/adrija
 sources:
   - https://github.com/cloudwizz/adrija
-

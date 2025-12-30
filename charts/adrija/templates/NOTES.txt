@@ -27,21 +27,16 @@
 3. View logs:
   kubectl logs --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "adrija.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -f
 
-4. Check health endpoint:
-  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "adrija.fullname" . }} 3000:3000
-  curl http://localhost:3000/health
-
-5. View metrics:
+4. View metrics:
   kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "adrija.fullname" . }} 3000:3000
   curl http://localhost:3000/metrics
 
 {{- if .Values.autoscaling.enabled }}
-6. Check HPA status:
+5. Check HPA status:
   kubectl get hpa --namespace {{ .Release.Namespace }} {{ include "adrija.fullname" . }}
 {{- end }}
 
 {{- if .Values.podDisruptionBudget.enabled }}
-7. Check Pod Disruption Budget:
+6. Check Pod Disruption Budget:
   kubectl get pdb --namespace {{ .Release.Namespace }} {{ include "adrija.fullname" . }}
 {{- end }}
-
