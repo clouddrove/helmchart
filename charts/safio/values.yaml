@@ -24,6 +24,9 @@ securityContext:
   runAsNonRoot: true
   allowPrivilegeEscalation: false
 
+namespace:
+  create: true
+
 service:
   enabled: true
   type: ClusterIP
