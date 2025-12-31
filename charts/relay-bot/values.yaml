@@ -1,0 +1,126 @@
+image:
+
+  repository: ghcr.io/cloud-wizz/relaybot
+  tag: latest
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    - name: ghcr-secret
+
+# Application replicas (typically 1 for stateful sync service)
+replicaCount: 1
+
+
+# Use a Secret for tokens. Option A: have this chart create it
+secrets:
+  create: false
+  name: "" # default: relaybot-secrets
+  clientSlackTokenKey: CLIENT_SLACK_TOKEN # Secret key name for the client workspace token
+  personalSlackTokenKey: PERSONAL_SLACK_TOKEN # Secret key name for the personal workspace token
+  clientSlackToken: "" # xoxp-... (leave empty and use existingSecret in production)
+  personalSlackToken: "" # xoxp-... (leave empty and use existingSecret in production)
+
+# Option B: reference an externally managed Secret instead of creating one
+# The Secret must contain keys matching the key names below (defaults fall back to secrets.* keys)
+existingSecret: ""
+existingSecretKeys:
+  clientSlackTokenKey: "" # override only if your external secret uses a different key name
+  personalSlackTokenKey: "" # override only if your external secret uses a different key name
+
+sourceChannelIds: []  # List of client channel IDs (comma-separated in env, list here)
+autoDiscover:
+  enabled: true        # When no explicit IDs, auto-discover from types
+  types: ["im", "mpim", "public_channel", "private_channel"] # Discover DMs and channels
+destinationChannelId: "" # Channel ID in personal workspace
+syncInterval: 60 # Interval in seconds
+
+# Storage paths (override per client for different state files)
+mountPath: "/data" # Container mount path
+tsFile: "/data/last_ts.json" # State file path (set per client: /data/client-name.json)
+
+# Channel filtering to reduce noise
+filtering:
+  excludeChannelIds: []  # List of channel IDs to exclude
+  excludeChannelPatterns: []  # List of patterns to exclude (e.g., ["test", "bot", "ci"])
+  includeOnlyPatterns: []  # Whitelist patterns (if set, only these will be included)
+  excludeBotChannels: false  # Exclude channels created by bots
+  excludeArchivedChannels: true  # Exclude archived channels
+
+rendering:
+  richHeader: true           # Use context+divider+section blocks for nicer formatting
+  headerShowTimestamp: true  # Show original message timestamp in header
+  detailsLayout: true        # Use bullet list "Details" layout with inline code
+  brandFooter: "by clouddrove" # Footer context text
+
+persistence:
+  enabled: true
+  # If you already have a PVC, set its name here and it will be used.
+  existingClaim: ""
+  # Size of the PVC to create when enabled and no existingClaim is set
+  size: 1Gi
+  # Storage class to use; leave empty to use cluster default
+  storageClass: ""
+  # Access modes for the PVC
+  accessModes:
+    - ReadWriteOnce
+
+metrics:
+  enabled: true
+  port: 8000
+  # If you have Prometheus Operator, enable ServiceMonitor
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+  # If not using ServiceMonitor, these annotations are applied to the Service
+  serviceAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8000"
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Security context for the pod
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+# Security context for the container
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false  # /data needs to be writable
+
+# Node selector for pod assignment
+nodeSelector: {}
+
+# Tolerations for pod assignment
+tolerations: []
+
+# Affinity for pod assignment
+affinity: {}
+
+# Additional labels for all resources
+labels: {}
+
+# Additional annotations for the deployment
+annotations: {}
+
+# Additional annotations for the pod
+podAnnotations: {}
+
+# Additional environment variables
+extraEnv: []
+# - name: CUSTOM_VAR
+#   value: "custom-value"

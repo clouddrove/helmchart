@@ -1,0 +1,19 @@
+apiVersion: v2
+name: relaybot
+version: 0.1.0
+appVersion: "1.0.0"
+description: RelayBot - A Helm chart for syncing Slack messages between workspaces
+type: application
+keywords:
+  - slack
+  - relaybot
+  - synchronization
+  - messaging
+  - monitoring
+home: https://github.com/Clouddrove/relaybot
+sources:
+  - https://github.com/Clouddrove/relaybot
+maintainers:
+  - name: Clouddrove
+    email: anmol@clouddrove.com
+icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/helm/icon/color/helm-icon-color.png
