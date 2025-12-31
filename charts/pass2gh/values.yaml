@@ -15,6 +15,13 @@ github:
     - "clouddrove/repo3"
   token: "CHANGE_ME"  # Set via --set or use existing secret
 
+# Existing Secret (optional)
+existingSecret:
+  enabled: false
+  name: ""                       # Use this secret instead of creating one
+  onepasswordKey: "onepassword-token"
+  githubKey: "github-token"
+
 # Organization Secrets Mapping
 # Format: GitHub Secret Name -> 1Password Item Title (string) or Object with item_type
 # Examples:
@@ -102,4 +109,3 @@ securityContext:
 nodeSelector: {}
 tolerations: []
 affinity: {}
-
