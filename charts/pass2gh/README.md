@@ -74,15 +74,20 @@ helm install pass2gh ./helm/pass2gh \
 1. Create secrets manually:
 ```bash
 kubectl create secret generic pass2gh-secrets \
-  --from-literal=op-connect-token="your-op-token" \
+  --from-literal=onepassword-token="your-op-token" \
   --from-literal=github-token="your-github-token" \
   -n github-sync
 ```
 
 2. Update values.yaml to reference existing secret:
 ```yaml
-# In values.yaml, don't set onepassword.token and github.token
-# The chart will use the existing secret
+existingSecret:
+  enabled: true
+  name: pass2gh-secrets
+  onepasswordKey: onepassword-token
+  githubKey: github-token
+
+# Optionally omit onepassword.token and github.token when using existing secrets
 ```
 
 3. Install:
@@ -127,6 +132,13 @@ github:
   repos:
     - "clouddrove/repo1"
   token: "your-token"  # Or use existing secret
+
+# Use an existing Kubernetes Secret for tokens
+existingSecret:
+  enabled: true
+  name: pass2gh-secrets
+  onepasswordKey: onepassword-token
+  githubKey: github-token
 
 # Secret Mappings
 orgSecrets:
@@ -249,4 +261,3 @@ helm install pass2gh ./helm/pass2gh \
   --dry-run --debug \
   -f my-values.yaml
 ```
-
