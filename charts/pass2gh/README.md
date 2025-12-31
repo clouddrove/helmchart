@@ -54,6 +54,11 @@ deployment:
 image:
   repository: ghcr.io/clouddrove/pass2gh
   tag: latest
+  pullPolicy: IfNotPresent
+
+# (Optional) Image pull secrets
+imagePullSecrets:
+  - name: regcred
 ```
 
 ### 2. Install with Helm
@@ -153,6 +158,10 @@ deployment:
   type: "CronJob"  # or "Deployment"
   cronJob:
     schedule: "0 * * * *"
+
+# Image pull secrets (optional)
+imagePullSecrets:
+  - name: regcred
 ```
 
 ### Secret Mappings

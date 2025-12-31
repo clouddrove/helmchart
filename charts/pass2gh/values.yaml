@@ -85,6 +85,10 @@ image:
   tag: "latest"
   pullPolicy: IfNotPresent
 
+# Image pull secrets (optional)
+imagePullSecrets: []
+# - name: regcred
+
 # Resource Limits
 resources:
   requests:
