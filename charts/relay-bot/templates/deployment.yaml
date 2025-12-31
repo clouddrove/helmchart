@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "relaybot.fullname" . }}
+  labels:
+    {{- include "relaybot.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "relaybot.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "relaybot.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+              protocol: TCP
+          env:
+            - name: CLIENT_SLACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "relaybot.secretName" . }}
+                  key: {{ include "relaybot.clientSlackTokenKey" . }}
+            - name: PERSONAL_SLACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "relaybot.secretName" . }}
+                  key: {{ include "relaybot.personalSlackTokenKey" . }}
+            - name: SOURCE_CHANNEL_IDS
+              value: "{{ join "," .Values.sourceChannelIds }}"
+            - name: AUTO_DISCOVER_ENABLED
+              value: "{{ ternary "true" "false" .Values.autoDiscover.enabled }}"
+            - name: DISCOVERY_TYPES
+              value: "{{ join "," .Values.autoDiscover.types }}"
+            - name: DEST_CHANNEL_ID
+              value: "{{ .Values.destinationChannelId }}"
+            - name: SYNC_INTERVAL
+              value: "{{ .Values.syncInterval }}"
+            - name: TS_FILE
+              value: "{{ .Values.tsFile }}"
+            - name: METRICS_ENABLED
+              value: "{{ ternary "true" "false" .Values.metrics.enabled }}"
+            - name: METRICS_PORT
+              value: "{{ .Values.metrics.port }}"
+            - name: RICH_HEADER
+              value: "{{ ternary "true" "false" .Values.rendering.richHeader }}"
+            - name: HEADER_SHOW_TS
+              value: "{{ ternary "true" "false" .Values.rendering.headerShowTimestamp }}"
+            - name: DETAILS_LAYOUT
+              value: "{{ ternary "true" "false" .Values.rendering.detailsLayout }}"
+            - name: BRAND_FOOTER
+              value: "{{ .Values.rendering.brandFooter }}"
+            {{- if .Values.filtering.excludeChannelIds }}
+            - name: EXCLUDE_CHANNEL_IDS
+              value: "{{ join "," .Values.filtering.excludeChannelIds }}"
+            {{- end }}
+            {{- if .Values.filtering.excludeChannelPatterns }}
+            - name: EXCLUDE_CHANNEL_PATTERNS
+              value: "{{ join "," .Values.filtering.excludeChannelPatterns }}"
+            {{- end }}
+            {{- if .Values.filtering.includeOnlyPatterns }}
+            - name: INCLUDE_ONLY_PATTERNS
+              value: "{{ join "," .Values.filtering.includeOnlyPatterns }}"
+            {{- end }}
+            - name: EXCLUDE_BOT_CHANNELS
+              value: "{{ ternary "true" "false" .Values.filtering.excludeBotChannels }}"
+            - name: EXCLUDE_ARCHIVED_CHANNELS
+              value: "{{ ternary "true" "false" .Values.filtering.excludeArchivedChannels }}"
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: state
+              mountPath: {{ .Values.mountPath }}
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - {{ .Values.tsFile }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - cat
+                - {{ .Values.tsFile }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+      volumes:
+        - name: state
+          {{- if .Values.persistence.enabled }}
+          {{- $pvcName := (default (printf "%s-data" (include "relaybot.fullname" .)) .Values.persistence.existingClaim) }}
+          persistentVolumeClaim:
+            claimName: {{ $pvcName }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
