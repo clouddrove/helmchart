@@ -6,6 +6,10 @@ metadata:
   namespace: {{ include "helmchart.namespace" . }}
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   {{- if .Values.service.headless }}
   clusterIP: None
@@ -13,10 +17,19 @@ spec:
   type: {{ .Values.service.type | default "ClusterIP" }}
   {{- end }}
   ports:
-    - port: {{ .Values.service.port }}
+    {{- if gt (len .Values.service.ports) 0 }}
+      {{- range .Values.service.ports }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      protocol: {{ .protocol | default "TCP" }}
+      {{- end }}
+    {{- else }}
+    - name: {{ .Values.service.targetPort | default "http" }}
+      port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort | default "http" }}
       protocol: {{ .Values.service.protocol | default "TCP" }}
-      name: {{ .Values.service.targetPort | default "http" }}
+    {{- end }}
   selector:
     {{- include "helmchart.selectorLabels" . | nindent 4 }}
     {{- include "helmchart.podLabels" . | nindent 4 }}

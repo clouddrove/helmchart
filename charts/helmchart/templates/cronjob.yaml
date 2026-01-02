@@ -2,14 +2,15 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name:  {{ include "helmchart.fullname" . }}-migration
+  name: {{ include "helmchart.fullname" . }}-migration
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
 spec:
   schedule: {{ .Values.cronJob.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.cronJob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronJob.failedJobsHistoryLimit }}
   startingDeadlineSeconds: {{ .Values.cronJob.startingDeadlineSeconds }}
   concurrencyPolicy: {{ .Values.cronJob.concurrencyPolicy }}
-  failedJobsHistoryLimit: {{ .Values.cronJob.failedJobsHistoryLimit }}
   jobTemplate:
     spec:
       template:
@@ -18,24 +19,73 @@ spec:
           labels:
             {{- include "helmchart.labels" . | nindent 12 }}
         spec:
-          restartPolicy: Never
+          {{- with .Values.cronJob.serviceAccount }}
+          serviceAccountName: {{ .name | default (include "helmchart.fullname" $) }}
+          automountServiceAccountToken: {{ .automountServiceAccountToken | default true }}
+          {{- end }}
+          restartPolicy: {{ .Values.cronJob.restartPolicy | default "Never" }}
+          {{- with .Values.cronJob.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronJob.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronJob.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           containers:
           - name: {{ include "helmchart.fullname" . }}
             image: "{{ .Values.cronJob.image.repository }}:{{ .Values.cronJob.image.tag }}"
-            imagePullPolicy: {{ .Values.cronJob.image.pullPolicy }}
+            imagePullPolicy: {{ .Values.cronJob.image.pullPolicy | default "IfNotPresent" }}
+            {{- with .Values.cronJob.command }}
+            command:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with .Values.cronJob.args }}
+            args:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with .Values.cronJob.ports }}
+            ports:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with .Values.cronJob.securityContext }}
+            securityContext:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with .Values.cronJob.resources }}
             resources:
-              {{- toYaml .Values.cronJob.resources | nindent 16 }}
-            envFrom:
-            {{- if and (not .Values.cronJob.configmap.enabled) }}
-              []
+              {{- toYaml . | nindent 14 }}
             {{- end }}
-            {{- if .Values.cronJob.configmap.enabled }}
-              - configMapRef:
-                  name: {{ include "helmchart.fullname" . }}
+            {{- if .Values.cronJob.volume.enabled }}
+            volumeMounts:
+              {{- if gt (len .Values.cronJob.volume.volumeMounts) 0 }}
+                {{- range .Values.cronJob.volume.volumeMounts }}
+              - name: {{ .name }}
+                mountPath: {{ .mountPath }}
+                {{- if .subPath }}
+                subPath: {{ .subPath }}
+                {{- end }}
+                {{- end }}
+              {{- else }}
+              - name: {{ default (include "helmchart.fullname" .) .Values.cronJob.volume.name }}
+                mountPath: {{ default "/app" .Values.cronJob.volume.mountPath }}
+              {{- end }}
             {{- end }}
-            {{- if .Values.cronJob.secret.enabled }}
-              - secretRef:
-                  name: {{ include "helmchart.fullname" . }}
-            {{- end }}  
+          {{- if .Values.cronJob.volume.enabled }}
+          volumes:
+            {{- if gt (len .Values.cronJob.volume.volumes) 0 }}
+              {{- range .Values.cronJob.volume.volumes }}
+            - name: {{ .name }}
+              {{- toYaml . | nindent 10 | trimPrefix "name:" }}
+              {{- end }}
+            {{- else }}
+            - name: {{ template "helmchart.fullname" . }}
+              persistentVolumeClaim:
+                claimName: {{ template "helmchart.fullname" . }}
+            {{- end }}
+          {{- end }}
 {{- end }}
-
