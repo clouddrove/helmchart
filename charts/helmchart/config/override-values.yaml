@@ -51,9 +51,7 @@ securityContext:
   allowPrivilegeEscalation: false
   runAsGroup: 3000
 
-resource:
-  enabled: true
-resources: 
+resources:
   limits:
     cpu: 200m
     memory: 512Mi

@@ -1,3 +1,4 @@
+{{- if .Values.deployment.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,9 +53,17 @@ spec:
           {{- end }}  
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
+            {{- if gt (len .Values.service.ports) 0 }}
+              {{- range .Values.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort | default .port }}
+              protocol: {{ .protocol | default "TCP" }}
+              {{- end }}
+            {{- else }}
             - name: {{ .Values.service.targetPort | default "http" }}
               containerPort: {{ .Values.service.containerPort | default .Values.service.port }}
               protocol: {{ .Values.service.protocol | default "TCP" }}
+            {{- end }}
           {{- if .Values.commands }}
           command:
             {{- toYaml .Values.commands | nindent 12 }}
@@ -74,14 +83,24 @@ spec:
           {{- if .Values.healthCheckProbes.enabled }}
           {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
           {{- end }}
-          {{- if .Values.resource.enabled }}
+          {{- with .Values.resources }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- if .Values.volume.enabled }}
           volumeMounts:
+            {{- if gt (len .Values.volume.volumeMounts) 0 }}
+              {{- range .Values.volume.volumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              {{- if .subPath }}
+              subPath: {{ .subPath }}
+              {{- end }}
+              {{- end }}
+            {{- else }}
             - mountPath: {{ default ("/app") .Values.volume.mountPath }}
-              name: {{ template "helmchart.fullname" . }}
+              name: {{ default (include "helmchart.fullname" .) .Values.volume.name }}
+            {{- end }}
           {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -97,7 +116,15 @@ spec:
       {{- end }}
       {{- if .Values.volume.enabled }}
       volumes:
+        {{- if gt (len .Values.volume.volumes) 0 }}
+          {{- range .Values.volume.volumes }}
+        - name: {{ .name }}
+          {{- toYaml . | nindent 10 | trimPrefix "name:" }}
+          {{- end }}
+        {{- else }}
         - name: {{ template "helmchart.fullname" . }}
           persistentVolumeClaim:
             claimName: {{ template "helmchart.fullname" . }}
+        {{- end }}
       {{- end }}
+{{- end }}

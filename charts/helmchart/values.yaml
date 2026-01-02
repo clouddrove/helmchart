@@ -2,6 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Create deployment.yaml by default.
+deployment:
+  enabled: true
+
 replicaCount: 1
   # -- Replica count used to configure the number of replica pods that should be deployed and maintained.
 
@@ -118,10 +122,27 @@ affinity: {}
 volume:
   enabled: false
   # -- Volume mounted to pods either as default or in the form of PVC
+  # name: "test"
   # mountPath: ""
   # -- Path inside container where pvc will be mounted
   # hostPath: ""
   # -- Path inside node which will be used as pvc
+  volumeMounts: []
+  # Example:
+  # volumeMounts:
+  #   - name: app-data
+  #     mountPath: /app
+  #   - name: logs
+  #     mountPath: /var/log/app
+  volumes: []
+  # Example:
+  # volumes:
+  #   - name: app-data
+  #     persistentVolumeClaim:
+  #       claimName: app-data-pvc
+  #   - name: logs
+  #     emptyDir: {}
+
 
 storageClass:
   enabled: false
@@ -278,6 +299,18 @@ service:
     # -- Target port of the pod
   protocol: TCP
     # -- Protocol for service port
+  annotations: {}
+    # service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  ports: []
+  # ports:
+  #   - name: http
+  #     port: 3000
+  #     targetPort: http
+  #     protocol: TCP
+  #   - name: health
+  #     port: 3001
+  #     targetPort: health
 
 istio:
   enabled: false

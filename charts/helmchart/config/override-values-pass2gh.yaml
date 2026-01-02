@@ -1,0 +1,126 @@
+serviceAccount:
+  enabled: true
+
+service:
+  enabled: false
+
+secret:
+  enabled: true
+  secrets:
+    ONEPASSWORD_TOKEN: "xxxxxx"
+    GITHUB_TOKEN: "xxxxxx"
+
+configmap:
+  enabled: true
+  configs:
+    config.json: |
+      {
+        "github_org": "clouddrove",
+        "github_repos": ["clouddrove/repo1","clouddrove/repo2","clouddrove/repo3"],
+        "vault_id": "your-vault-id",
+        "org_secrets": {"DATABASE_URL":"DATABASE_URL","SHARED_API_KEY":"SHARED_API_KEY","SLACK_WEBHOOK":"SLACK_WEBHOOK","SSL_CERTIFICATE":{"item_type":"document"}},
+        "repo_secrets": {"clouddrove/repo1":{"CONFIG_FILE":{"item_type":"file"},"DEPLOY_KEY":"DEPLOY_KEY","SSH_PRIVATE_KEY":{"item_type":"ssh_key"},"SSL_CERTIFICATE":{"item_type":"document"},"WEBHOOK_SECRET":"WEBHOOK_SECRET"},"clouddrove/repo2":{"API_KEY":"API_KEY","DATABASE_PASSWORD":"DATABASE_PASSWORD"},"clouddrove/repo3":{"DATABASE_PASSWORD":"DATABASE_PASSWORD"}},
+        "deploy_keys": {"clouddrove/repo1":"Production Deploy Key","clouddrove/repo2":"Staging Deploy Key","clouddrove/repo3":{"key_title":"CI/CD Deploy Key","read_only":false}}
+      }
+
+##--------------------------------------
+## DEPLOYMENT
+##--------------------------------------
+deployment:
+  enabled: false
+
+image:
+  repository: ghcr.io/clouddrove/pass2gh  # GitHub Container Registry
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+resources: {}
+  # requests:
+  #   memory: "128Mi"
+  #   cpu: "100m"
+  # limits:
+  #   memory: "256Mi"
+  #   cpu: "200m"
+
+securityContext: {}
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # fsGroup: 1000
+
+
+commands: {}
+  # - python
+  # - sync_secrets.py
+
+volume: {}
+  # enabled: true
+  # volumeMounts:
+  #   - name: config
+  #     mountPath: /app/config.json
+  #     subPath: config.json
+  #     readOnly: true
+  # volumes:
+  #   - name: config
+  #     configMap:
+  #       name: pass2gh-config
+
+
+##--------------------------------------
+## CRONJOB
+##--------------------------------------
+
+cronJob:
+  enabled: true
+  
+  schedule: "0 * * * *"  # Run every hour
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 30
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  restartPolicy: OnFailure
+  
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "1.16.0" 
+  
+  command:
+    - python
+    - sync_secrets.py
+  
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+  serviceAccount:
+    name: ""
+    automountServiceAccountToken: true
+
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+  volume:
+    enabled: true
+    volumeMounts:
+      - name: config
+        mountPath: /app/config.json
+        subPath: config.json
+        readOnly: true
+    volumes:
+      - name: config
+        configMap:
+          name: pass2gh-test-config
