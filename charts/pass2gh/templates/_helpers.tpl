@@ -48,3 +48,13 @@ app.kubernetes.io/name: {{ include "pass2gh.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+Resolve the secret name, supporting user-supplied existing secrets.
+*/}}
+{{- define "pass2gh.secretName" -}}
+{{- if .Values.existingSecret.enabled }}
+{{- default (printf "%s-secrets" (include "pass2gh.fullname" .)) .Values.existingSecret.name }}
+{{- else }}
+{{- printf "%s-secrets" (include "pass2gh.fullname" .) }}
+{{- end }}
+{{- end }}

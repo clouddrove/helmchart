@@ -101,54 +101,10 @@ ingress:
       hosts:
         - adrija.example.com
 
-# Health checks
-livenessProbe:
-  httpGet:
-    path: /health
-    port: http
-  initialDelaySeconds: 40
-  periodSeconds: 30
-  timeoutSeconds: 10
-  failureThreshold: 3
-  successThreshold: 1
-
-readinessProbe:
-  httpGet:
-    path: /health
-    port: http
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-  successThreshold: 1
-
-startupProbe:
-  httpGet:
-    path: /health
-    port: http
-  initialDelaySeconds: 0
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 30
-  successThreshold: 1
-
-# External Secrets Configuration (1Password)
-externalSecrets:
-  enabled: true
-  secretStore: "1password"  # Name of the SecretStore resource
-  createSecretStore: false  # Set to true if you want the chart to create the SecretStore
-  refreshInterval: "1h"     # How often to sync secrets
-  # 1Password vault and item configuration
-  vault: "Engineering"      # 1Password vault name
-  item: "adrija-secrets"    # 1Password item name
-  # 1Password Connect configuration (only used if createSecretStore=true)
-  onepassword:
-    connectUrl: "http://onepassword-connect-api:8080"  # 1Password Connect API URL
-  
 # Environment variables - Slack Configuration (Required)
 slack:
-  botToken: ""  # Set via external secret or values (ignored if externalSecrets.enabled=true)
-  appToken: ""  # Set via external secret or values (ignored if externalSecrets.enabled=true)
+  botToken: ""  # Set via values or CI/CD secrets
+  appToken: ""  # Set via values or CI/CD secrets
 
 # Environment variables - AI Provider Configuration
 aiProviders:
@@ -157,8 +113,7 @@ aiProviders:
   enableOpenAI: false
   defaultProvider: "gemini"
   
-  # API Keys (should be set via external secrets or values)
-  # These are ignored if externalSecrets.enabled=true
+  # API Keys (should be set via values or CI/CD secrets)
   geminiApiKey: ""
   anthropicApiKey: ""
   openaiApiKey: ""
@@ -166,6 +121,9 @@ aiProviders:
   # Model configuration
   geminiModel: "gemini-1.5-flash"
   openaiModel: "gpt-3.5-turbo"
+
+# Use an existing secret instead of creating one
+existingSecret: ""
 
 # Feature Configuration
 features:
@@ -221,4 +179,3 @@ networkPolicy:
   enabled: false
   ingress: []
   egress: []
-

@@ -1,4 +1,5 @@
 {{- if eq .Values.deployment.type "Deployment" }}
+{{- $secretName := include "pass2gh.secretName" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,6 +22,10 @@ spec:
       serviceAccountName: {{ .name | default (include "pass2gh.fullname" $) }}
       {{- end }}
       {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: sync
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -30,13 +35,13 @@ spec:
         - name: ONEPASSWORD_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ include "pass2gh.fullname" . }}-secrets
-              key: onepassword-token
+              name: {{ $secretName }}
+              key: {{ .Values.existingSecret.onepasswordKey | default "onepassword-token" }}
         - name: GITHUB_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ include "pass2gh.fullname" . }}-secrets
-              key: github-token
+              name: {{ $secretName }}
+              key: {{ .Values.existingSecret.githubKey | default "github-token" }}
         volumeMounts:
         - name: config
           mountPath: /app/config.json
@@ -73,4 +78,3 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 {{- end }}
-

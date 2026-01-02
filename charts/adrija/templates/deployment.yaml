@@ -36,6 +36,7 @@ spec:
       initContainers:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- $secretName := default (printf "%s-secret" (include "adrija.fullname" .)) .Values.existingSecret }}
       containers:
       - name: {{ .Chart.Name }}
         securityContext:
@@ -51,12 +52,12 @@ spec:
         - name: SLACK_BOT_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ include "adrija.fullname" . }}-secret
+              name: {{ $secretName }}
               key: slack-bot-token
         - name: SLACK_APP_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ include "adrija.fullname" . }}-secret
+              name: {{ $secretName }}
               key: slack-app-token
         # AI Provider Configuration
         - name: ENABLE_GEMINI
@@ -70,19 +71,19 @@ spec:
         - name: GEMINI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ include "adrija.fullname" . }}-secret
+              name: {{ $secretName }}
               key: gemini-api-key
               optional: true
         - name: ANTHROPIC_API_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ include "adrija.fullname" . }}-secret
+              name: {{ $secretName }}
               key: anthropic-api-key
               optional: true
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: {{ include "adrija.fullname" . }}-secret
+              name: {{ $secretName }}
               key: openai-api-key
               optional: true
         - name: GEMINI_MODEL
@@ -112,12 +113,6 @@ spec:
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        livenessProbe:
-          {{- toYaml .Values.livenessProbe | nindent 10 }}
-        readinessProbe:
-          {{- toYaml .Values.readinessProbe | nindent 10 }}
-        startupProbe:
-          {{- toYaml .Values.startupProbe | nindent 10 }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         {{- with .Values.volumeMounts }}
@@ -146,4 +141,3 @@ spec:
       {{- end }}
       dnsPolicy: {{ .Values.dnsPolicy }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
-
