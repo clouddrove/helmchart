@@ -16,6 +16,7 @@ on:
       - 'charts/safio/Chart.yaml'
       - 'charts/pass2gh/Chart.yaml'
       - 'charts/relay-bot/Chart.yaml'
+      - 'charts/hrbuddy/Chart.yaml'
 
 jobs:
   release:
