@@ -36,6 +36,7 @@ syncInterval: 60 # Interval in seconds
 # Storage paths (override per client for different state files)
 mountPath: "/data" # Container mount path
 tsFile: "/data/last_ts.json" # State file path (set per client: /data/client-name.json)
+startFromNow: true # Start syncing from now instead of last timestamp
 
 # Channel filtering to reduce noise
 filtering:

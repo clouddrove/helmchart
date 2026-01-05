@@ -65,6 +65,8 @@ spec:
               value: "{{ .Values.syncInterval }}"
             - name: TS_FILE
               value: "{{ .Values.tsFile }}"
+            - name: START_FROM_NOW
+              value: "{{ ternary "true" "false" .Values.startFromNow }}"
             - name: METRICS_ENABLED
               value: "{{ ternary "true" "false" .Values.metrics.enabled }}"
             - name: METRICS_PORT
