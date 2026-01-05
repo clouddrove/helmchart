@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hrbuddy.configMapName" . }}
+  labels:
+    {{- include "hrbuddy.labels" . | nindent 4 }}
+data:
+  # Outline API Configuration
+  OUTLINE_API_URL: {{ .Values.outline.apiUrl | quote }}
+  {{- if .Values.outline.collectionId }}
+  OUTLINE_COLLECTION_ID: {{ .Values.outline.collectionId | quote }}
+  {{- end }}
+
+  # OpenAI Configuration
+  OPENAI_ENABLED: {{ .Values.openai.enabled | quote }}
+  OPENAI_MODEL: {{ .Values.openai.model | quote }}
+  OPENAI_EMBEDDING_MODEL: {{ .Values.openai.embeddingModel | quote }}
+
+  # Redis Configuration
+  REDIS_HOST: {{ .Values.redis.host | quote }}
+  REDIS_PORT: {{ .Values.redis.port | quote }}
+  REDIS_INDEX_NAME: {{ .Values.redis.indexName | quote }}
+  {{- if .Values.redis.url }}
+  REDIS_URL: {{ .Values.redis.url | quote }}
+  {{- end }}
+
+  # RAG Configuration
+  CHUNK_SIZE: {{ .Values.rag.chunkSize | quote }}
+  CHUNK_OVERLAP: {{ .Values.rag.chunkOverlap | quote }}
+  TOP_K_RESULTS: {{ .Values.rag.topKResults | quote }}
+
+  # Auto-Recovery Configuration
+  AUTO_RECOVERY_ENABLED: {{ .Values.autoRecovery.enabled | quote }}
+  AUTO_RECOVERY_MAX_RETRIES: {{ .Values.autoRecovery.maxRetries | quote }}
+  AUTO_RECOVERY_RETRY_DELAY: {{ .Values.autoRecovery.retryDelay | quote }}
+
+  # Policy Monitor Configuration
+  POLICY_MONITOR_ENABLED: {{ .Values.policyMonitor.enabled | quote }}
+  POLICY_MONITOR_INTERVAL: {{ .Values.policyMonitor.interval | quote }}
+  {{- if .Values.policyMonitor.slackNotificationChannel }}
+  SLACK_NOTIFICATION_CHANNEL: {{ .Values.policyMonitor.slackNotificationChannel | quote }}
+  {{- end }}
+
+  # Policy Update Notice Configuration
+  POLICY_UPDATE_NOTICE_ENABLED: {{ .Values.policyUpdateNotice.enabled | quote }}
+  {{- if .Values.policyUpdateNotice.kekaPolicyUpdateUrl }}
+  KEKA_POLICY_UPDATE_URL: {{ .Values.policyUpdateNotice.kekaPolicyUpdateUrl | quote }}
+  {{- end }}
+
