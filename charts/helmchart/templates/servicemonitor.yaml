@@ -1,17 +1,25 @@
-{{- if .Values.metrics.enabled }}
-# This object requires CustomResourceDefinition (crds).
+{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
+# This object requires Prometheus Operator CRDs installed
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "helmchart.fullname" . }}-service-monitor
   labels:
     {{- include "helmchart.labels" . | nindent 4 }}
+    {{- with .Values.metrics.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.metrics.serviceMonitor.annotations }}
   annotations:
-    "helm.sh/hook-weight": "1"
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   selector:
     matchLabels:
-      {{- include "helmchart.labels" . | nindent 6 }}
+      {{- include "helmchart.selectorLabels" . | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Values.metrics.serviceMonitor.targetNamespace | default (include "helmchart.namespace" .) }}
   endpoints:
-    - port: {{ .Values.metrics.portName }}
-  {{- end }}
+    {{- toYaml .Values.metrics.serviceMonitor.endpoints | nindent 4 }}
+{{- end }}

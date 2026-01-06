@@ -1,0 +1,171 @@
+
+# -------------------
+# Replica / Scaling
+# -------------------
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+
+# -------------------
+# Image
+# -------------------
+image:
+  repository: ghcr.io/cloud-wizz/relaybot
+  tag: latest
+  pullPolicy: IfNotPresent
+  digest: ""
+
+imagePullSecrets:
+  - name: ghcr-secret
+
+# -------------------
+# Service Account
+# -------------------
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+
+# -------------------
+# Service / Ports
+# -------------------
+service:
+  enabled: true
+  port: 8000
+  name: metrics
+  targetPort: metrics
+  containerPort: 8000
+  protocol: TCP
+  type: ClusterIP
+
+# -------------------
+# Pod & Container Security
+# -------------------
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+# -------------------
+# Secret (Slack tokens)
+# -------------------
+secret:
+  enabled: false
+  existingSecretName: "relaybot-slack-token-secret"
+  secrets: {}
+    # CLIENT_SLACK_TOKEN: "xoxp-xxxxxxxxxxx"
+    # PERSONAL_SLACK_TOKEN: "xoxp-xxxxxxxxxxx"
+
+# -------------------
+# ConfigMap (ALL non-secret envs)
+# -------------------
+configmap:
+  enabled: true
+  configs:
+    AUTO_DISCOVER_ENABLED: "true"
+    BRAND_FOOTER: "by clouddrove"
+    CLIENT_SLACK_TOKEN: ""
+    DEST_CHANNEL_ID: ""
+    DETAILS_LAYOUT: "true"
+    DISCOVERY_TYPES: "im,mpim,public_channel,private_channel"
+    EXCLUDE_ARCHIVED_CHANNELS: "true"
+    EXCLUDE_BOT_CHANNELS: "false"
+    EXCLUDE_CHANNEL_IDS: "C111,C222"
+    EXCLUDE_CHANNEL_PATTERNS: "test,bot,ci"
+    HEADER_SHOW_TS: "true"
+    INCLUDE_ONLY_PATTERNS: ""
+    METRICS_ENABLED: "true"
+    METRICS_PORT: "9090"
+    RICH_HEADER: "true"
+    SOURCE_CHANNEL_IDS: "C12345,C67890" 
+    START_FROM_NOW: "true"
+    SYNC_INTERVAL: "60"
+    TS_FILE: "/data/last_ts.json"
+
+# -------------------
+# Health Probes
+# -------------------
+healthCheckProbes:
+  enabled: true
+  probes:
+    livenessProbe:
+      exec:
+        command:
+          - cat
+          - /data/last_ts.json
+      initialDelaySeconds: 30
+      periodSeconds: 30
+    readinessProbe:
+      exec:
+        command:
+          - cat
+          - /data/last_ts.json
+      initialDelaySeconds: 10
+      periodSeconds: 10
+
+# -------------------
+# Resources
+# -------------------
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# -------------------
+# Volume
+# -------------------
+volume:
+  enabled: true
+  name: state
+  mountPath: /data
+  volumeMounts:
+    - name: state
+      mountPath: /data
+
+# -------------------
+# Persistent Volume
+# -------------------
+storageClass:
+  enabled: false
+  storageClassName: ""
+  existingClaim: ""
+  allowVolumeExpansion: false
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
+    persistentVolumeReclaimPolicy: "Retain"
+
+# -------------------
+# ServiceMonitor
+# -------------------
+metrics:
+  enabled: true
+
+  serviceMonitor:
+    enabled: true
+    targetNamespace: ""
+    endpoints:
+      - port: metrics
+        path: /metrics
+        interval: 30s
+        scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+      # prometheus.io/scrape: "true"
+      # prometheus.io/path: "/metrics"
+      # prometheus.io/port: "8000"
+
+
+
