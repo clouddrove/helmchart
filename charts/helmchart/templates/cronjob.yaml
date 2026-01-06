@@ -13,12 +13,19 @@ spec:
   concurrencyPolicy: {{ .Values.cronJob.concurrencyPolicy }}
   jobTemplate:
     spec:
+      {{- if .Values.cronJob.activeDeadlineSeconds }}
+      activeDeadlineSeconds: {{ .Values.cronJob.activeDeadlineSeconds }}
+      {{- end }}
       template:
         metadata:
           name: {{ include "helmchart.fullname" . }}
           labels:
             {{- include "helmchart.labels" . | nindent 12 }}
         spec:
+          {{- with .Values.cronJob.podSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.cronJob.serviceAccount }}
           serviceAccountName: {{ .name | default (include "helmchart.fullname" $) }}
           automountServiceAccountToken: {{ .automountServiceAccountToken | default true }}
@@ -51,6 +58,18 @@ spec:
             {{- with .Values.cronJob.ports }}
             ports:
               {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- $secretName := default (printf "%s-secret" (include "helmchart.fullname" .)) .Values.secret.existingSecretName }}
+            {{- if or .Values.configmap.enabled .Values.secret.enabled .Values.secret.existingSecretName }}
+            envFrom:
+            {{- if .Values.configmap.enabled }}
+              - configMapRef:
+                  name: {{ include "helmchart.fullname" . }}-config
+            {{- end }}
+            {{- if or .Values.secret.enabled .Values.secret.existingSecretName }}
+              - secretRef:
+                  name: {{ $secretName }}
+            {{- end }}
             {{- end }}
             {{- with .Values.cronJob.securityContext }}
             securityContext:

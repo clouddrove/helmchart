@@ -1,32 +1,36 @@
-# Values for helmchart.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-# Application configuration
+# -------------------
+# Image
+# -------------------
 image:
   repository: hrbuddy
   tag: latest
   pullPolicy: IfNotPresent
 
-# Replica count
-replicaCount: 1
-
-# Image pull secrets (if using private registry)
 imagePullSecrets: []
 
-# Service account
+# -------------------
+# Replica / Scaling
+# -------------------
+replicaCount: 1
+
+# -------------------
+# Service Account
+# -------------------
 serviceAccount:
   enabled: true
 
-# Service
+# -------------------
+# Service / Ports
+# -------------------
 service:
   enabled: false
 
-# Pod security context
+# -------------------
+# Pod & Container Security
+# -------------------
 podSecurityContext:
   fsGroup: 2000
 
-# Container security context
 securityContext:
   capabilities:
     drop:
@@ -35,7 +39,9 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 1000
 
-# Resource limits and requests
+# -------------------
+# Resources
+# -------------------
 resources:
   limits:
     cpu: 1000m
@@ -59,7 +65,9 @@ podAnnotations: {}
 # Pod labels
 podLabels: {}
 
-# liveness and readiness probes in deployment
+# -------------------
+# HealthChecks
+# -------------------
 healthCheckProbes:
   enabled: true
   probes:
@@ -84,6 +92,9 @@ healthCheckProbes:
       timeoutSeconds: 3
       failureThreshold: 3
 
+# -------------------
+# Secret
+# -------------------
 secret:
   enabled: false
   existingSecretName: "hrbuddy-secrets"
@@ -95,6 +106,9 @@ secret:
     # SLACK_SIGNING_SECRET: ""
     # REDIS_PASSWORD: ""
 
+# -------------------
+# ConfigMap (ALL non-secret envs)
+# -------------------
 configmap:
   enabled: true
   configs:
@@ -121,3 +135,48 @@ configmap:
     PYTHONUNBUFFERED: "1"
     PYTHONPATH: "/app"
 
+# -------------------
+# CronJob
+# -------------------
+cronJob:
+  enabled: true
+  
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  restartPolicy: OnFailure
+  activeDeadlineSeconds: 1800
+  
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "1.16.0" 
+  
+  command:
+    - python
+    - sync_documents.py
+  
+  securityContext:
+    capabilities:
+      drop:
+      - ALL
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  podSecurityContext:
+    fsGroup: 2000
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+      cpu: "1000m"
+
+  serviceAccount:
+    name: ""
+    automountServiceAccountToken: true
