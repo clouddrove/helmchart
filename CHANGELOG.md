@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [hrbuddy-0.1.1] - 2026-01-06
+### :sparkles: New Features
+- [`2182cb8`](https://github.com/clouddrove/helmchart/commit/2182cb8f4894e8a24990d80510b83b58e9d9e3db) - Added hr buddy *(PR [#96](https://github.com/clouddrove/helmchart/pull/96) by [@archit-cd](https://github.com/archit-cd))*
+- [`480acf7`](https://github.com/clouddrove/helmchart/commit/480acf76c020f13204606b86f5405490346ce217) - Added cron job for hrbuddy *(PR [#98](https://github.com/clouddrove/helmchart/pull/98) by [@archit-cd](https://github.com/archit-cd))*
+
+### :bug: Bug Fixes
+- [`38d6c47`](https://github.com/clouddrove/helmchart/commit/38d6c47e429c8380cc9bf9d26ee4227999428360) - Update workflows for hrbuddy helm chart *(PR [#97](https://github.com/clouddrove/helmchart/pull/97) by [@archit-cd](https://github.com/archit-cd))*
+
+### :memo: Documentation Changes
+- [`3672dc4`](https://github.com/clouddrove/helmchart/commit/3672dc4c8afadb3b706592ab61529771534c646e) - update CHANGELOG.md for relaybot-0.1.1 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [relaybot-0.1.1] - 2026-01-05
 ### :bug: Bug Fixes
 - [`4c56ad6`](https://github.com/clouddrove/helmchart/commit/4c56ad676fd17c4213a2396a0bd619b13382d8bf) - Added support for start now *(PR [#94](https://github.com/clouddrove/helmchart/pull/94) by [@archit-cd](https://github.com/archit-cd))*
@@ -161,3 +173,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [pass2gh-0.1.2]: https://github.com/clouddrove/helmchart/compare/pass2gh-0.1.1...pass2gh-0.1.2
 [relaybot-0.1.0]: https://github.com/clouddrove/helmchart/compare/pass2gh-0.1.2...relaybot-0.1.0
 [relaybot-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.0...relaybot-0.1.1
+[hrbuddy-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.1...hrbuddy-0.1.1
