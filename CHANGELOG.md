@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [relaybot-0.1.1] - 2026-01-05
+### :bug: Bug Fixes
+- [`4c56ad6`](https://github.com/clouddrove/helmchart/commit/4c56ad676fd17c4213a2396a0bd619b13382d8bf) - Added support for start now *(PR [#94](https://github.com/clouddrove/helmchart/pull/94) by [@archit-cd](https://github.com/archit-cd))*
+
+### :memo: Documentation Changes
+- [`daa4e61`](https://github.com/clouddrove/helmchart/commit/daa4e618c97917eefddaaadb86c2ce7551af6f56) - update CHANGELOG.md for relaybot-0.1.0 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [relaybot-0.1.0] - 2025-12-31
 ### :sparkles: New Features
 - [`5573850`](https://github.com/clouddrove/helmchart/commit/5573850f550dc8f7904795e6eabed4bd5dd722bf) - Add Realy-Bot HelmChart *(commit by [@Sunny-Mor](https://github.com/Sunny-Mor))*
@@ -152,3 +160,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [pass2gh-0.1.1]: https://github.com/clouddrove/helmchart/compare/adrija-0.2.0...pass2gh-0.1.1
 [pass2gh-0.1.2]: https://github.com/clouddrove/helmchart/compare/pass2gh-0.1.1...pass2gh-0.1.2
 [relaybot-0.1.0]: https://github.com/clouddrove/helmchart/compare/pass2gh-0.1.2...relaybot-0.1.0
+[relaybot-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.0...relaybot-0.1.1
