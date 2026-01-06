@@ -11,6 +11,26 @@ image:
 # Replica count
 replicaCount: 1
 
+# CronJob configuration
+cronjob:
+  enabled: true
+  schedule: "0 */6 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: 600
+  activeDeadlineSeconds: 1800
+  concurrencyPolicy: Forbid
+  command:
+    - python
+    - sync_documents.py
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
 # Image pull secrets (if using private registry)
 imagePullSecrets: []
 
