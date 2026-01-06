@@ -37,4 +37,8 @@ spec:
           averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
         {{- end }}
     {{- end }}
+  {{- if .Values.autoscaling.behavior.enabled }}
+  behavior:
+    {{- toYaml .Values.autoscaling.behavior.config | nindent 4 }}
+  {{- end }}
 {{- end }}

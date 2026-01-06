@@ -1,0 +1,138 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/******/safio
+  tag: "v1.0.2"
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: ghcr-token
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+
+secret:
+  enabled: false
+  existingSecretName: "safio-secret"
+  secrets:
+    SLACK_BOT_TOKEN: ""  # Set via K8s secret
+    SLACK_APP_TOKEN: ""   # Set via K8s secret
+    OP_SERVICE_ACCOUNT_TOKEN: ""  # Set via K8s secret
+    ADMIN_DASHBOARD_TOKEN: ""  # Set via K8s secret
+    Note: PG_CONNECTION_STRING is
+
+configmap:
+  enabled: true
+  configs:
+    ADMIN_DASHBOARD_PORT: "3100"
+    ADMIN_USER_IDS: ""
+    ALLOWED_CHANNEL_IDS: "<some_value>"
+    ALLOWED_USER_IDS: "<some_value>"
+    ALLOWED_USERGROUP_IDS: ""
+    AUDIT_RETENTION_DAYS: "90"
+    AUDIT_STORAGE: postgres
+    AUDIT_STORE_ITEM_TITLE: "true"
+    AUDIT_STORE_URL: "false"
+    AUTH_REQUIRE_BOTH: "false"
+    CHANNEL_VAULT_MAP_JSON: '{}'
+    HEALTH_PORT: "3001"
+    NODE_ENV: production
+    OP_PATH: ""
+    OP_SHARE_FLAGS: "--expiry 5m --view-once"
+    PG_POOL_MAX: "10"
+    POLICY_REQUIRE_CHANNEL_AND_MEMBERSHIP: "false"
+    PORT: "3000"
+    RATE_LIMIT_MAX_REQUESTS: "50"
+    RATE_LIMIT_MESSAGE: "⏳ You have reached the hourly request limit. Please try again later or contact an admin."
+    RATE_LIMIT_WINDOW_MINUTES: "60"
+    SLACK_LOG_LEVEL: INFO
+    VAULT_CHANNEL_MAP_JSON: '{}'
+    PG_CONNECTION_STRING: "postgres://postgres:postgres@postgresql.postgresql.svc.cluster.local:5432/test"
+
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+    - name: health
+      port: 3001
+      targetPort: health
+    - name: admin
+      port: 3100
+      targetPort: admin
+
+
+healthCheckProbes:
+  enabled: true
+  probes:
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: health
+      initialDelaySeconds: 30
+      periodSeconds: 60
+      timeoutSeconds: 10
+      failureThreshold: 3
+
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: health
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      timeoutSeconds: 5
+      failureThreshold: 3
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "3001"
+  prometheus.io/path: "/metrics"
+
+
+volume:
+  enabled: true
+  volumeMounts:
+    - name: tmp-volume
+      mountPath: /tmp
+    - name: op-config
+      mountPath: /home/node/.config
+  volumes:
+    - name: tmp-volume
+      emptyDir: {}
+    - name: op-config
+      emptyDir: {}
+
+serviceAccount:
+  enabled: true
+
+

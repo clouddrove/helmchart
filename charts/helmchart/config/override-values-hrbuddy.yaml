@@ -1,0 +1,182 @@
+# -------------------
+# Image
+# -------------------
+image:
+  repository: hrbuddy
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# -------------------
+# Replica / Scaling
+# -------------------
+replicaCount: 1
+
+# -------------------
+# Service Account
+# -------------------
+serviceAccount:
+  enabled: true
+
+# -------------------
+# Service / Ports
+# -------------------
+service:
+  enabled: false
+
+# -------------------
+# Pod & Container Security
+# -------------------
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
+
+# -------------------
+# Resources
+# -------------------
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod labels
+podLabels: {}
+
+# -------------------
+# HealthChecks
+# -------------------
+healthCheckProbes:
+  enabled: true
+  probes:
+    livenessProbe:
+      exec:
+        command:
+          - python
+          - -c
+          - "import sys; sys.exit(0)"
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readinessProbe:
+      exec:
+        command:
+          - python
+          - -c
+          - "import sys; sys.exit(0)"
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+
+# -------------------
+# Secret
+# -------------------
+secret:
+  enabled: false
+  existingSecretName: "hrbuddy-secrets"
+  secrets: {}
+    # OUTLINE_API_TOKEN: ""
+    # OPENAI_API_KEY: ""
+    # SLACK_BOT_TOKEN: ""
+    # SLACK_APP_TOKEN: ""
+    # SLACK_SIGNING_SECRET: ""
+    # REDIS_PASSWORD: ""
+
+# -------------------
+# ConfigMap (ALL non-secret envs)
+# -------------------
+configmap:
+  enabled: true
+  configs:
+    OUTLINE_API_URL: ""
+    OUTLINE_COLLECTION_ID: ""
+    OPENAI_ENABLED: ""
+    OPENAI_MODEL: ""
+    OPENAI_EMBEDDING_MODEL: ""
+    REDIS_HOST: ""
+    REDIS_PORT: ""
+    REDIS_INDEX_NAME: ""
+    REDIS_URL: ""
+    CHUNK_SIZE: ""
+    CHUNK_OVERLAP: ""
+    TOP_K_RESULTS: ""
+    AUTO_RECOVERY_ENABLED: ""
+    AUTO_RECOVERY_MAX_RETRIES: ""
+    AUTO_RECOVERY_RETRY_DELAY: ""
+    POLICY_MONITOR_ENABLED: ""
+    POLICY_MONITOR_INTERVAL: ""
+    SLACK_NOTIFICATION_CHANNEL: ""
+    POLICY_UPDATE_NOTICE_ENABLED: ""
+    KEKA_POLICY_UPDATE_URL: ""
+    PYTHONUNBUFFERED: "1"
+    PYTHONPATH: "/app"
+
+# -------------------
+# CronJob
+# -------------------
+cronJob:
+  enabled: true
+  
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  restartPolicy: OnFailure
+  activeDeadlineSeconds: 1800
+  
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "1.16.0" 
+  
+  command:
+    - python
+    - sync_documents.py
+  
+  securityContext:
+    capabilities:
+      drop:
+      - ALL
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  podSecurityContext:
+    fsGroup: 2000
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+      cpu: "1000m"
+
+  serviceAccount:
+    name: ""
+    automountServiceAccountToken: true
