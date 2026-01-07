@@ -3,9 +3,9 @@ entries:
   adrija:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-01-06T14:25:01.232643622Z"
+    created: "2026-01-07T10:46:20.592239891Z"
     description: A Helm chart for Adrija - AI Assistant for Slack
-    digest: 5b2d60b21b34e211260dc9241f7a9037023fcf84c11354d0377aaab264a2333e
+    digest: 92d988ff579e2cfdff5173b4469e6641719ce5ab52c8b75797be07be0d5313bd
     home: https://github.com/cloudwizz/adrija
     keywords:
     - slack
@@ -44,9 +44,9 @@ entries:
   cloudflare-ddns:
   - apiVersion: v2
     appVersion: "1"
-    created: "2026-01-06T14:25:01.233048537Z"
+    created: "2026-01-07T10:46:20.592676444Z"
     description: Cloudflare DDNS updater
-    digest: e88761e0471d112c37fa13ca358306bc82f5305dbc9b4df060e17c9ae63c4d3d
+    digest: 53c18b4e5fbc8d87aa23a50f7e6f939f9f2416f1c3db92fa660ed1534825f1a1
     home: https://github.com/clouddrove/helmchart
     keywords:
     - helm
@@ -89,9 +89,9 @@ entries:
   cloudflared-tunnel:
   - apiVersion: v2
     appVersion: 2024.3.0
-    created: "2026-01-06T14:25:01.233469803Z"
+    created: "2026-01-07T10:46:20.593095855Z"
     description: Run Cloudflare Tunnel with token (no autoupdate)
-    digest: 3373d4772df4e63883d5dd22ad77bea41d47f2e1b988720ad33f1df7d658a4f9
+    digest: fe72061e8f4c9d996afef52c524d4c9f4cefc48b9795bfd4f0a44ffb5212dca8
     keywords:
     - helm
     - chart
@@ -126,9 +126,9 @@ entries:
   cronjob:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-06T14:25:01.233938667Z"
+    created: "2026-01-07T10:46:20.593559729Z"
     description: A chart for cron jobs
-    digest: 614ea8a8106dfe832869c7afb670816d1f9f5eaa30133064525958e3debbcef8
+    digest: 867ae91f2a4502d43af3ca12258ff74dc197377473d0b2a0812afc97c9da75e0
     home: https://github.com/clouddrove/helmchart
     keywords:
     - cronjob
@@ -142,6 +142,26 @@ entries:
     - https://charts.clouddrove.com/charts/cronjob-1.0.0.tgz
     version: 1.0.0
   helmchart:
+  - apiVersion: v2
+    appVersion: 1.2.0
+    created: "2026-01-07T10:46:20.595653157Z"
+    description: A Helm chart for Kubernetes
+    digest: a3d6fe08941cd331a2637fba6225093a44f7bc4bddd6664a8511f5c7b95541b5
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/helmchart-1.2.0.tgz
+    version: 1.2.0
   - apiVersion: v2
     appVersion: 1.0.1
     created: "2026-01-06T14:25:01.235106795Z"
@@ -185,9 +205,9 @@ entries:
   hrbuddy:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-06T14:25:01.23566687Z"
+    created: "2026-01-07T10:46:20.59672373Z"
     description: A Helm chart for Hrbuddy - AI-Powered HR Knowledge Assistant
-    digest: 83d1c88f85715595534fa5bb59e491fde4f36f51d8b47352c97c81f8b63e08fa
+    digest: dab1436cd9531d4c175f0f32637ed9a070b41e20017a2f702e4e73e2e090c5fe
     home: https://github.com/clouddrove/hrbuddy
     keywords:
     - hr
@@ -228,10 +248,10 @@ entries:
   pass2gh:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-06T14:25:01.236111299Z"
+    created: "2026-01-07T10:46:20.597554607Z"
     description: A Helm chart for syncing 1Password secrets to GitHub organization
       and repository secrets
-    digest: 14149dd16f84f3f5b587b07ff92786f18a50d7d0814fd6cc63fe0e0045487b23
+    digest: d4f57771242ccea198423a887eb63cd2e51e4ba95e3e812fb122f97d6909c897
     name: pass2gh
     type: application
     urls:
@@ -262,10 +282,10 @@ entries:
   rbac:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2026-01-06T14:25:01.236317854Z"
+    created: "2026-01-07T10:46:20.597924496Z"
     description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no
       SSO).
-    digest: de59b18c08602cbf85d549c4ed1366d4a592d54628a0626b252ecb20c94aee29
+    digest: 55d45c4b0b69199db119b6445904d2c4795f768b5a6d93cdd6382ae4ac040e15
     keywords:
     - helm
     - chart
@@ -282,9 +302,9 @@ entries:
   relaybot:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-06T14:25:01.237033308Z"
+    created: "2026-01-07T10:46:20.598705761Z"
     description: RelayBot - A Helm chart for syncing Slack messages between workspaces
-    digest: eac78fe3266018bccaaf25dc8de23dd434b22026fa483e1b971b34e8bac62e21
+    digest: f4ae64b0ec4b32e6693ee312579abb5fa032ea69f58f367a609b83fed4f09acc
     home: https://github.com/Clouddrove/relaybot
     icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/helm/icon/color/helm-icon-color.png
     keywords:
@@ -329,9 +349,9 @@ entries:
   safio:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-06T14:25:01.238391631Z"
+    created: "2026-01-07T10:46:20.599200552Z"
     description: Safio Slack <> 1Password automation service
-    digest: 6ea891b4ad8ffcfa4d98735c0071b0a0c47eaedf22e16cc1c2029f1085c7ae24
+    digest: 9de227ada5af19041324f67248037115a64dacfa88a1cce157eefca98173a0a9
     name: safio
     type: application
     urls:
@@ -340,9 +360,9 @@ entries:
   vigil:
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-01-06T14:25:01.239483678Z"
+    created: "2026-01-07T10:46:20.601033979Z"
     description: A Helm chart for Kubernetes
-    digest: bb5dd0987d9192e39454f5d350c1f8f8de08fdd7728d5d080eb50140af14411e
+    digest: fcb77bd250f9f8b469d2e08027a379ca9b13f7fe3421a52165ff2ba73ca7f77f
     home: https://github.com/clouddrove/vigil
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -358,4 +378,4 @@ entries:
     urls:
     - https://charts.clouddrove.com/charts/vigil-1.0.1.tgz
     version: 1.0.1
-generated: "2026-01-06T14:25:01.231685515Z"
+generated: "2026-01-07T10:46:20.591192831Z"
