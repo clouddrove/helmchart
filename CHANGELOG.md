@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [helmchart-1.2.0] - 2026-01-07
+### :sparkles: New Features
+- [`672af74`](https://github.com/clouddrove/helmchart/commit/672af7476f1fb854976b60cf81a9343d3d32a245) - refactor charts/helmchart templates and values to support safio and pass2gh deployments *(PR [#93](https://github.com/clouddrove/helmchart/pull/93) by [@hahirwar-cd](https://github.com/hahirwar-cd))*
+
+### :memo: Documentation Changes
+- [`c935e76`](https://github.com/clouddrove/helmchart/commit/c935e760f32e4341894c6ff121f433b481d8f4da) - update CHANGELOG.md for hrbuddy-0.1.1 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [hrbuddy-0.1.1] - 2026-01-06
 ### :sparkles: New Features
 - [`2182cb8`](https://github.com/clouddrove/helmchart/commit/2182cb8f4894e8a24990d80510b83b58e9d9e3db) - Added hr buddy *(PR [#96](https://github.com/clouddrove/helmchart/pull/96) by [@archit-cd](https://github.com/archit-cd))*
@@ -174,3 +182,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [relaybot-0.1.0]: https://github.com/clouddrove/helmchart/compare/pass2gh-0.1.2...relaybot-0.1.0
 [relaybot-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.0...relaybot-0.1.1
 [hrbuddy-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.1...hrbuddy-0.1.1
+[helmchart-1.2.0]: https://github.com/clouddrove/helmchart/compare/hrbuddy-0.1.1...helmchart-1.2.0
