@@ -1,0 +1,292 @@
+# Default values for helmchart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+  # -- Replica count used to configure the number of replica pods that should be deployed and maintained.
+
+image:
+    # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
+    # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.       
+  repository: ""
+    # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
+  pullPolicy: IfNotPresent
+      # -- Overrides the image tag whose default is the chart version.
+  tag: "42"
+      # -- Specify digest of image. Tags can be overriden but each tag will contain different digest than previous.
+  digest: ""
+
+imagePullSecrets:
+  - name: ""
+  # -- imagePullSecrets lists the Secret resources that should be used for accessing private registries.
+
+commands: []
+  # - /bin/sh
+  # - -c
+  # - echo "Hello, from CloudDrove!"
+  
+secret:
+  enabled: true
+    # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
+  secrets:
+    postgresPassword: ""
+    username: ""
+    password: ""
+    database: ""
+    RDS_USER: ""
+    RDS_HOST: ""
+    RDS_DB_NAME: 
+    RDS_PASSWORD: ""
+    RDS_PORT: "5432"
+    AWS_ACCESS_KEY_ID: ""
+    AWS_SECRET_ACCESS_KEY: ""
+    AWS_REGION: ""
+    AWS_S3_BUCKET_NAME: ""
+    SMTP_HOST: ""
+    SMTP_PORT: "2525"
+    EMAIL_USER: ""
+    EMAIL_PASS: ""
+    CC_EMAIL: ""
+    # KEY: "value"
+
+configmap:
+  enabled: false
+  configs: {}
+    # KEY: "value"
+
+nameOverride: "" 
+
+fullnameOverride: "" 
+  # -- fullnameOverride is a string that allows overriding the default fullname that appears as the application name and is used as the application name by kubernetes.
+
+pdbMinAvailable: ""
+  # -- minPodsAvailable specifies the minimum number of pods that should be available at any given point in time.
+
+serviceAccount:
+  enabled: false  
+    # -- Specifies whether a service account should be created
+  annotations: {}       
+    # -- Annotations to add to the service account
+  name: "" 
+    # -- The name of the service account to use. If not set and enabled is true, a name is generated using the fullname template
+
+podAnnotations: {} 
+  # -- podAnnotations will add the provided map to the annotations for the Pod resource created by the Deployment.
+
+podSecurityContext: {} 
+  # -- podSecurityContext holds pod-level security access control settings.
+
+securityContext: {}
+      # -- securityContext is a map  that specified the privilege and access control settings for a Pod of Container. Security Context can be specified when the application requires additional access control permissions. securityContext takes precedence over podSecurityContext    
+
+service: 
+    # -- service is a map that specifies the  configuration for the Service resource that is created by the chart.
+  enabled: true
+    # -- Specifies whether a service should be created.        
+  type: ClusterIP 
+    # -- The Service type,  as defined in Kubernetes. Defaults to ClusterIP.
+  port: 3000
+    # -- port: on which the kubernetes service is exposed
+  containerPort: ""
+    # -- Port number on which the container is accepting traffic.
+  targetPort: ""
+    # -- Port number on which the pod is accepting traffic.
+
+istio:
+  # -- We can either use Istio or Ingress for an application deployment. Set `enabled: true` if istio is already installed.
+  enabled: false
+  # -- virtualService is required when using istio.
+  virtualService:
+    enabled: false
+    hosts: []
+      # - test.example.com
+      # - test-2.example.com
+  
+  gateway:
+    # -- Set `enabled: true` to install Gateway for istio using this helmchart.
+    enabled: false
+    
+    # -- Provide name of namespace where your istio is installed. Gateway and Istio has to be in same namespace.
+    namespace: "istio-system"
+    
+    # -- Provide name of istio gateways here, this option is only applicable when istio gateway is already present in kubernetes cluster and not being managed by this helmchart.
+    names: 
+      - "istio-system/istio-gateway"
+    # -- Provide selector for istio gateway to select istio service.
+    selector: "ingress"
+
+ingress:    
+    # -- ingress is a map that can be used to configure an Ingress resource for this service.
+  enabled: false 
+    # -- Specifies whether a ingress should be created
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:                        
+        # Sets up the host routes for the ingress resource.
+    - host: test.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+  tls: []
+      # -- Sets up TLS termination on the ingress rule. Each item is a separate TLS rule that maps to one or more hosts specified in this ingress rule. This is injected directly in to the resource yaml.                       
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resource: 
+  enabled: false
+resources: {}
+  # -- Requests and Limits to be specified for each pod.
+  # limits: 
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests: 
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:      
+  enabled: false 
+    # -- Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created
+  minReplicas: 1
+    # -- The minimum amount of replicas allowed
+  maxReplicas: 100
+    # -- The maximum amount of replicas allowed
+  targetCPUUtilizationPercentage: 80
+      # -- The target average CPU utilization to be used with the metrics
+  # targetMemoryUtilizationPercentage: 80 
+      # -- The target average Memory utilization to be used with the metrics
+
+poddisruptionbudget:
+  enabled: false
+  minAvailable: 1
+
+nodeSelector: {}
+    # -- nodeSelector specify restrictions on what node this pod should be scheduled on.
+
+tolerations: []
+    # -- tolerations can be used to allow the pod to be scheduled on nodes with a specific taint.
+
+affinity: {} 
+  # -- affinity specify restrictions on what node this pod should be scheduled on.
+
+cronJob: 
+  # -- Determines if the `cronJob` resource should be deployed as part of the helm release.
+  enabled: false
+  # -- Cron job schedule.
+  schedule: ""
+  # -- Cron Job startingDeadlineSeconds
+  startingDeadlineSeconds: 3600
+  # -- CronJob's concurrencyPolicy
+  concurrencyPolicy: Forbid
+  # -- ConnJob's failed history limit
+  failedJobsHistoryLimit: 3
+  # -- CPU/Memory resource requests/limits for CronJob
+  resources: {}
+  image:
+    # -- Cron Job's image repository
+    repository: nginx
+    # -- Cron Job's image pullPolicy
+    pullPolicy: IfNotPresent
+    # -- Cron Job's image tag
+    # Overrides the image tag whose default is the chart version.
+    tag: "1.16.0" 
+  secret:
+    # -- Turn on and off secrets for CronJob resource.
+    enabled: false
+  configmap:
+    # -- Turn on and off configmap for CronJob resource.
+    enabled: false
+
+metrics:
+  # -- Whether or not metrics should be created, if false the metrics will not be created
+  enabled: false   
+  # -- portName specify the name of the port for the metrics resource.  
+  portName: "prometheus" 
+  port: 3001     
+  targetPort: 3001 
+
+volume:
+  # -- Volume mounted to pods either as default or in the form of PVC
+  enabled: false
+  # -- Path inside container where pvc will be mounted. default is set to "/app"
+  mountPath: ""
+  # -- Path inside node which will be used as pvc. default is set to "/mnt/data"
+  hostPath: ""
+
+storageClass:
+  # -- Whether to create a custom Storage Class, Default is gp2
+  create: false
+
+  # -- Use existing PVC by mentioning name of PVC
+  existingClaim: ""
+
+  # Override name of storage-class, default is set to helmchart.fullname. 
+  storageClassName: ""
+
+  # -- PVC configurations for AWS Cloud Provider
+  aws: false
+  fileSystemId: ""
+  
+  # -- PVC configurations for Azure Cloud Provider
+  azure: false
+  
+  # -- PVC configurations for GCP Cloud Provider
+  gcp: false
+
+  # -- Provisioner as per the Cloud Provider [aws: `efs.csi.aws.com` `ebs.csi.aws.com`] [azure: `file.csi.azure.com`] [minikube: `k8s.io/minikube-hostpath`]
+  provisioner: ""
+
+  # -- Allow volume expansion
+  allowVolumeExpansion: false
+
+  # -- Volume binding modes, other are `WaitForFirstConsumer`
+  volumeBindingMode: Immediate
+
+  # -- Enable persistent volume
+  persistence:
+    enabled: false
+    # -- Mode of access this persistent volume, other modes are `ReadWriteMany`, `ReadOnlyMany`
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    # -- Reclaim Policy for Persistent Volume. Default is set to `Retain`. Other valid values are `Delete`, `Recycle`
+    persistentVolumeReclaimPolicy: ""
+
+healthCheckProbes:
+  # -- liveness and readiness probes in deployment
+  enabled: false
+  probes: {}
+    # livenessProbe:
+    #   enabled: true
+    #   httpGet:
+    #     path: /healthz
+    #     port: http
+    #   initialDelaySeconds: 10
+    #   periodSeconds: 10
+    #   timeoutSeconds: 2
+    #   failureThreshold: 3
+    #   successThreshold: 1
+    #
+    # readinessProbe:
+    #   enabled: true
+    #   httpGet:
+    #     path: /readyz
+    #     port: http
+    #   initialDelaySeconds: 5
+    #   periodSeconds: 5
+    #   timeoutSeconds: 2
+    #   failureThreshold: 3
+    #   successThreshold: 1
+
+podLabels: {}
+  # -- podLabels allows you to add custom labels to the pods.
+  # ManagedBy: Clouddrove
+
+deploymentStrategy: {}
+  # -- Defines how updates to the Deployment are rolled out.
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
