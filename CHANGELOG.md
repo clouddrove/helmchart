@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [helmchart-1.2.1] - 2026-01-09
+### :sparkles: New Features
+- [`1933a6d`](https://github.com/clouddrove/helmchart/commit/1933a6d81d4b2fc1a9b9ed8593d65120e82a3868) - (charts/helmchart) - add ImagePullSecrets in template/cronjob *(commit by [@hahirwar-cd](https://github.com/hahirwar-cd))*
+
+### :memo: Documentation Changes
+- [`96de17f`](https://github.com/clouddrove/helmchart/commit/96de17fc689a8f4f2f9b65b6206342c5127b2f66) - update CHANGELOG.md for helmchart-1.2.0 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [helmchart-1.2.0] - 2026-01-07
 ### :sparkles: New Features
 - [`672af74`](https://github.com/clouddrove/helmchart/commit/672af7476f1fb854976b60cf81a9343d3d32a245) - refactor charts/helmchart templates and values to support safio and pass2gh deployments *(PR [#93](https://github.com/clouddrove/helmchart/pull/93) by [@hahirwar-cd](https://github.com/hahirwar-cd))*
@@ -183,3 +191,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [relaybot-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.0...relaybot-0.1.1
 [hrbuddy-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.1...hrbuddy-0.1.1
 [helmchart-1.2.0]: https://github.com/clouddrove/helmchart/compare/hrbuddy-0.1.1...helmchart-1.2.0
+[helmchart-1.2.1]: https://github.com/clouddrove/helmchart/compare/helmchart-1.2.0...helmchart-1.2.1
