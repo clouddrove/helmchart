@@ -16,6 +16,7 @@ on:
       - 'charts/pass2gh/**'
       - 'charts/relay-bot/**'
       - 'charts/hrbuddy/**'
+      - 'charts/calc/**'
 
 jobs:
   install-helm-docs:

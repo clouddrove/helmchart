@@ -1,0 +1,33 @@
+suite: Test  deployment
+values:
+  - ../values.yaml
+  - ../config/override-values.yaml 
+templates:
+  - deployment.yaml
+chart:
+  version: 0.0.6
+  appVersion: v2
+
+tests:
+  - it: should pass all kinds of assertion
+    set:
+      service.port: 80
+      type: ClusterIP
+    template: templates/deployment.yaml
+    documentIndex: 0                  
+    asserts:
+      - isAPIVersion:
+          of: apps/v1    
+      - isKind:
+          of: Deployment
+      - hasDocuments:
+          count: 1
+      - isNotNull:
+          path: spec.template.spec
+      - isNotNull:
+          path: spec.template.spec.containers                     
+      - isNotNull:
+          path: spec.template
+      - isNotNull:
+          path: spec.selector
+                                                                                                     
