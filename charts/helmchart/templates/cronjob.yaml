@@ -30,6 +30,10 @@ spec:
           serviceAccountName: {{ .name | default (include "helmchart.fullname" $) }}
           automountServiceAccountToken: {{ .automountServiceAccountToken | default true }}
           {{- end }}
+          {{- with .Values.cronJob.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           restartPolicy: {{ .Values.cronJob.restartPolicy | default "Never" }}
           {{- with .Values.cronJob.nodeSelector }}
           nodeSelector:
