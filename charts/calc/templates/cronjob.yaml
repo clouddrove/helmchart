@@ -35,7 +35,6 @@ spec:
             {{- end }}
             {{- if .Values.cronJob.secret.enabled }}
               - secretRef:
-                  name: {{ include "helmchart.fullname" . }}
+                  name: {{ default (printf "%s-secret" (include "helmchart.fullname" .)) .Values.secret.existingSecret }}
             {{- end }}  
 {{- end }}
-

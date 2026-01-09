@@ -8,6 +8,7 @@ image:
 
 secret:
   enabled: true
+  existingSecret: ""
   secrets:
     SECRET_KEY: "secret"
 

@@ -61,6 +61,10 @@
           "enabled": {
             "type": "boolean",
             "pattern": "^(true|false)$"
+          },
+          "existingSecret": {
+            "type": "string",
+            "default": ""
           }
         }
       },

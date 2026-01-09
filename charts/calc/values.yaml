@@ -8,7 +8,7 @@ replicaCount: 1
 image:
     # -- Image to use for deploying, must support an entrypoint which creates users/databases from appropriate config files
     # -- The container image repository that should be used.  E.g 'nginx', 'gcr.io/kubernetes-helm/tiller'.       
-  repository: ""
+  repository: "nginx"
     # -- The image pull policy to employ. Determines when the image will be pulled in. If undefined, this will default to 'IfNotPresent'.
   pullPolicy: IfNotPresent
       # -- Overrides the image tag whose default is the chart version.
@@ -27,6 +27,8 @@ commands: []
   
 secret:
   enabled: true
+  # -- Use an existing Secret instead of creating one. Set to the Secret name.
+  existingSecret: ""
     # -- secrets is a map that specifies the Secret resources that should be exposed to the main application container.           
   secrets:
     postgresPassword: ""

@@ -64,7 +64,7 @@ spec:
           {{- end }}
           {{- if .Values.secret.enabled }}
             - secretRef:
-                name: {{ include "helmchart.fullname" . }}-secret
+                name: {{ default (printf "%s-secret" (include "helmchart.fullname" .)) .Values.secret.existingSecret }}
           {{- end }}
           {{- if .Values.healthCheckProbes.enabled }}
           {{- toYaml .Values.healthCheckProbes.probes | nindent 10 }}
