@@ -375,6 +375,8 @@ cronJob:
     # -- Cron Job's image tag
     # Overrides the image tag whose default is the chart version.
     tag: "1.16.0" 
+  imagePullSecrets: [] 
+    # - name: docker-secret
   secret:
     # -- Turn on and off secrets for CronJob resource.
     enabled: false
