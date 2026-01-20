@@ -59,6 +59,13 @@ image:
 # (Optional) Image pull secrets
 imagePullSecrets:
   - name: regcred
+
+# Security context
+podSecurityContext:
+  fsGroup: 1000
+containerSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
 ```
 
 ### 2. Install with Helm
@@ -162,6 +169,13 @@ deployment:
 # Image pull secrets (optional)
 imagePullSecrets:
   - name: regcred
+
+# Security context
+podSecurityContext:
+  fsGroup: 1000
+containerSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
 ```
 
 ### Secret Mappings
