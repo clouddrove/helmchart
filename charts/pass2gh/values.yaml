@@ -9,10 +9,7 @@ onepassword:
 # GitHub Configuration
 github:
   org: "clouddrove"
-  repos:
-    - "clouddrove/repo1"
-    - "clouddrove/repo2"
-    - "clouddrove/repo3"
+  repos: []
   token: "CHANGE_ME"  # Set via --set or use existing secret
 
 # Existing Secret (optional)
