@@ -18,6 +18,10 @@ spec:
           labels:
             {{- include "pass2gh.labels" . | nindent 12 }}
         spec:
+          {{- with .Values.podSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.serviceAccount }}
           {{- if .create }}
           serviceAccountName: {{ .name | default (include "pass2gh.fullname" $) }}
@@ -51,7 +55,7 @@ spec:
             command: ["python", "sync_secrets.py"]
             resources:
               {{- toYaml .Values.resources | nindent 14 }}
-            {{- with .Values.securityContext }}
+            {{- with (default .Values.securityContext .Values.containerSecurityContext) }}
             securityContext:
               {{- toYaml . | nindent 14 }}
             {{- end }}

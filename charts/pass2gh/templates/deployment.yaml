@@ -22,6 +22,10 @@ spec:
       serviceAccountName: {{ .name | default (include "pass2gh.fullname" $) }}
       {{- end }}
       {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -57,7 +61,7 @@ spec:
             done
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        {{- with .Values.securityContext }}
+        {{- with (default .Values.securityContext .Values.containerSecurityContext) }}
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}

@@ -77,10 +77,15 @@ serviceAccount:
   name: ""
 
 # Security Context
-securityContext:
+podSecurityContext:
+  fsGroup: 1000
+
+containerSecurityContext:
   runAsNonRoot: true
   runAsUser: 1000
-  fsGroup: 1000
+
+# Backward compatibility (deprecated; use podSecurityContext/containerSecurityContext)
+securityContext: {}
 
 # Node Selector, Tolerations, Affinity (optional)
 nodeSelector: {}
