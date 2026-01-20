@@ -35,30 +35,11 @@ orgSecrets:
 
 # Repository Secrets Mapping
 # Format: Repository -> {GitHub Secret Name -> 1Password Item Title or Object}
-repoSecrets:
-  clouddrove/repo1:
-    DEPLOY_KEY: "DEPLOY_KEY"
-    WEBHOOK_SECRET: "WEBHOOK_SECRET"
-    SSH_PRIVATE_KEY:
-      item_type: "ssh_key"
-    SSL_CERTIFICATE:
-      item_type: "document"
-    CONFIG_FILE:
-      item_type: "file"
-  clouddrove/repo2:
-    API_KEY: "API_KEY"
-    DATABASE_PASSWORD: "DATABASE_PASSWORD"
-  clouddrove/repo3:
-    DATABASE_PASSWORD: "DATABASE_PASSWORD"
+repoSecrets: {}
 
 # Deploy Keys Configuration (optional)
 # Format: Repository -> Key Title (string) or Object with key_title and read_only
-deployKeys:
-  clouddrove/repo1: "Production Deploy Key"
-  clouddrove/repo2: "Staging Deploy Key"
-  clouddrove/repo3:
-    key_title: "CI/CD Deploy Key"
-    read_only: false
+deployKeys: {}
 
 # Deployment Configuration
 deployment:
