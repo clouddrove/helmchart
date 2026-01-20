@@ -26,12 +26,7 @@ existingSecret:
 #   SSH Key: SSH_KEY: {"item_type": "ssh_key"}  (auto-detects private key field)
 #   Document: SSL_CERT: {"item_type": "document"}  (uses document content)
 #   File: CONFIG_FILE: {"item_type": "file"}  (uses file attachment)
-orgSecrets:
-  DATABASE_URL: "DATABASE_URL"
-  SHARED_API_KEY: "SHARED_API_KEY"
-  SLACK_WEBHOOK: "SLACK_WEBHOOK"
-  SSL_CERTIFICATE:
-    item_type: "document"
+orgSecrets: {}
 
 # Repository Secrets Mapping
 # Format: Repository -> {GitHub Secret Name -> 1Password Item Title or Object}
