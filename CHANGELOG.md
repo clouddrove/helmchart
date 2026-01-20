@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [pass2gh-0.1.3] - 2026-01-20
+### :bug: Bug Fixes
+- [`a0a60d9`](https://github.com/clouddrove/helmchart/commit/a0a60d972d89751b57eab9c38f56414fbae4b4bb) - pass2gh values *(PR [#103](https://github.com/clouddrove/helmchart/pull/103) by [@archit-cd](https://github.com/archit-cd))*
+
+### :memo: Documentation Changes
+- [`c939c18`](https://github.com/clouddrove/helmchart/commit/c939c18f5eb62ebb949415241602ba31030b13be) - update CHANGELOG.md for helmchart-1.2.1 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [helmchart-1.2.1] - 2026-01-09
 ### :sparkles: New Features
 - [`1933a6d`](https://github.com/clouddrove/helmchart/commit/1933a6d81d4b2fc1a9b9ed8593d65120e82a3868) - (charts/helmchart) - add ImagePullSecrets in template/cronjob *(commit by [@hahirwar-cd](https://github.com/hahirwar-cd))*
@@ -192,3 +200,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [hrbuddy-0.1.1]: https://github.com/clouddrove/helmchart/compare/relaybot-0.1.1...hrbuddy-0.1.1
 [helmchart-1.2.0]: https://github.com/clouddrove/helmchart/compare/hrbuddy-0.1.1...helmchart-1.2.0
 [helmchart-1.2.1]: https://github.com/clouddrove/helmchart/compare/helmchart-1.2.0...helmchart-1.2.1
+[pass2gh-0.1.3]: https://github.com/clouddrove/helmchart/compare/helmchart-1.2.1...pass2gh-0.1.3
