@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [pass2gh-0.1.5] - 2026-01-20
+### :bug: Bug Fixes
+- [`4ca8be0`](https://github.com/clouddrove/helmchart/commit/4ca8be02e1201204a6bd7c896a2de4e62dd1c4f1) - Remove random secrets values *(PR [#105](https://github.com/clouddrove/helmchart/pull/105) by [@archit-cd](https://github.com/archit-cd))*
+
+### :memo: Documentation Changes
+- [`0d1725f`](https://github.com/clouddrove/helmchart/commit/0d1725f4df88269c66724d6a088136c00a8268b6) - update CHANGELOG.md for pass2gh-0.1.4 *(commit by [@clouddrove-ci](https://github.com/clouddrove-ci))*
+
+
 ## [pass2gh-0.1.4] - 2026-01-20
 ### :bug: Bug Fixes
 - [`5b21b31`](https://github.com/clouddrove/helmchart/commit/5b21b311d7797f1dbd4cf9e6e936111a24ce6838) - remove random values *(commit by [@archit-cd](https://github.com/archit-cd))*
@@ -210,3 +218,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [helmchart-1.2.1]: https://github.com/clouddrove/helmchart/compare/helmchart-1.2.0...helmchart-1.2.1
 [pass2gh-0.1.3]: https://github.com/clouddrove/helmchart/compare/helmchart-1.2.1...pass2gh-0.1.3
 [pass2gh-0.1.4]: https://github.com/clouddrove/helmchart/compare/pass2gh-0.1.3...pass2gh-0.1.4
+[pass2gh-0.1.5]: https://github.com/clouddrove/helmchart/compare/pass2gh-0.1.4...pass2gh-0.1.5
