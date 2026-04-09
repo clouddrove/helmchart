@@ -9,6 +9,10 @@ metadata:
     {{- with .Values.statefulset.extraLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.statefulset.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   serviceName: {{ include "helmchart.fullname" . }}-sts
   {{- if not .Values.autoscaling.enabled }}

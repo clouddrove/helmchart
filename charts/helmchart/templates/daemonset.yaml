@@ -9,6 +9,10 @@ metadata:
     {{- with .Values.daemonset.extraLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.daemonset.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   selector:
     matchLabels:
