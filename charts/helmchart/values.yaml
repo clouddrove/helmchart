@@ -5,6 +5,8 @@
 # -- Create deployment.yaml by default.
 deployment:
   enabled: true
+  annotations: {}
+    # -- Annotations to add on Deployment metadata.
 
 replicaCount: 1
   # -- Replica count used to configure the number of replica pods that should be deployed and maintained.
@@ -212,6 +214,8 @@ storageClass:
 statefulset:
   enabled: false
     # -- Set to true to deploy a StatefulSet instead of a Deployment
+  annotations: {}
+    # -- Annotations to add on StatefulSet metadata.
   image:
     repository: ""
       # -- Container image repository
@@ -254,6 +258,8 @@ statefulset:
 daemonset:
   enabled: false
     # -- Set to true to deploy a DaemonSet
+  annotations: {}
+    # -- Annotations to add on DaemonSet metadata.
   image: {}
     # -- DaemonSet image repository/pullPolicy/tag/digest
   secret:
