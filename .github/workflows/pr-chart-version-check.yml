@@ -1,0 +1,66 @@
+name: Validate Helm Chart Version Bump
+
+on:
+  pull_request:
+    paths:
+      - 'charts/**'
+
+jobs:
+  validate-chart:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changes
+        run: |
+          git fetch origin ${{ github.base_ref }}
+
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+
+          echo "$CHANGED_FILES" > changed_files.txt
+          cat changed_files.txt
+
+      - name: Validate Chart.yaml updates
+        run: |
+          FAILED=0
+
+          # Get unique chart directories that were modified
+          CHARTS=$(grep '^charts/' changed_files.txt | cut -d'/' -f2 | sort -u)
+
+          for chart in $CHARTS; do
+            echo "Checking chart: $chart"
+            FILE="charts/$chart/Chart.yaml"
+            # Check if anything other than Chart.yaml changed
+            CHART_CHANGED=$(grep "^charts/$chart/" changed_files.txt | grep -v "Chart.yaml" || true)
+            
+            # Get version from base branch
+            OLD_VERSION=$(git show origin/master:$FILE 2>/dev/null | grep '^version:' | awk '{print $2}')
+
+            # Get version from current branch (HEAD)
+            NEW_VERSION=$(grep '^version:' $FILE | awk '{print $2}')
+
+             if [ -n "$CHART_CHANGED" ]; then
+               # Ensure Chart.yaml is also modified
+               if [ "$OLD_VERSION" == "$NEW_VERSION" ]; then
+                  echo "Old Version: $OLD_VERSION for $chart"
+                  echo "New Version: $NEW_VERSION for $chart"
+                  echo "❌ Chart '$chart' modified but Chart.yaml not updated"
+                  FAILED=1
+               else
+                  echo "✅ Chart.yaml updated for $chart"
+                  echo "New Version: $NEW_VERSION for $chart"
+               fi
+             fi
+          done
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo "🚨 Validation failed: Some charts were modified without updating Chart.yaml"
+            exit 1
+          fi
+
+          echo "✅ All good"

@@ -1,16 +1,11 @@
-name: 'PR Validation'
+name: 🔍 PR Checks
+
 on:
   pull_request_target:
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
-
+    types: [opened, edited, synchronize, reopened]
 jobs:
   pr-validation:
     if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/pr-checks.yml@master
-    secrets: inherit
     with:
-      subjectPattern: '^.+$'
+      commitlintConfig: commitlint.config.cjs
