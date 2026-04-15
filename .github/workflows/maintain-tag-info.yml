@@ -1,0 +1,67 @@
+name: Update RELEASE.md
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*-*.*.*'   # e.g. adrija-2.3.0
+
+jobs:
+  update-release-md:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0   # important for tags
+
+      - name: Fetch all tags
+        run: git fetch --tags --force
+
+      - name: Build RELEASE.md
+        run: |
+          FILE="RELEASE.md"
+          echo "" > $FILE
+
+          # safer loop than ls
+          for chartPath in charts/*; do 
+              chartName=$(basename $chartPath)
+              # get versions for chart
+              tags=$(git tag --list "${chartName}-[0-9]*.[0-9]*.[0-9]*" | sed "s/^${chartName}-//" | sort -Vr || true)  # ignore ddns tags
+
+              # skip if empty
+              if [ -z "$tags" ]; then
+                  continue
+              fi
+
+              echo "### $chartName" >> $FILE
+              echo "\`\`\`" >> $FILE
+
+              first=true
+              for tag in $tags; do
+                  if [ "$first" = true ]; then
+                      echo " - $chartName-$tag (latest)" >> $FILE
+                      first=false
+                  else
+                      echo " - $chartName-$tag" >> $FILE
+                  fi
+              done
+
+              echo "\`\`\`" >> $FILE
+              echo "" >> $FILE
+          done
+
+      - name: Clean empty lines
+        run: |
+          sed -i '/^[[:space:]]*$/d' RELEASE.md
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add RELEASE.md
+          git commit -m "Update RELEASE.md" || echo "No changes"
+          git push origin master
