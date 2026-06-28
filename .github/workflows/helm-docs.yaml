@@ -9,13 +9,8 @@ on:
       - 'charts/cronjob/**'
       - 'charts/cloudflare/**'
       - 'charts/vigil/**'
-      - 'charts/rbac/**'
       - 'charts/cloudflare-ddns/**'
-      - 'charts/adrija/**'
-      - 'charts/safio/**'
       - 'charts/pass2gh/**'
-      - 'charts/relay-bot/**'
-      - 'charts/hrbuddy/**'
 
 jobs:
   install-helm-docs:
