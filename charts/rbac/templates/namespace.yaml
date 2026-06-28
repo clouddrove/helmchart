@@ -1,7 +1,8 @@
 {{- with .Values.members }}
 {{- include "rbac.validateNamespaces" . }}
 {{- range $i, $u := . }}
-{{- if $u.createNamespace | default true }}
+{{- $isSA := eq ($u.subjectKind | default "ServiceAccount") "ServiceAccount" }}
+{{- if hasKey $u "createNamespace" | ternary $u.createNamespace $isSA }}
 apiVersion: v1
 kind: Namespace
 metadata:

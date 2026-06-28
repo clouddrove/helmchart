@@ -23,8 +23,20 @@
             "type": "string",
             "enum": ["view", "edit", "admin"]
           },
-          "createNamespace": { "type": "boolean" }
-        }
+          "createNamespace": { "type": "boolean" },
+          "subjectKind": {
+            "type": "string",
+            "enum": ["ServiceAccount", "Group", "User"]
+          },
+          "subject": { "type": "string", "minLength": 1 }
+        },
+        "if": {
+          "properties": {
+            "subjectKind": { "enum": ["Group", "User"] }
+          },
+          "required": ["subjectKind"]
+        },
+        "then": { "required": ["subject"] }
       }
     }
   }

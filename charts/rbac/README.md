@@ -1,8 +1,14 @@
 # rbac
 
-Per-user (or per-bot) namespace RBAC using **ServiceAccounts + RoleBindings**, with **no SSO/IdP required**.
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/clouddrove)](https://artifacthub.io/packages/search?repo=clouddrove)
+[![Version](https://img.shields.io/badge/Chart-0.2.0-blue)](Chart.yaml)
+[![AppVersion](https://img.shields.io/badge/AppVersion-1.0-informational)](Chart.yaml)
+[![License](https://img.shields.io/badge/License-APACHE2.0-blue)](https://github.com/clouddrove/helmchart/blob/master/LICENSE)
+[![Type](https://img.shields.io/badge/Type-application-success)](Chart.yaml)
 
-For each entry in `members`, the chart creates:
+Per-user (or per-bot) namespace RBAC using **ServiceAccounts + RoleBindings**, with **no SSO/IdP required** — plus an optional **SSO bridge** to bind existing IdP groups/users.
+
+For each `ServiceAccount` member, the chart creates:
 
 | Resource | Name | Purpose |
 |----------|------|---------|
@@ -10,6 +16,8 @@ For each entry in `members`, the chart creates:
 | `ServiceAccount` | `sa-<name>` | the identity |
 | `Secret` (`service-account-token`) | `sa-<name>-token` | long-lived bearer token for that SA |
 | `RoleBinding` → built-in `ClusterRole` | `rb-<name>` | grants `view` / `edit` / `admin` in the namespace |
+
+For a `Group`/`User` member (SSO bridge), the chart creates **only** the `RoleBinding` — no ServiceAccount, no token Secret.
 
 Portable: pure Kubernetes RBAC primitives, runs identically on **EKS, AKS, GKE, kind, and on-prem** — no cloud-specific APIs.
 
@@ -43,13 +51,30 @@ kubectl -n alice get secret sa-alice-token -o jsonpath='{.data.token}' | base64 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `members` | list | `[]` | one entry per user/bot |
-| `members[].name` | string | — | **required**; DNS-safe (`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`) |
+| `members` | list | `[]` | one entry per user/bot/group |
+| `members[].name` | string | — | **required**; DNS-safe (`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`); names the generated resources |
 | `members[].namespace` | string | `ns-<name>` | target namespace |
 | `members[].role` | string | `edit` | one of `view`, `edit`, `admin` |
-| `members[].createNamespace` | bool | `true` | create the namespace |
+| `members[].subjectKind` | string | `ServiceAccount` | one of `ServiceAccount`, `Group`, `User` |
+| `members[].subject` | string | — | **required when `subjectKind` is `Group`/`User`**; the literal IdP identity name to bind |
+| `members[].createNamespace` | bool | `true` for `ServiceAccount`, `false` for `Group`/`User` | create the namespace |
 
-`values.schema.json` enforces `role` and the name/namespace patterns at install time.
+`values.schema.json` enforces `role`, `subjectKind`, the name/namespace patterns, and requires `subject` for `Group`/`User` at install time.
+
+### SSO bridge (bind an IdP group/user)
+
+When your cluster authenticates humans through an IdP (EKS Access Entries, AKS Entra ID, GKE Google Groups), bind the **group your IdP already issues** instead of minting a static SA token:
+
+```yaml
+members:
+  - name: platform-team       # DNS-safe label for the RoleBinding (rb-platform-team)
+    subjectKind: Group        # Group | User
+    subject: platform-team    # literal group name as the IdP presents it
+    namespace: platform       # must already exist (createNamespace defaults false here)
+    role: edit
+```
+
+Renders a single `RoleBinding` with `subject.apiGroup: rbac.authorization.k8s.io` — no ServiceAccount, no token. The credential lifecycle stays with the IdP (short-lived, federated). This is the recommended path for real human users.
 
 ## When to use this chart vs cloud-native RBAC
 
