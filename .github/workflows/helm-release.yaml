@@ -12,6 +12,7 @@ on:
       - 'charts/vigil/Chart.yaml'
       - 'charts/cloudflare-ddns/Chart.yaml'
       - 'charts/pass2gh/Chart.yaml'
+      - 'charts/rbac/Chart.yaml'
 
 jobs:
   release:

@@ -11,6 +11,7 @@ on:
       - 'charts/vigil/**'
       - 'charts/cloudflare-ddns/**'
       - 'charts/pass2gh/**'
+      - 'charts/rbac/**'
 
 jobs:
   install-helm-docs:
