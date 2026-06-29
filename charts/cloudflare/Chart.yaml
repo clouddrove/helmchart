@@ -2,7 +2,7 @@ apiVersion: v2
 name: cloudflared-tunnel
 description: Run Cloudflare Tunnel with token (no autoupdate)
 type: application
-version: 0.1.2
+version: 0.1.3
 appVersion: "2024.3.0"
 keywords:
 - helm
@@ -12,3 +12,19 @@ keywords:
 maintainers:
 - email: hello@clouddrove.com
   name: Clouddrove Inc
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: source
+      url: https://github.com/clouddrove/helmchart
+    - name: support
+      url: https://github.com/clouddrove/helmchart/issues
+  artifacthub.io/maintainers: |
+    - name: CloudDrove
+      email: hello@clouddrove.com
+  artifacthub.io/images: |
+    - name: cloudflared
+      image: cloudflare/cloudflared:2024.3.0
+  artifacthub.io/changes: |
+    - kind: added
+      description: Artifact Hub metadata annotations
