@@ -19,9 +19,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: "1"
-    created: "2026-06-29T09:11:36.492523202Z"
+    created: "2026-06-29T09:15:10.813171814Z"
     description: Cloudflare DDNS updater
-    digest: de4b9a8337cde4db04edc9a155f0ea81c5f9b01cec5519be9fcdda10089946f0
+    digest: d71c7202f2ea4168a2bdc68f9a2a257d81066d7b9e438ae5a87d37820b704e69
     home: https://github.com/clouddrove/helmchart
     keywords:
     - helm
@@ -124,9 +124,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 2024.3.0
-    created: "2026-06-29T09:11:36.493124493Z"
+    created: "2026-06-29T09:15:10.813606718Z"
     description: Run Cloudflare Tunnel with token (no autoupdate)
-    digest: 41a4a36fd58a5a9f68056544b0faf1e7a2899f082c5fc6ba66a8d77fdf24baea
+    digest: 4c0d25fcfbebb2dbdd5bca7551c1681ba4478129ef5d192d29134381614fcd38
     keywords:
     - helm
     - chart
@@ -210,9 +210,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-06-29T09:11:36.494163508Z"
+    created: "2026-06-29T09:15:10.814108847Z"
     description: A chart for cron jobs
-    digest: b326e63a716839ba4e7bead09946f59fb7efa57b30e6b75cf96499a649a8b054
+    digest: 4aaa4176067bffba1b2fa3972dc8c6741dd3a0d48a067af0d64a0e90a759cc01
     home: https://github.com/clouddrove/helmchart
     keywords:
     - cronjob
@@ -261,9 +261,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.2.1
-    created: "2026-06-29T09:11:36.495612172Z"
+    created: "2026-06-29T09:15:10.815549523Z"
     description: A Helm chart for Kubernetes
-    digest: 3d31bb6c4cb1c41f6c97ca11133bfe0425530538c7a0c29c00c0d82e1fa12b66
+    digest: 59448b49b92cfe365914e6a442adb309accbf8e73f8051736034bd80d9aa610b
     home: https://github.com/clouddrove/helmchart
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -378,10 +378,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-06-29T09:11:36.496108575Z"
+    created: "2026-06-29T09:15:10.816034971Z"
     description: A Helm chart for syncing 1Password secrets to GitHub organization
       and repository secrets
-    digest: 634ff9dd51ed931cd6cd07205cdfb73cf7f4557ce1820711e68ac25eefc95b4f
+    digest: 1cb16ec43834493bfd3c83b42fa77d7a552c0edbd90d952c2b62597b285ffff1
     home: https://github.com/clouddrove/helmchart
     keywords:
     - helm
@@ -501,10 +501,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: "1.0"
-    created: "2026-06-29T09:11:36.49639845Z"
+    created: "2026-06-29T09:15:10.816355Z"
     description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no
       SSO).
-    digest: cc538e9c72d15c0adbaf0e209a6591b2a6787cc082d4bf080003ef04fe176ac0
+    digest: abf819bd7646135e5d1b1293d57fbcf696bddde4f8ae70ca0d87641f2e7f4304
     keywords:
     - helm
     - chart
@@ -575,9 +575,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-06-29T09:11:36.497475365Z"
+    created: "2026-06-29T09:15:10.817550126Z"
     description: A Helm chart for Kubernetes
-    digest: 94bdac162e36c918a2d54f6465b6398982870be33cd0a7d3418159d38849e7b2
+    digest: eea394965291c964161a774d146451c423ad408948e3f489c06af6c2aa5ae1b2
     home: https://github.com/clouddrove/vigil
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -613,4 +613,4 @@ entries:
     urls:
     - https://charts.clouddrove.com/charts/vigil-1.0.1.tgz
     version: 1.0.1
-generated: "2026-06-29T09:11:36.491946709Z"
+generated: "2026-06-29T09:15:10.812372343Z"
