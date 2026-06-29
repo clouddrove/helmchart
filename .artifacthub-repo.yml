@@ -1,4 +1,4 @@
-# repositoryID: 09c0151e-5789-4eb1-83b1-0133b27cc159
+# repositoryID: 8f2ced88-35bc-4845-be81-4d1a5a9912f6
 # name: clouddrove
 # displayName: CloudDrove
 # description: A collection of Helm charts maintained by Clouddrove
@@ -19,7 +19,7 @@
 
 # Optional but recommended: if you already have a repositoryID from a previous submission, keep it.
 # Otherwise, remove this line for the first verification attempt.
-repositoryID: 09c0151e-5789-4eb1-83b1-0133b27cc159
+repositoryID: 8f2ced88-35bc-4845-be81-4d1a5a9912f6
 
 # Basic info about your repository
 name: clouddrove
