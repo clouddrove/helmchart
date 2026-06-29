@@ -1,6 +1,6 @@
 apiVersion: v2
 name: cloudflared-tunnel
-description: Secure outbound-only tunnel that exposes your Kubernetes services to the internet without open ports or a public IP address.
+description: Exposes Kubernetes services via a secure outbound-only Cloudflare Tunnel — no open ports or public IP required.
 type: application
 version: 0.1.4
 appVersion: "2024.3.0"

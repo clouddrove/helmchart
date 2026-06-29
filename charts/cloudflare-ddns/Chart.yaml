@@ -1,6 +1,6 @@
 apiVersion: v2
 name: cloudflare-ddns
-description: Automatically updates Cloudflare DNS records with your public IP address to keep your domains reachable on dynamic connections.
+description: Keeps Cloudflare DNS records in sync with a dynamic public IP, so domains stay reachable on changing connections.
 type: application
 version: 0.1.5
 appVersion: "1"

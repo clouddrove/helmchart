@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: 1.0.1
-description: Self-hosted microservices status page that monitors your infrastructure and sends alerts via Slack, Email, and SMS.
+description: Self-hosted status page and uptime monitor for microservices, with alerts over Slack, Email, and SMS.
 home: https://github.com/clouddrove/vigil
 icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
 keywords:
