@@ -1,6 +1,7 @@
 ### cloudflare-ddns
 ```
- - cloudflare-ddns-0.1.4 (latest)
+ - cloudflare-ddns-0.1.5 (latest)
+ - cloudflare-ddns-0.1.4
  - cloudflare-ddns-0.1.3
  - cloudflare-ddns-0.1.2
  - cloudflare-ddns-0.1.1
@@ -42,5 +43,6 @@
 ```
 ### vigil
 ```
- - vigil-1.0.2 (latest)
+ - vigil-1.0.3 (latest)
+ - vigil-1.0.2
 ```
