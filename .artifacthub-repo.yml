@@ -36,10 +36,12 @@ owners:
   - name: Anmol Nagpal
     email: anmol@clouddrove.com
 
-# (optional) You can exclude some test or demo charts if you don’t want them to appear in Artifact Hub
-# ignore:
-#   - name: test-chart
-#   - name: example
+# Exclude legacy per-app charts that leaked into the index; keep only the curated set
+ignore:
+  - name: adrija
+  - name: hrbuddy
+  - name: relaybot
+  - name: safio
 
 # (optional) Add publisher info
 publisher:

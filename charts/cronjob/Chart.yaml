@@ -1,7 +1,7 @@
 apiVersion: v2
 name: cronjob
 description: A chart for cron jobs
-version: 1.0.0
+version: 1.0.1
 appVersion: 1.0.0
 keywords:
   - cronjob
@@ -11,4 +11,17 @@ home: "https://github.com/clouddrove/helmchart"
 maintainers:
   - name: CloudDrove Inc.
     email: hello@clouddrove.com
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: source
+      url: https://github.com/clouddrove/helmchart
+    - name: support
+      url: https://github.com/clouddrove/helmchart/issues
+  artifacthub.io/maintainers: |
+    - name: CloudDrove
+      email: hello@clouddrove.com
+  artifacthub.io/changes: |
+    - kind: added
+      description: Artifact Hub metadata annotations
 

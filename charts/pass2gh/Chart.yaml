@@ -2,5 +2,31 @@ apiVersion: v2
 name: pass2gh
 description: A Helm chart for syncing 1Password secrets to GitHub organization and repository secrets
 type: application
-version: 0.1.7
+version: 0.1.8
 appVersion: "1.0.0"
+home: https://github.com/clouddrove/helmchart
+keywords:
+  - helm
+  - chart
+  - k8s
+  - secrets
+  - github
+maintainers:
+  - name: CloudDrove Inc
+    email: hello@clouddrove.com
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: source
+      url: https://github.com/clouddrove/helmchart
+    - name: support
+      url: https://github.com/clouddrove/helmchart/issues
+  artifacthub.io/maintainers: |
+    - name: CloudDrove
+      email: hello@clouddrove.com
+  artifacthub.io/images: |
+    - name: pass2gh
+      image: ghcr.io/clouddrove/pass2gh:1.0.0
+  artifacthub.io/changes: |
+    - kind: added
+      description: Artifact Hub metadata annotations

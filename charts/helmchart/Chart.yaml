@@ -2,7 +2,7 @@ apiVersion: v2
 name: helmchart
 type: application
 description: A Helm chart for Kubernetes
-version: 1.2.1
+version: 1.2.2
 appVersion: 1.2.1
 icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
 keywords:
@@ -14,3 +14,19 @@ home: https://github.com/clouddrove/helmchart
 maintainers:
     - name: CloudDrove Inc
       email: hello@clouddrove.com
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: source
+      url: https://github.com/clouddrove/helmchart
+    - name: support
+      url: https://github.com/clouddrove/helmchart/issues
+  artifacthub.io/maintainers: |
+    - name: CloudDrove
+      email: hello@clouddrove.com
+  artifacthub.io/images: |
+    - name: app
+      image: nginx:latest
+  artifacthub.io/changes: |
+    - kind: added
+      description: Artifact Hub metadata annotations

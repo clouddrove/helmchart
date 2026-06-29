@@ -13,4 +13,20 @@ maintainers:
   name: Clouddrove Inc
 name: vigil
 type: application
-version: 1.0.1
+version: 1.0.2
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: source
+      url: https://github.com/clouddrove/helmchart
+    - name: support
+      url: https://github.com/clouddrove/helmchart/issues
+  artifacthub.io/maintainers: |
+    - name: CloudDrove
+      email: hello@clouddrove.com
+  artifacthub.io/images: |
+    - name: vigil
+      image: valeriansaliou/vigil:latest
+  artifacthub.io/changes: |
+    - kind: added
+      description: Artifact Hub metadata annotations
