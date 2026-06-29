@@ -18,6 +18,13 @@ owners:
   - name: Anmol Nagpal
     email: anmol@clouddrove.com
 
+# Exclude legacy per-app charts that leaked into the index; keep only the curated set
+ignore:
+  - name: adrija
+  - name: hrbuddy
+  - name: relaybot
+  - name: safio
+
 # Optional: Add publisher info
 publisher:
   name: CloudDrove
