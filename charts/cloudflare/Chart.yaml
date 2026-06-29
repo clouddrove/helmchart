@@ -1,8 +1,8 @@
 apiVersion: v2
 name: cloudflared-tunnel
-description: Run Cloudflare Tunnel with token (no autoupdate)
+description: Secure outbound-only tunnel that exposes your Kubernetes services to the internet without open ports or a public IP address.
 type: application
-version: 0.1.3
+version: 0.1.4
 appVersion: "2024.3.0"
 keywords:
 - helm

@@ -1,8 +1,8 @@
 apiVersion: v2
 name: cloudflare-ddns
-description: Cloudflare DDNS updater
+description: Automatically updates Cloudflare DNS records with your public IP address to keep your domains reachable on dynamic connections.
 type: application
-version: 0.1.4
+version: 0.1.5
 appVersion: "1"
 sources:
   - https://github.com/favonia/cloudflare-ddns

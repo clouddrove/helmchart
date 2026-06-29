@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: 1.0.1
-description: A Helm chart for Kubernetes
+description: Self-hosted microservices status page that monitors your infrastructure and sends alerts via Slack, Email, and SMS.
 home: https://github.com/clouddrove/vigil
 icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
 keywords:
@@ -13,7 +13,7 @@ maintainers:
   name: Clouddrove Inc
 name: vigil
 type: application
-version: 1.0.2
+version: 1.0.3
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/links: |
