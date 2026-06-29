@@ -8,9 +8,16 @@ metadata:
   labels:
     {{- include "rbac.labels" $ | nindent 4 }}
 subjects:
+{{- $kind := $u.subjectKind | default "ServiceAccount" }}
+{{- if eq $kind "ServiceAccount" }}
   - kind: ServiceAccount
     name: {{ printf "sa-%s" $u.name | quote }}
     namespace: {{ $u.namespace | default (printf "ns-%s" $u.name) | quote }}
+{{- else }}
+  - kind: {{ $kind | quote }}
+    name: {{ required (printf "members[%d] (%s): 'subject' is required when subjectKind is %s" $i $u.name $kind) $u.subject | quote }}
+    apiGroup: rbac.authorization.k8s.io
+{{- end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

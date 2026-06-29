@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "cloudflare-ddns values",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string" },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"]
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": { "name": { "type": "string" } }
+      }
+    },
+    "podAnnotations": { "type": "object" },
+    "podLabels": { "type": "object" },
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" }
+      }
+    },
+    "secret": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "existingSecret": { "type": "string" },
+        "key": { "type": "string", "minLength": 1 },
+        "value": { "type": "string" }
+      }
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["domains"],
+      "properties": {
+        "domains": { "type": "string", "minLength": 1 },
+        "proxied": { "type": "boolean" },
+        "ttl": { "type": ["string", "integer"] },
+        "recordComment": { "type": "string" },
+        "ip4Provider": { "type": "string" },
+        "ip6Provider": { "type": "string" }
+      }
+    },
+    "hostNetwork": { "type": "boolean" },
+    "dnsPolicy": {
+      "type": "string",
+      "enum": ["ClusterFirst", "ClusterFirstWithHostNet", "Default", "None"]
+    },
+    "configmap": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "name": { "type": "string" },
+        "configs": { "type": "object" }
+      }
+    },
+    "resources": { "type": "object" },
+    "securityContext": { "type": "object" },
+    "affinity": { "type": "object" },
+    "nodeSelector": { "type": "object" },
+    "tolerations": { "type": "array" }
+  }
+}
