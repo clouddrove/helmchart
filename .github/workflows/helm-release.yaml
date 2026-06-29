@@ -10,13 +10,9 @@ on:
       - 'charts/cronjob/Chart.yaml'
       - 'charts/cloudflare/Chart.yaml'
       - 'charts/vigil/Chart.yaml'
-      - 'charts/rbac/Chart.yaml'
       - 'charts/cloudflare-ddns/Chart.yaml'
-      - 'charts/adrija/Chart.yaml'
-      - 'charts/safio/Chart.yaml'
       - 'charts/pass2gh/Chart.yaml'
-      - 'charts/relay-bot/Chart.yaml'
-      - 'charts/hrbuddy/Chart.yaml'
+      - 'charts/rbac/Chart.yaml'
 
 jobs:
   release:
@@ -61,3 +57,49 @@ jobs:
           skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB }}"
+
+  oci-release:
+    needs: release
+    permissions:
+      contents: read
+      packages: write # push OCI charts to ghcr.io
+      id-token: write # cosign keyless signing via OIDC
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: latest
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Package, push and sign charts (OCI)
+        env:
+          OCI_REPO: oci://ghcr.io/clouddrove/charts
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pkg
+          for chart in charts/*/; do
+            [ -f "${chart}Chart.yaml" ] || continue
+            name=$(grep '^name:' "${chart}Chart.yaml" | awk '{print $2}')
+            version=$(grep '^version:' "${chart}Chart.yaml" | awk '{print $2}')
+
+            echo "::group::OCI publish ${name}-${version}"
+            helm package "$chart" -d /tmp/pkg
+
+            push_out=$(helm push "/tmp/pkg/${name}-${version}.tgz" "$OCI_REPO" 2>&1 | tee /dev/stderr)
+            digest=$(echo "$push_out" | awk '/Digest:/ {print $NF}')
+
+            cosign sign --yes "ghcr.io/clouddrove/charts/${name}@${digest}"
+            echo "::endgroup::"
+          done

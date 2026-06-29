@@ -1,11 +1,25 @@
-# Add one entry per teammate.
-# `name` must be DNS-compatible (lowercase alphanumerics + '-' allowed).
+# Add one entry per teammate, bot, or SSO group.
+# `name` must be DNS-compatible (lowercase alphanumerics + '-' allowed); it is
+# used to name the generated resources (sa-<name>, rb-<name>, ns-<name>).
+#
+# subjectKind selects the RoleBinding subject:
+#   ServiceAccount (default) -> creates a ServiceAccount + token Secret and binds it.
+#   Group | User            -> binds an existing IdP-provided identity (SSO bridge);
+#                              no ServiceAccount or token Secret is created.
+#                              `subject` (the literal IdP group/user name) is required.
+#                              createNamespace defaults to false for Group/User.
 members: []
   # - name: clouddrove
   #   namespace: clouddrove
   #   role: admin            # one of: view, edit, admin
   #   createNamespace: true
+  #   # subjectKind: ServiceAccount   # default
   # - name: devops
   #   namespace: devops
-  #   role: edit            # one of: view, edit, admin
+  #   role: edit
   #   createNamespace: true
+  # - name: platform-team
+  #   subjectKind: Group     # SSO bridge: bind an IdP group, no SA/token minted
+  #   subject: platform-team # literal group name as your IdP presents it
+  #   namespace: platform    # must already exist (createNamespace defaults false)
+  #   role: edit
