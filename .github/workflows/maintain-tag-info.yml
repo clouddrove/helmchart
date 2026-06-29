@@ -16,6 +16,7 @@ jobs:
         with:
           ref: master
           fetch-depth: 0   # important for tags
+          token: ${{ secrets.GITHUB }}   # PAT that can push to protected master
 
       - name: Fetch all tags
         run: git fetch --tags --force
