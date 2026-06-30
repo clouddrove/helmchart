@@ -4,7 +4,7 @@
 
 A Helm chart for Kubernetes
 
-**Homepage:** <https://github.com/clouddrove/helmchart/tree/master/charts/vigil>
+**Homepage:** <https://github.com/clouddrove/helmchart>
 
 Vigil is a tool for endpoint monitoring and health checkup, designed to provide real-time insights into the status and performance of your microservices.
 
