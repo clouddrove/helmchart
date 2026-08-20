@@ -14,7 +14,7 @@
 ```
 ### helmchart
 ```
- - helmchart-1.3.0 (latest)
+ - helmchart-1.4.0 (latest)
  - helmchart-1.2.2
  - helmchart-1.2.1
  - helmchart-1.2.0

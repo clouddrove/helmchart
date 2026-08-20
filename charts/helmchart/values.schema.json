@@ -300,10 +300,21 @@
         "required": [
             "enabled",
             "minReplicas",
-            "maxReplicas",
-            "targetCPUUtilizationPercentage"
+            "maxReplicas"
         ],
         "properties": {
+            "customMetrics": {
+                "type": "array",
+                "default": [],
+                "title": "The customMetrics Schema",
+                "description": "Raw HorizontalPodAutoscaler metric entries appended to spec.metrics. Use for Pods, Object, External or ContainerResource metrics, which the chart does not wrap.",
+                "items": {
+                    "type": "object"
+                },
+                "examples": [
+                    []
+                ]
+            },
             "enabled": {
                 "type": "boolean",
                 "default": false,
