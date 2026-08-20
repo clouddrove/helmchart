@@ -17,6 +17,7 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| autoscaling.customMetrics | list | `[]` | Raw HorizontalPodAutoscaler metric entries appended to spec.metrics. Use for Pods, Object, External or ContainerResource metrics, which the chart does not wrap. Needs an adapter serving them. Set autoscaling.targetCPUUtilizationPercentage to null to scale on these alone. |
 | autoscaling.enabled | bool | `false` |  |
 | autoscaling.maxReplicas | int | `100` | The minimum amount of replicas allowed |
 | autoscaling.minReplicas | int | `1` | Whether or not Horizontal Pod Autoscaler should be created, if false the Horizontal Pod Autoscaler will not be created |

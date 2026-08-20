@@ -1,0 +1,157 @@
+suite: hpa
+templates:
+  - hpa.yaml
+tests:
+  - it: renders nothing when autoscaling is disabled
+    set:
+      autoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: still renders cpu and memory resource metrics on their own
+    set:
+      autoscaling.enabled: true
+      autoscaling.minReplicas: 2
+      autoscaling.maxReplicas: 10
+      autoscaling.targetCPUUtilizationPercentage: 70
+      autoscaling.targetMemoryUtilizationPercentage: 80
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - lengthEqual:
+          path: spec.metrics
+          count: 2
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: memory
+      - equal:
+          path: spec.metrics[1].resource.name
+          value: cpu
+      - equal:
+          path: spec.metrics[1].resource.target.averageUtilization
+          value: 70
+
+  - it: appends custom metrics after the resource metrics
+    set:
+      autoscaling.enabled: true
+      autoscaling.targetCPUUtilizationPercentage: 70
+      autoscaling.customMetrics:
+        - type: Pods
+          pods:
+            metric:
+              name: http_requests_in_flight
+            target:
+              type: AverageValue
+              averageValue: "2"
+    asserts:
+      - lengthEqual:
+          path: spec.metrics
+          count: 2
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: cpu
+      - equal:
+          path: spec.metrics[1].type
+          value: Pods
+      - equal:
+          path: spec.metrics[1].pods.metric.name
+          value: http_requests_in_flight
+      - equal:
+          path: spec.metrics[1].pods.target.averageValue
+          value: "2"
+
+  - it: scales on custom metrics alone when cpu is unset
+    set:
+      autoscaling.enabled: true
+      autoscaling.targetCPUUtilizationPercentage: null
+      autoscaling.customMetrics:
+        - type: External
+          external:
+            metric:
+              name: sqs_queue_depth
+            target:
+              type: AverageValue
+              averageValue: "30"
+    asserts:
+      - lengthEqual:
+          path: spec.metrics
+          count: 1
+      - equal:
+          path: spec.metrics[0].type
+          value: External
+      - equal:
+          path: spec.metrics[0].external.metric.name
+          value: sqs_queue_depth
+
+  - it: omits the metrics key entirely when there is nothing to scale on
+    # An empty metrics list is rejected by the API server, so the key has to be
+    # absent rather than present and empty.
+    set:
+      autoscaling.enabled: true
+      autoscaling.targetCPUUtilizationPercentage: null
+      autoscaling.targetMemoryUtilizationPercentage: null
+      autoscaling.customMetrics: []
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - notExists:
+          path: spec.metrics
+
+  - it: carries several custom metrics through in order
+    set:
+      autoscaling.enabled: true
+      autoscaling.targetCPUUtilizationPercentage: null
+      autoscaling.customMetrics:
+        - type: Pods
+          pods:
+            metric:
+              name: first
+            target:
+              type: AverageValue
+              averageValue: "1"
+        - type: Object
+          object:
+            describedObject:
+              apiVersion: networking.k8s.io/v1
+              kind: Ingress
+              name: main
+            metric:
+              name: second
+            target:
+              type: Value
+              value: "10"
+    asserts:
+      - lengthEqual:
+          path: spec.metrics
+          count: 2
+      - equal:
+          path: spec.metrics[0].pods.metric.name
+          value: first
+      - equal:
+          path: spec.metrics[1].object.metric.name
+          value: second
+
+  - it: leaves behavior working alongside custom metrics
+    set:
+      autoscaling.enabled: true
+      autoscaling.targetCPUUtilizationPercentage: null
+      autoscaling.customMetrics:
+        - type: Pods
+          pods:
+            metric:
+              name: http_requests_in_flight
+            target:
+              type: AverageValue
+              averageValue: "2"
+      autoscaling.behavior.enabled: true
+      autoscaling.behavior.config:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+    asserts:
+      - equal:
+          path: spec.behavior.scaleUp.stabilizationWindowSeconds
+          value: 0
+      - lengthEqual:
+          path: spec.metrics
+          count: 1

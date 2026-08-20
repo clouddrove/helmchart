@@ -107,6 +107,30 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
+  # -- Metrics the chart does not wrap, passed through to spec.metrics as
+  # written. CPU and memory are covered above; Pods, Object, External and
+  # ContainerResource go here, because those shapes vary too much to wrap
+  # usefully. Needs an adapter serving them (prometheus-adapter, KEDA, or the
+  # external metrics API). Set targetCPUUtilizationPercentage to null to scale
+  # on these alone.
+  customMetrics: []
+    # - type: Pods
+    #   pods:
+    #     metric:
+    #       name: http_requests_in_flight
+    #     target:
+    #       type: AverageValue
+    #       averageValue: "2"
+    # - type: External
+    #   external:
+    #     metric:
+    #       name: sqs_queue_depth
+    #       selector:
+    #         matchLabels:
+    #           queue: jobs
+    #     target:
+    #       type: AverageValue
+    #       averageValue: "30"
   behavior:
     enabled: false
     # config:

@@ -12,6 +12,12 @@ spec:
     name: {{ include "helmchart.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  {{- /*
+    Only emit metrics when there is at least one, otherwise an empty list is
+    rendered and the API server rejects the object. This matters now that
+    customMetrics can be the only source of metrics.
+  */}}
+  {{- if or .Values.autoscaling.targetMemoryUtilizationPercentage .Values.autoscaling.targetCPUUtilizationPercentage .Values.autoscaling.customMetrics }}
   metrics:
     {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
@@ -37,6 +43,16 @@ spec:
           averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
         {{- end }}
     {{- end }}
+    {{- /*
+      Raw metric entries, passed through as written. Resource metrics above
+      cover CPU and memory; anything else (Pods, Object, External, or a
+      ContainerResource) goes here, because those shapes vary too much to be
+      usefully wrapped. Requires a metrics adapter that serves them.
+    */}}
+    {{- with .Values.autoscaling.customMetrics }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
   {{- if .Values.autoscaling.behavior.enabled }}
   behavior:
     {{- toYaml .Values.autoscaling.behavior.config | nindent 4 }}
