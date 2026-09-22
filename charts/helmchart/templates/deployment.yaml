@@ -123,7 +123,7 @@ spec:
         {{- if gt (len .Values.volume.volumes) 0 }}
           {{- range .Values.volume.volumes }}
         - name: {{ .name }}
-          {{- toYaml . | nindent 10 | trimPrefix "name:" }}
+          {{- omit . "name" | toYaml | nindent 10 }}
           {{- end }}
         {{- else }}
         - name: {{ template "helmchart.fullname" . }}
