@@ -19,10 +19,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: "1"
-    created: "2026-09-22T18:22:49.155687774Z"
+    created: "2026-10-12T12:45:37.974500843Z"
     description: Keeps Cloudflare DNS records in sync with a dynamic public IP, so
       domains stay reachable on changing connections.
-    digest: 96ebb294a503e1c92df4e8d454fb6fa524712695228e3ab4d31ce907c8e2851f
+    digest: f53f38df3385951a5872b9bf227ead28ba0c30f47e12f14d5b5870648657ed88
     home: https://github.com/clouddrove/helmchart
     keywords:
     - helm
@@ -145,6 +145,50 @@ entries:
     - https://charts.clouddrove.com/charts/cloudflare-ddns-0.1.1.tgz
     version: 0.1.1
   cloudflared-tunnel:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Production hardening with PodSecurityContext, SecurityContext, ServiceAccount, ServiceMonitor, and PDB
+        - kind: fixed
+          description: Fix missing ConfigMap template, extraArgs propagation, and decoupled health probes
+      artifacthub.io/images: |
+        - name: cloudflared
+          image: cloudflare/cloudflared:2026.9.3
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: source
+          url: https://github.com/clouddrove/helmchart
+        - name: support
+          url: https://github.com/clouddrove/helmchart/issues
+      artifacthub.io/maintainers: |
+        - name: CloudDrove
+          email: hello@clouddrove.com
+    apiVersion: v2
+    appVersion: 2026.9.3
+    created: "2026-10-12T12:45:37.975277973Z"
+    description: Exposes Kubernetes services via a secure outbound-only Cloudflare
+      Tunnel — no open ports or public IP required.
+    digest: f5a82c4ad1d267ab15bcf86c61d149629fac823ab438acb17881a6f1f2c1ca9d
+    home: https://github.com/clouddrove/helmchart
+    icon: https://raw.githubusercontent.com/cloudflare/color/refs/heads/master/static/thinking/logo.png
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    - cloudflare
+    - cloudflared
+    - cloudflare-tunnel
+    - zero-trust
+    - argo-tunnel
+    maintainers:
+    - email: hello@clouddrove.com
+      name: Clouddrove Inc
+    name: cloudflared-tunnel
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/cloudflared-tunnel-0.2.0.tgz
+    version: 0.2.0
   - annotations:
       artifacthub.io/changes: |
         - kind: added
@@ -284,9 +328,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-09-22T18:22:49.157424036Z"
+    created: "2026-10-12T12:45:37.975841414Z"
     description: A chart for cron jobs
-    digest: c8fe54b1908e7c04d1bc0d851099a2178b2d573f127d4e8e9c37ec397e49d34a
+    digest: 59684c19dea402770540cd9f945d4873d7c1945a47a68f1191af99b800651b7f
     home: https://github.com/clouddrove/helmchart
     keywords:
     - cronjob
@@ -335,9 +379,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.2.1
-    created: "2026-09-22T18:22:49.159160038Z"
+    created: "2026-10-12T12:45:37.977340341Z"
     description: A Helm chart for Kubernetes
-    digest: e8a57f818bdc21d72b07ae149848ce11a466f92afdd048412e389327ba1de6f8
+    digest: 3b3de0bda4c57e3a11db46f5447aac61ec6ccdb79265859ac9b1ee140bf10d7b
     home: https://github.com/clouddrove/helmchart
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -524,10 +568,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-09-22T18:22:49.159637231Z"
+    created: "2026-10-12T12:45:37.977877674Z"
     description: A Helm chart for syncing 1Password secrets to GitHub organization
       and repository secrets
-    digest: 7d2cb22f804bf6a1a2ecfe64ee24be9bf67acf045ff91c31ad92015675ac6b71
+    digest: f8595987f35f46e53ec86551e5fa2cc3c5e0339cee2c3febfed9ed7a775e2a82
     home: https://github.com/clouddrove/helmchart
     keywords:
     - helm
@@ -647,10 +691,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: "1.0"
-    created: "2026-09-22T18:22:49.159955858Z"
+    created: "2026-10-12T12:45:37.978196399Z"
     description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no
       SSO).
-    digest: a0d7cb1ec528f5ef5683843fd56661b0d7c042c7aeefe9ec9327b524b35fa534
+    digest: 7a3c0e5e21a72bc90117b138887bf526acf4fee305ccfa765e789f351fb51943
     keywords:
     - helm
     - chart
@@ -721,10 +765,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-09-22T18:22:49.161106423Z"
+    created: "2026-10-12T12:45:37.979441523Z"
     description: Self-hosted status page and uptime monitor for microservices, with
       alerts over Slack, Email, and SMS.
-    digest: 433a2cf8184a725272692b5c42843012ce2a29700792fbdde483eb0ae48328d9
+    digest: 4c77f80e7734ef78d16e25700adcd37552fce7ae0c40399d9491c5cea14cb7b0
     home: https://github.com/clouddrove/vigil
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -796,4 +840,4 @@ entries:
     urls:
     - https://charts.clouddrove.com/charts/vigil-1.0.1.tgz
     version: 1.0.1
-generated: "2026-09-22T18:22:49.155051332Z"
+generated: "2026-10-12T12:45:37.973110911Z"
