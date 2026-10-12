@@ -1,19 +1,22 @@
-{{- if .Values.metrics.enabled }}
+{{- if and .Values.metrics.enabled .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helmchart.fullname" . }}-metrics
-  namespace: {{ include "helmchart.namespace" . }}
+  name: {{ include "cloudflared-tunnel.fullname" . }}-metrics
+  namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "helmchart.labels" . | nindent 4 }}
+    {{- include "cloudflared-tunnel.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
   annotations:
-    {{- toYaml .Values.service.annotations | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.type | default "ClusterIP" }}
   selector:
-    {{- include "helmchart.selectorLabels" . | nindent 4 }}
+    {{- include "cloudflared-tunnel.selectorLabels" . | nindent 4 }}
   ports:
     - name: {{ .Values.metrics.portName | default "metrics" }}
-      port: {{ .Values.metrics.port }}
+      port: {{ .Values.metrics.port | default 2000 }}
       targetPort: {{ .Values.metrics.portName | default "metrics" }}
+      protocol: TCP
 {{- end }}

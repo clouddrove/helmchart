@@ -20,6 +20,36 @@
         }
       }
     },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "strategy": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "rollingUpdate": { "type": "object" }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": { "type": "boolean" },
+        "name": { "type": "string" },
+        "automount": { "type": "boolean" },
+        "annotations": { "type": "object" }
+      }
+    },
+    "podSecurityContext": {
+      "type": "object"
+    },
+    "securityContext": {
+      "type": "object"
+    },
+    "terminationGracePeriodSeconds": {
+      "type": "integer",
+      "minimum": 0
+    },
     "secret": {
       "type": "object",
       "additionalProperties": false,
@@ -27,6 +57,7 @@
         "enabled": { "type": "boolean" },
         "name": { "type": "string" },
         "existingSecret": { "type": "string" },
+        "existingSecretKey": { "type": "string" },
         "token": { "type": "string" },
         "annotations": { "type": "object" }
       }
@@ -43,6 +74,8 @@
     "command": { "type": "array", "items": { "type": "string" } },
     "args": { "type": "array", "items": { "type": "string" } },
     "extraArgs": { "type": "array", "items": { "type": "string" } },
+    "env": { "type": "array" },
+    "envFrom": { "type": "array" },
     "metrics": {
       "type": "object",
       "additionalProperties": false,
@@ -56,10 +89,32 @@
       "type": "object",
       "additionalProperties": true,
       "properties": {
+        "enabled": { "type": "boolean" },
         "type": {
           "type": "string",
           "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"]
         },
+        "annotations": { "type": "object" }
+      }
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "namespace": { "type": "string" },
+        "interval": { "type": "string" },
+        "scrapeTimeout": { "type": "string" },
+        "path": { "type": "string" },
+        "labels": { "type": "object" },
+        "annotations": { "type": "object" }
+      }
+    },
+    "podDisruptionBudget": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minAvailable": { "type": ["integer", "string"] },
+        "maxUnavailable": { "type": ["integer", "string"] },
         "annotations": { "type": "object" }
       }
     },
@@ -70,12 +125,15 @@
     "tolerations": { "type": "array" },
     "affinity": { "type": "object" },
     "podAnnotations": { "type": "object" },
+    "podLabels": { "type": "object" },
     "deployment": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
         "annotations": { "type": "object" }
       }
-    }
+    },
+    "commonLabels": { "type": "object" },
+    "createNamespace": { "type": "boolean" }
   }
 }

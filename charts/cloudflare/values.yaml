@@ -1,29 +1,92 @@
+# Default values for cloudflared-tunnel.
+# This is a YAML-formatted file.
+
+# -- Overrides chart name
 nameOverride: ""
+# -- Overrides fully qualified app name
 fullnameOverride: ""
 
-
-image:
-  repository: cloudflare/cloudflared
-  tag: "2025.8.0"
-  pullPolicy: IfNotPresent
-
+# -- Number of replica pods to run (Cloudflare tunnels support multiple active-active replicas)
 replicaCount: 1
 
+# -- Container image configuration
+image:
+  repository: cloudflare/cloudflared
+  tag: "2026.9.3"
+  pullPolicy: IfNotPresent
+
+# -- References to secrets for pulling images from private registries
+imagePullSecrets: []
+
+# -- Deployment rolling update strategy
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+# -- ServiceAccount configuration
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use. If not set, a name is generated using the fullname template
+  name: ""
+  # Cloudflared does not need access to the Kubernetes API, so automounting the token is disabled by default
+  automount: false
+
+# -- Pod-level security context
+podSecurityContext:
+  runAsNonRoot: true
+  fsGroup: 65532
+  fsGroupChangePolicy: "OnRootMismatch"
+  # Uncomment if ICMP/ping routing through Cloudflare WARP is required:
+  # sysctls:
+  #   - name: net.ipv4.ping_group_range
+  #     value: "0 2147483647"
+
+# -- Container-level security context (Restricted security standard)
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+
+# -- Duration in seconds before the pod is forcibly killed after SIGTERM
+terminationGracePeriodSeconds: 30
+
+# -- Secret configuration for the Cloudflare Tunnel token
 secret:
+  # Whether to manage the secret in this chart
   enabled: true
-  name: cloudflared-token
+  # Override name of the secret created by this chart (defaults to <fullname>-secret)
+  name: ""
+  # Use an existing secret rather than creating one
   existingSecret: ""
+  # The key inside the existing secret holding the tunnel token
+  existingSecretKey: "TUNNEL_TOKEN"
+  # Cloudflare Tunnel token string (from Cloudflare Zero Trust Dashboard)
   token: ""
+  # Annotations to add to the created Secret
   annotations: {}
 
+# -- ConfigMap for injecting additional environment variables via envFrom
 configmap:
   enabled: false
+  # Key-value pairs to store in ConfigMap
   data: {}
   annotations: {}
 
+# -- Container entrypoint command
 command:
   - cloudflared
 
+# -- Arguments passed to the cloudflared command
 args:
   - tunnel
   - --no-autoupdate
@@ -31,39 +94,92 @@ args:
   - "0.0.0.0:2000"
   - run
 
+# -- Additional CLI arguments passed to cloudflared (e.g. ["--protocol", "quic", "--loglevel", "info"])
 extraArgs: []
 
+# -- Additional environment variables to pass to the container
+env: []
+
+# -- Additional sources to populate environment variables into the container
+envFrom: []
+
+# -- Metrics endpoint configuration
 metrics:
   enabled: true
   port: 2000
   portName: "metrics"
 
+# -- Kubernetes Service to expose the cloudflared metrics endpoint
 service:
+  enabled: true
   type: ClusterIP
   annotations: {}
 
+# -- Prometheus Operator ServiceMonitor configuration
+serviceMonitor:
+  enabled: false
+  namespace: ""
+  interval: 15s
+  scrapeTimeout: 10s
+  path: /metrics
+  labels: {}
+  annotations: {}
+
+# -- PodDisruptionBudget configuration for high availability
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  maxUnavailable: ""
+  annotations: {}
+
+# -- Liveness probe configuration
 livenessProbe:
   httpGet:
     path: /ready
     port: 2000
   initialDelaySeconds: 10
   periodSeconds: 10
-  failureThreshold: 1
+  failureThreshold: 3
 
+# -- Readiness probe configuration
 readinessProbe:
   httpGet:
     path: /ready
     port: 2000
   initialDelaySeconds: 5
   periodSeconds: 10
+  failureThreshold: 2
 
+# -- Resource requests and limits
 resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 256Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
+# -- Node labels for pod assignment
 nodeSelector: {}
+
+# -- Tolerations for pod assignment
 tolerations: []
+
+# -- Affinity rules for pod assignment (e.g. podAntiAffinity across nodes for HA)
 affinity: {}
 
+# -- Annotations to add to the Pod template
 podAnnotations: {}
 
+# -- Labels to add to the Pod template
+podLabels: {}
+
+# -- Annotations to add to the Deployment
 deployment:
   annotations: {}
+
+# -- Common labels to add to all resources
+commonLabels: {}
+
+# -- Whether to create the namespace (prefer using `helm install --create-namespace`)
+createNamespace: false

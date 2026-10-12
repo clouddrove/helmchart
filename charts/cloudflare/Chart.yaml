@@ -1,18 +1,12 @@
-apiVersion: v2
-name: cloudflared-tunnel
-description: Exposes Kubernetes services via a secure outbound-only Cloudflare Tunnel — no open ports or public IP required.
-type: application
-version: 0.1.4
-appVersion: "2024.3.0"
-keywords:
-- helm
-- chart
-- k8s
-- helm-chart
-maintainers:
-- email: hello@clouddrove.com
-  name: Clouddrove Inc
 annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Production hardening with PodSecurityContext, SecurityContext, ServiceAccount, ServiceMonitor, and PDB
+    - kind: fixed
+      description: Fix missing ConfigMap template, extraArgs propagation, and decoupled health probes
+  artifacthub.io/images: |
+    - name: cloudflared
+      image: cloudflare/cloudflared:2026.9.3
   artifacthub.io/license: Apache-2.0
   artifacthub.io/links: |
     - name: source
@@ -22,9 +16,24 @@ annotations:
   artifacthub.io/maintainers: |
     - name: CloudDrove
       email: hello@clouddrove.com
-  artifacthub.io/images: |
-    - name: cloudflared
-      image: cloudflare/cloudflared:2024.3.0
-  artifacthub.io/changes: |
-    - kind: added
-      description: Artifact Hub metadata annotations
+apiVersion: v2
+appVersion: 2026.9.3
+description: Exposes Kubernetes services via a secure outbound-only Cloudflare Tunnel — no open ports or public IP required.
+home: https://github.com/clouddrove/helmchart
+icon: https://raw.githubusercontent.com/cloudflare/color/refs/heads/master/static/thinking/logo.png
+keywords:
+  - helm
+  - chart
+  - k8s
+  - helm-chart
+  - cloudflare
+  - cloudflared
+  - cloudflare-tunnel
+  - zero-trust
+  - argo-tunnel
+maintainers:
+  - email: hello@clouddrove.com
+    name: Clouddrove Inc
+name: cloudflared-tunnel
+type: application
+version: 0.2.0
