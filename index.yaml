@@ -19,10 +19,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: "1"
-    created: "2026-10-12T12:45:37.974500843Z"
+    created: "2026-11-17T21:31:21.158515145Z"
     description: Keeps Cloudflare DNS records in sync with a dynamic public IP, so
       domains stay reachable on changing connections.
-    digest: f53f38df3385951a5872b9bf227ead28ba0c30f47e12f14d5b5870648657ed88
+    digest: 312e2bbb6ab6131e19a4d214326bbaed63500539439a30591efafe1d7c6b9bfe
     home: https://github.com/clouddrove/helmchart
     keywords:
     - helm
@@ -165,10 +165,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 2026.9.3
-    created: "2026-10-12T12:45:37.975277973Z"
+    created: "2026-11-17T21:31:21.159268395Z"
     description: Exposes Kubernetes services via a secure outbound-only Cloudflare
       Tunnel — no open ports or public IP required.
-    digest: f5a82c4ad1d267ab15bcf86c61d149629fac823ab438acb17881a6f1f2c1ca9d
+    digest: 9e4c90560acce46a6bd9405ef6b725faf01f9833b03735fb55a358dfd7b3be7f
     home: https://github.com/clouddrove/helmchart
     icon: https://raw.githubusercontent.com/cloudflare/color/refs/heads/master/static/thinking/logo.png
     keywords:
@@ -328,9 +328,9 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-10-12T12:45:37.975841414Z"
+    created: "2026-11-17T21:31:21.159724903Z"
     description: A chart for cron jobs
-    digest: 59684c19dea402770540cd9f945d4873d7c1945a47a68f1191af99b800651b7f
+    digest: ea824aa2e3cb38f3fd62500d0842f7b54e8651fc8e4928b5e13df32afe886049
     home: https://github.com/clouddrove/helmchart
     keywords:
     - cronjob
@@ -361,6 +361,42 @@ entries:
     - https://charts.clouddrove.com/charts/cronjob-1.0.0.tgz
     version: 1.0.0
   helmchart:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Artifact Hub metadata annotations
+      artifacthub.io/images: |
+        - name: app
+          image: nginx:latest
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: source
+          url: https://github.com/clouddrove/helmchart
+        - name: support
+          url: https://github.com/clouddrove/helmchart/issues
+      artifacthub.io/maintainers: |
+        - name: CloudDrove
+          email: hello@clouddrove.com
+    apiVersion: v2
+    appVersion: 1.2.1
+    created: "2026-11-17T21:31:21.161029292Z"
+    description: A Helm chart for Kubernetes
+    digest: deceed665aef1ded1b8b37e6a913c0bdb606a370237dfd77563f6bde7b9c939f
+    home: https://github.com/clouddrove/helmchart
+    icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
+    keywords:
+    - helm
+    - chart
+    - k8s
+    - helm-chart
+    maintainers:
+    - email: hello@clouddrove.com
+      name: CloudDrove Inc
+    name: helmchart
+    type: application
+    urls:
+    - https://charts.clouddrove.com/charts/helmchart-1.4.2.tgz
+    version: 1.4.2
   - annotations:
       artifacthub.io/changes: |
         - kind: added
@@ -568,10 +604,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-10-12T12:45:37.977877674Z"
+    created: "2026-11-17T21:31:21.161455525Z"
     description: A Helm chart for syncing 1Password secrets to GitHub organization
       and repository secrets
-    digest: f8595987f35f46e53ec86551e5fa2cc3c5e0339cee2c3febfed9ed7a775e2a82
+    digest: 7cf9e647275b74088af7c4496abc66dd5ebb9c2b8998ccdcde85f88cfc75dabd
     home: https://github.com/clouddrove/helmchart
     keywords:
     - helm
@@ -691,10 +727,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: "1.0"
-    created: "2026-10-12T12:45:37.978196399Z"
+    created: "2026-11-17T21:31:21.161745466Z"
     description: Per-user namespace RBAC using ServiceAccounts and RoleBindings (no
       SSO).
-    digest: 7a3c0e5e21a72bc90117b138887bf526acf4fee305ccfa765e789f351fb51943
+    digest: e88b20a4e3a56b7e5519b35248a092c033a9927fe26f823886408c5ac1799c8d
     keywords:
     - helm
     - chart
@@ -765,10 +801,10 @@ entries:
           email: hello@clouddrove.com
     apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-10-12T12:45:37.979441523Z"
+    created: "2026-11-17T21:31:21.162855286Z"
     description: Self-hosted status page and uptime monitor for microservices, with
       alerts over Slack, Email, and SMS.
-    digest: 4c77f80e7734ef78d16e25700adcd37552fce7ae0c40399d9491c5cea14cb7b0
+    digest: 13d4807e380e7b220e06600bef0d22de972f0e8b1d24b5b6a3eec31508eedd7b
     home: https://github.com/clouddrove/vigil
     icon: https://emojis.slackmojis.com/emojis/images/1643514183/1491/kubernetes.png?1643514183
     keywords:
@@ -840,4 +876,4 @@ entries:
     urls:
     - https://charts.clouddrove.com/charts/vigil-1.0.1.tgz
     version: 1.0.1
-generated: "2026-10-12T12:45:37.973110911Z"
+generated: "2026-11-17T21:31:21.157304926Z"
