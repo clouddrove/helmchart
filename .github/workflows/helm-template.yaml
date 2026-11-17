@@ -22,6 +22,8 @@ jobs:
 
     - name: Run helm unittest
       run: |
-        helm plugin install https://github.com/helm-unittest/helm-unittest.git
-        helm unittest -f ./test/*.yaml ./charts/helmchart
+        # Helm 4 refuses a plugin it cannot verify from a git source.
+        helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v1.2.1 --verify=false
+        # The suites live in charts/helmchart/tests (the default -f pattern).
+        helm unittest ./charts/helmchart
 

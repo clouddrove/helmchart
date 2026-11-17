@@ -164,6 +164,14 @@ tolerations: []
 affinity: {} 
   # -- affinity specify restrictions on what node this pod should be scheduled on.
 
+# -- Pod topology spread constraints for the Deployment. A constraint without a
+# labelSelector gets the chart's selector labels, so it spreads this release's pods.
+# Example, one pod per zone at most ahead of the others:
+#   - maxSkew: 1
+#     topologyKey: topology.kubernetes.io/zone
+#     whenUnsatisfiable: DoNotSchedule
+topologySpreadConstraints: []
+
 volume:
   enabled: false
   # -- Volume mounted to pods either as default or in the form of PVC

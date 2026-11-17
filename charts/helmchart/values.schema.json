@@ -375,6 +375,14 @@
         "properties": {},
         "examples": [{}]
     },
+    "topologySpreadConstraints": {
+        "type": "array",
+        "default": [],
+        "title": "Pod topology spread constraints",
+        "items": {
+            "type": "object"
+        }
+    },
     "tolerations": {
         "type": "array",
         "default": [],

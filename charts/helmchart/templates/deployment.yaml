@@ -118,6 +118,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range . }}
+        - {{ toYaml . | nindent 10 | trim }}
+          {{- if not .labelSelector }}
+          labelSelector:
+            matchLabels:
+              {{- include "helmchart.selectorLabels" $ | nindent 14 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       {{- if .Values.volume.enabled }}
       volumes:
         {{- if gt (len .Values.volume.volumes) 0 }}
